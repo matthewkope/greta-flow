@@ -1,8 +1,8 @@
 cask "greta-flow" do
-  version "0.3.0"
-  sha256 "387fae7e5041d386c66015245725e1f3ee3f5e82ffb152c5843e507f695fcabf"
+  version "0.4.0"
+  sha256 "2a4261e9666e64e9a7d78ce95b0957779382f5b5fcaef2f66656e92c12966cfd"
 
-  url "https://github.com/matthewkope/greta-flow/releases/download/v#{version}/Gretchen.Flow_#{version}_aarch64.dmg"
+  url "https://github.com/matthewkope/greta-flow/releases/download/v#{version}/Greta.Flow_#{version}_aarch64.dmg"
   name "Greta Flow"
   desc "Push-to-talk voice dictation with Parakeet, fully on-device"
   homepage "https://github.com/matthewkope/greta-flow"
@@ -10,9 +10,7 @@ cask "greta-flow" do
   depends_on arch: :arm64
   depends_on macos: :sonoma
 
-  # The published 0.3.0 archive keeps its original name and checksum.
-  # Homebrew removes the old cask's app artifact during migration/reinstall.
-  app "Gretchen Flow.app", target: "Greta Flow.app"
+  app "Greta Flow.app"
 
   # Personal tap: the self-signed release is intentionally not notarized.
   postflight_steps do
