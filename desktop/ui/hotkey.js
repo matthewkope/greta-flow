@@ -96,5 +96,5 @@ invoke("hotkey_replace_target").then((target) => {
     "Press a new key or combination to replace " + shown;
   save.textContent = "Save Shortcut";
   document.getElementById("remove").style.display = "";
-  document.title = "Change Shortcut — Gretchen Flow";
+  document.title = "Change Shortcut — Greta Flow";
 });

@@ -157,7 +157,7 @@ until a model is ready). To get going:
    default) — Greta switches to her recording badge while she listens — then
    **let go**; your words type out where the cursor is.
 
-You can reopen the guide anytime from the menu's **Getting Started…** item.
+You can reopen the guide anytime from the menu's **Run Setup Again…** item.
 
 | Menu bar (Greta icon) | Meaning |
 |---|---|
