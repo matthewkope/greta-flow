@@ -22,24 +22,29 @@ pub(crate) fn set_model(app: &AppHandle, name: &str) {
         return;
     }
     let state = app.state::<AppState>();
-    let (previous, generation) = {
+    let (previous, generation, reuse_active) = {
         let mut current = state.current_model.lock_recover();
-        // Skip only if this model is already active and loaded; otherwise
-        // (re)load so a missing/never-downloaded model still gets fetched.
-        if *current == name && state.engine_ready.load(Ordering::SeqCst) {
-            return;
-        }
         let previous = state.active_model.lock_recover().clone();
-        *current = name.to_string();
-        (
-            previous,
-            state.model_generation.fetch_add(1, Ordering::SeqCst) + 1,
-        )
+        let (generation, reuse_active) = select_model(
+            &mut current,
+            &previous,
+            state.engine_ready.load(Ordering::SeqCst),
+            &state.model_generation,
+            name,
+        );
+        (previous, generation, reuse_active)
     };
-    setup_status::phase(app, generation, name, "queued");
     let mut cfg = config::Config::load();
     cfg.model = name.to_string();
     cfg.save();
+    if reuse_active {
+        state.cfg.lock_recover().model = name.to_string();
+        setup_status::phase(app, generation, name, "ready");
+        set_tray_state(app, TrayState::Idle);
+        refresh_menu(app);
+        return;
+    }
+    setup_status::phase(app, generation, name, "queued");
     refresh_menu(app);
 
     let app = app.clone();
@@ -342,7 +347,6 @@ pub(crate) fn load_engine_async(app: AppHandle) {
             Ok(engine) => {
                 *engine_slot = Some(engine);
                 *state.active_model.lock_recover() = cfg.model.clone();
-                *state.cfg.lock_recover() = cfg.clone();
                 state.engine_ready.store(true, Ordering::SeqCst);
                 setup_status::phase(&app, generation, &cfg.model, "ready");
                 log::info!("engine ready (model: {})", cfg.model);
@@ -386,7 +390,6 @@ pub(crate) fn reload_engine(app: AppHandle, cfg: config::Config, generation: u64
             Ok(engine) => {
                 *engine_slot = Some(engine);
                 *state.active_model.lock_recover() = cfg.model.clone();
-                *state.cfg.lock_recover() = cfg.clone();
                 state.engine_ready.store(true, Ordering::SeqCst);
                 setup_status::phase(&app, generation, &cfg.model, "ready");
                 log::info!("engine reloaded (model: {model})");
@@ -435,13 +438,17 @@ pub(crate) fn reload_config(app: &AppHandle) {
     }
 
     // Swap in the new config (covers hotkey_mode and any future fields).
-    let model_changed = fresh.model != *state.active_model.lock_recover();
-    let model = fresh.model.clone();
-    *state.cfg.lock_recover() = fresh.clone();
     let generation = {
         let mut current = state.current_model.lock_recover();
-        *current = model;
-        state.model_generation.fetch_add(1, Ordering::SeqCst) + 1
+        let generation = reload_generation(
+            &state.model_generation,
+            &current,
+            &state.active_model.lock_recover(),
+            &fresh.model,
+        );
+        *current = fresh.model.clone();
+        *state.cfg.lock_recover() = fresh.clone();
+        generation
     };
 
     refresh_menu(app);
@@ -449,7 +456,7 @@ pub(crate) fn reload_config(app: &AppHandle) {
 
     // Formatting and recognition settings use per-session snapshots; only a
     // model change needs new weights.
-    if model_changed {
+    if let Some(generation) = generation {
         reload_engine(app.clone(), fresh, generation);
     }
 }
@@ -550,4 +557,68 @@ pub(crate) fn initialize(
     }
     load_engine_async(app.handle().clone());
     Ok(())
+}
+
+// Every explicit selection supersedes pending work, even when it returns to the
+// working engine. Requested/current is not evidence that an engine loaded.
+fn select_model(
+    current: &mut String,
+    active: &str,
+    ready: bool,
+    generation: &std::sync::atomic::AtomicU64,
+    name: &str,
+) -> (u64, bool) {
+    *current = name.into();
+    (
+        generation.fetch_add(1, Ordering::SeqCst) + 1,
+        ready && active == name,
+    )
+}
+
+fn reload_generation(
+    generation: &std::sync::atomic::AtomicU64,
+    current: &str,
+    active: &str,
+    next: &str,
+) -> Option<u64> {
+    // A changed request must also supersede a pending switch back to a model
+    // that happens to still be active. A failed load remains retryable.
+    (next != current || next != active).then(|| generation.fetch_add(1, Ordering::SeqCst) + 1)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::AtomicU64;
+
+    #[test]
+    fn failed_reload_can_retry_and_returning_to_active_supersedes_pending_work() {
+        let generation = AtomicU64::new(4);
+        let mut current = "failed".to_string();
+        let (retry, reuse) = select_model(&mut current, "working", true, &generation, "failed");
+        assert_eq!(retry, 5);
+        assert!(!reuse);
+        let (back, reuse) = select_model(&mut current, "working", true, &generation, "working");
+        assert_eq!(back, 6);
+        assert!(reuse);
+        assert_eq!(current, "working");
+        assert_ne!(retry, generation.load(Ordering::SeqCst));
+        let (_, reuse) = select_model(&mut current, "working", false, &generation, "working");
+        assert!(!reuse);
+    }
+
+    #[test]
+    fn unchanged_config_does_not_supersede_startup() {
+        let generation = AtomicU64::new(1);
+        assert_eq!(
+            reload_generation(&generation, "model", "model", "model"),
+            None
+        );
+        assert_eq!(generation.load(Ordering::SeqCst), 1);
+        assert_eq!(
+            reload_generation(&generation, "pending", "model", "model"),
+            Some(2)
+        );
+        assert_eq!(generation.load(Ordering::SeqCst), 2);
+    }
 }

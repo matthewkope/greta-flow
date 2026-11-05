@@ -68,9 +68,6 @@ pub fn ensure_model_with_progress(
     name: &str,
     report: &mut dyn FnMut(Progress),
 ) -> Result<PathBuf, String> {
-    // Serialize all writers, including Whisper .part files.
-    static DOWNLOAD: std::sync::Mutex<()> = std::sync::Mutex::new(());
-    let _guard = DOWNLOAD.lock_recover();
     report(Progress::phase("checking"));
     if name == crate::config::DEFAULT_MODEL {
         return ensure_parakeet(report);
@@ -87,47 +84,71 @@ pub fn ensure_model_with_progress(
         return Err(format!("invalid model name: {name:?}"));
     }
     let path = model_path(name);
-    if path.exists() {
-        return Ok(path);
-    }
-    fs::create_dir_all(path.parent().ok_or("model path has no parent")?)
-        .map_err(|e| e.to_string())?;
+    download_if_missing(
+        || Ok(path.exists()),
+        || {
+            fs::create_dir_all(path.parent().ok_or("model path has no parent")?)
+                .map_err(|e| e.to_string())?;
 
-    let url = format!("https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-{name}.bin");
-    log::info!("downloading model {name} from {url}");
+            let url = format!(
+                "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-{name}.bin"
+            );
+            log::info!("downloading model {name} from {url}");
 
-    let resp = ureq::get(&url)
-        .call()
-        .map_err(|e| format!("download failed: {e}"))?;
-    let tmp = path.with_extension("bin.part");
-    let mut file = fs::File::create(&tmp).map_err(|e| e.to_string())?;
-    download(resp, &mut file, &path, name, report)?;
-    report(Progress::phase("verifying"));
-    drop(file);
+            let resp = ureq::get(&url)
+                .call()
+                .map_err(|e| format!("download failed: {e}"))?;
+            let tmp = path.with_extension("bin.part");
+            let mut file = fs::File::create(&tmp).map_err(|e| e.to_string())?;
+            download(resp, &mut file, &path, name, report)?;
+            report(Progress::phase("verifying"));
+            drop(file);
 
-    // Verify integrity against the pinned hash before the file is ever loaded
-    // by native whisper.cpp. Unknown models can't be verified, so log that.
-    if let Some(expected) = expected_sha256(name) {
-        match file_sha256(&tmp) {
-            Ok(actual) if actual.eq_ignore_ascii_case(expected) => {}
-            Ok(actual) => {
-                let _ = fs::remove_file(&tmp);
-                return Err(format!(
+            // Verify integrity against the pinned hash before the file is ever loaded
+            // by native whisper.cpp. Unknown models can't be verified, so log that.
+            if let Some(expected) = expected_sha256(name) {
+                match file_sha256(&tmp) {
+                    Ok(actual) if actual.eq_ignore_ascii_case(expected) => {}
+                    Ok(actual) => {
+                        let _ = fs::remove_file(&tmp);
+                        return Err(format!(
                     "model {name} failed integrity check (expected {expected}, got {actual}); discarded"
                 ));
+                    }
+                    Err(e) => {
+                        let _ = fs::remove_file(&tmp);
+                        return Err(format!("couldn't hash downloaded model {name}: {e}"));
+                    }
+                }
+            } else {
+                log::warn!("model {name} has no pinned hash; integrity not verified");
             }
-            Err(e) => {
-                let _ = fs::remove_file(&tmp);
-                return Err(format!("couldn't hash downloaded model {name}: {e}"));
-            }
-        }
-    } else {
-        log::warn!("model {name} has no pinned hash; integrity not verified");
-    }
 
-    fs::rename(&tmp, &path).map_err(|e| e.to_string())?;
-    log::info!("model saved to {}", path.display());
+            fs::rename(&tmp, &path).map_err(|e| e.to_string())?;
+            log::info!("model saved to {}", path.display());
+            Ok(())
+        },
+    )?;
     Ok(path)
+}
+
+// Only writers wait for downloads. Verified/cached files and local paths remain
+// available while an obsolete selection is downloading another model.
+static DOWNLOAD: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+fn download_if_missing(
+    mut cached: impl FnMut() -> Result<bool, String>,
+    download: impl FnOnce() -> Result<(), String>,
+) -> Result<(), String> {
+    if cached()? {
+        return Ok(());
+    }
+    let _guard = DOWNLOAD.lock_recover();
+    // Another worker may have finished this file while we waited.
+    if cached()? {
+        return Ok(());
+    }
+    download()
 }
 
 fn expected_sha256(name: &str) -> Option<&'static str> {
@@ -172,26 +193,28 @@ fn ensure_parakeet(report: &mut dyn FnMut(Progress)) -> Result<PathBuf, String> 
         .build();
     for (relative, hash) in manifest {
         let path = root.join(&relative);
-        if path.is_file() && file_sha256(&path)? == hash {
-            continue;
-        }
-        fs::create_dir_all(path.parent().ok_or("model path has no parent")?)
-            .map_err(|e| e.to_string())?;
-        let url = format!("https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml/resolve/ee09c569f73759e6d44c9bd16766f477b2b36d39/{relative}");
-        let response = agent.get(&url).call().map_err(|e| e.to_string())?;
-        let temp = path.with_extension("download-part");
-        let mut file = fs::File::create(&temp).map_err(|e| e.to_string())?;
-        download(response, &mut file, &path, &relative, report)?;
-        report(Progress {
-            file: Some(relative.clone()),
-            ..Progress::phase("verifying")
-        });
-        drop(file);
-        if file_sha256(&temp)? != hash {
-            let _ = fs::remove_file(&temp);
-            return Err(format!("Parakeet integrity check failed: {relative}"));
-        }
-        fs::rename(temp, path).map_err(|e| e.to_string())?;
+        download_if_missing(
+            || Ok(path.is_file() && file_sha256(&path)? == hash),
+            || {
+                fs::create_dir_all(path.parent().ok_or("model path has no parent")?)
+                    .map_err(|e| e.to_string())?;
+                let url = format!("https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml/resolve/ee09c569f73759e6d44c9bd16766f477b2b36d39/{relative}");
+                let response = agent.get(&url).call().map_err(|e| e.to_string())?;
+                let temp = path.with_extension("download-part");
+                let mut file = fs::File::create(&temp).map_err(|e| e.to_string())?;
+                download(response, &mut file, &path, &relative, report)?;
+                report(Progress {
+                    file: Some(relative.clone()),
+                    ..Progress::phase("verifying")
+                });
+                drop(file);
+                if file_sha256(&temp)? != hash {
+                    let _ = fs::remove_file(&temp);
+                    return Err(format!("Parakeet integrity check failed: {relative}"));
+                }
+                fs::rename(temp, &path).map_err(|e| e.to_string())
+            },
+        )?;
     }
     Ok(root)
 }
@@ -309,6 +332,38 @@ fn copy_download(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn cached_and_local_models_do_not_wait_for_an_unrelated_download() {
+        let guard = DOWNLOAD.lock_recover();
+        let (tx, rx) = std::sync::mpsc::channel();
+        let worker = std::thread::spawn(move || {
+            let cached = download_if_missing(|| Ok(true), || panic!("cached file downloaded"));
+            let local = ensure_model(concat!(env!("CARGO_MANIFEST_DIR"), "/Cargo.toml"));
+            tx.send((cached, local)).unwrap();
+        });
+        let result = rx.recv_timeout(std::time::Duration::from_secs(2));
+        // Release even on failure so a regression does not hang the test suite.
+        drop(guard);
+        worker.join().unwrap();
+        let (cached, local) = result.expect("cached/local model waited on download lock");
+        assert!(cached.is_ok());
+        assert!(local.is_ok());
+    }
+
+    #[test]
+    fn waiting_writer_rechecks_cache_before_downloading() {
+        let mut checks = 0;
+        download_if_missing(
+            || {
+                checks += 1;
+                Ok(checks == 2)
+            },
+            || panic!("file completed by another writer was downloaded again"),
+        )
+        .unwrap();
+        assert_eq!(checks, 2);
+    }
 
     #[test]
     fn reports_bytes_and_rejects_truncated_downloads() {
