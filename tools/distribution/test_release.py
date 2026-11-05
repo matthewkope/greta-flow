@@ -39,6 +39,8 @@ class ReleaseTests(unittest.TestCase):
         self.assertIn('app "Greta Flow.app"', cask)
         self.assertNotIn('Gretchen.Flow_', cask)
         self.assertIn('postflight_steps', cask)
+        self.assertIn('depends_on arch: :arm64', cask)
+        self.assertIn('depends_on macos: :sonoma', cask)
         subprocess.run(['bash', '-n', self.out / 'install.sh'], check=True)
 
     def test_wrong_tag_and_artifact_fail_before_output(self):
