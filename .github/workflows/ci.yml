@@ -47,6 +47,8 @@ jobs:
         run: brew install portaudio
       - name: Sync dependencies
         run: uv sync
+      - name: Build source distribution and wheel
+        run: uv build
       - name: Lint
         run: uv run ruff check .
       - name: Test

@@ -1,0 +1,3 @@
+{"event":"load","pid":66531,"seconds":0.27135575}
+{"event":"offline_sink","id":"6930-75918-0000-clean","pass":0,"stages_ms":{"engine_wait":0.006167000000000001,"offline_delivery":0.00041600000000000003,"offline_release_to_sink":380.781125,"recognition_and_format":380.215041,"release_to_final_text":380.780583,"resample_gate_gain_retain":0.52825},"text":"Concord returned to its place amidst the tents."}
+{"event":"offline_sink","id":"6930-75918-0000-clean","pass":1,"stages_ms":{"engine_wait":0.000083,"offline_delivery":0.00033299999999999996,"offline_release_to_sink":60.369125000000004,"recognition_and_format":60.237917,"release_to_final_text":60.368625,"resample_gate_gain_retain":0.130083},"text":"Concord returned to its place amidst the tents."}

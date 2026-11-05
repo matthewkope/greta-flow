@@ -1,6 +1,7 @@
 //! Validate shortcut plans before changing live bindings. Native registration
 //! failures leave the previous dispatch table intact.
-use crate::{bare_modifier_flag, config::Config};
+use crate::locks::MutexExt;
+use crate::{config::Config, hotkey::bare_modifier_flag};
 use std::sync::{Arc, Mutex};
 use tauri_plugin_global_shortcut::Shortcut;
 
@@ -73,14 +74,13 @@ pub struct Dispatch(Arc<Mutex<Vec<(Shortcut, Action)>>>);
 impl Dispatch {
     pub fn action(&self, shortcut: &Shortcut) -> Option<Action> {
         self.0
-            .lock()
-            .unwrap()
+            .lock_recover()
             .iter()
             .find(|(s, _)| s == shortcut)
             .map(|(_, a)| *a)
     }
     fn replace(&self, active: &[(Shortcut, Action)]) {
-        *self.0.lock().unwrap() = active.to_vec();
+        *self.0.lock_recover() = active.to_vec();
     }
 }
 

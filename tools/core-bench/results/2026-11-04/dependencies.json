@@ -1,0 +1,50 @@
+[
+  {
+    "name": "whisper-rs",
+    "locked": [
+      "0.14.4"
+    ],
+    "latest_stable": "0.16.0",
+    "source": "https://crates.io/crates/whisper-rs"
+  },
+  {
+    "name": "cpal",
+    "locked": [
+      "0.15.3"
+    ],
+    "latest_stable": "0.18.2",
+    "source": "https://crates.io/crates/cpal"
+  },
+  {
+    "name": "enigo",
+    "locked": [
+      "0.5.0"
+    ],
+    "latest_stable": "0.6.1",
+    "source": "https://crates.io/crates/enigo"
+  },
+  {
+    "name": "ureq",
+    "locked": [
+      "2.12.1"
+    ],
+    "latest_stable": "3.5.1",
+    "source": "https://crates.io/crates/ureq"
+  },
+  {
+    "name": "tauri",
+    "locked": [
+      "2.11.2"
+    ],
+    "latest_stable": "2.12.5",
+    "source": "https://crates.io/crates/tauri"
+  },
+  {
+    "name": "tauri-plugin-global-shortcut",
+    "locked": [
+      "2.3.2"
+    ],
+    "latest_stable": "2.4.1",
+    "source": "https://crates.io/crates/tauri-plugin-global-shortcut"
+  }
+]

@@ -51,7 +51,9 @@ impl Profile {
                 protected.push((token, value));
                 i += key.len();
             } else {
-                let c = raw[i..].chars().next().unwrap();
+                let Some(c) = raw[i..].chars().next() else {
+                    break;
+                };
                 text.push(c);
                 i += c.len_utf8();
             }
@@ -90,7 +92,9 @@ fn commands(text: &str) -> String {
         ("comma", ","),
     ];
     while i < text.len() {
-        let c = text[i..].chars().next().unwrap();
+        let Some(c) = text[i..].chars().next() else {
+            break;
+        };
         if matches!(c, '"' | '“' | '”') {
             quote = if quote.is_some() { None } else { Some(c) };
         }

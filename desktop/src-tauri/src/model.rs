@@ -1,6 +1,7 @@
 //! Download ggml Whisper models from the ggerganov/whisper.cpp Hugging Face repo
 //! into `~/.cache/gretchen-flow/models/`.
 
+use crate::locks::MutexExt;
 use std::fs;
 use std::io::Read;
 use std::path::PathBuf;
@@ -78,7 +79,8 @@ pub fn ensure_model(name: &str) -> Result<PathBuf, String> {
     if path.exists() {
         return Ok(path);
     }
-    fs::create_dir_all(path.parent().unwrap()).map_err(|e| e.to_string())?;
+    fs::create_dir_all(path.parent().ok_or("model path has no parent")?)
+        .map_err(|e| e.to_string())?;
 
     let url = format!("https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-{name}.bin");
     log::info!("downloading model {name} from {url}");
@@ -150,7 +152,7 @@ fn hex_lower(bytes: &[u8]) -> String {
 /// Fetch only the pinned CoreML exports used by our bundled runtime.
 fn ensure_parakeet() -> Result<PathBuf, String> {
     static DOWNLOAD: std::sync::Mutex<()> = std::sync::Mutex::new(());
-    let _guard = DOWNLOAD.lock().map_err(|_| "model download lock failed")?;
+    let _guard = DOWNLOAD.lock_recover();
     let root = model_path(crate::config::DEFAULT_MODEL);
     let manifest: std::collections::BTreeMap<String, String> =
         serde_json::from_str(include_str!("parakeet-model.json")).map_err(|e| e.to_string())?;
@@ -163,7 +165,8 @@ fn ensure_parakeet() -> Result<PathBuf, String> {
         if path.is_file() && file_sha256(&path)? == hash {
             continue;
         }
-        fs::create_dir_all(path.parent().unwrap()).map_err(|e| e.to_string())?;
+        fs::create_dir_all(path.parent().ok_or("model path has no parent")?)
+            .map_err(|e| e.to_string())?;
         let url = format!("https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml/resolve/ee09c569f73759e6d44c9bd16766f477b2b36d39/{relative}");
         let response = agent.get(&url).call().map_err(|e| e.to_string())?;
         let temp = path.with_extension("download-part");

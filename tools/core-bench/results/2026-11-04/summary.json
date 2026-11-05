@@ -1,0 +1,60 @@
+{
+  "quantile": "nearest rank",
+  "live_release_to_inserted": null,
+  "full_corpus": {
+    "paired_transcripts": 1441,
+    "changed_transcripts": 0,
+    "before": {
+      "n": 720,
+      "median_ms": 59.774853500000006,
+      "p95_ms": 104.312125
+    },
+    "after": {
+      "n": 720,
+      "median_ms": 58.203,
+      "p95_ms": 95.399375
+    }
+  },
+  "offline_release_proxy": {
+    "first": {
+      "paired_transcripts": 361,
+      "changed_transcripts": 0,
+      "before": {
+        "n": 360,
+        "median_ms": 58.6221665,
+        "p95_ms": 97.37404199999999
+      },
+      "after": {
+        "n": 360,
+        "median_ms": 58.239562500000005,
+        "p95_ms": 97.245
+      }
+    },
+    "-repeat": {
+      "paired_transcripts": 361,
+      "changed_transcripts": 0,
+      "before": {
+        "n": 360,
+        "median_ms": 58.6946665,
+        "p95_ms": 97.956625
+      },
+      "after": {
+        "n": 360,
+        "median_ms": 58.092271,
+        "p95_ms": 97.26975
+      }
+    },
+    "combined": {
+      "before": {
+        "n": 720,
+        "median_ms": 58.6310205,
+        "p95_ms": 97.956625
+      },
+      "after": {
+        "n": 720,
+        "median_ms": 58.1630205,
+        "p95_ms": 97.26975
+      }
+    }
+  }
+}

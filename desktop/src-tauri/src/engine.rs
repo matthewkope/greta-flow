@@ -5,6 +5,15 @@ pub enum Engine {
     Parakeet(parakeet::Engine),
 }
 impl Engine {
+    /// Called by the existing idle maintenance thread; never opens another
+    /// helper while a healthy one is available.
+    pub fn ensure_ready(&self) -> Result<(), String> {
+        match self {
+            Self::Parakeet(engine) => engine.ensure_ready(),
+            Self::Whisper(_, _) => Ok(()),
+        }
+    }
+
     pub fn load(path: &str, cfg: &Config) -> Result<Self, String> {
         let start = std::time::Instant::now();
         let result = if cfg.model == crate::config::DEFAULT_MODEL {

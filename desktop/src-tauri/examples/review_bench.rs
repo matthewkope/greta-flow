@@ -8,6 +8,8 @@ mod engine;
 mod history;
 #[path = "../src/lists.rs"]
 mod lists;
+#[path = "../src/locks.rs"]
+mod locks;
 #[path = "../src/parakeet.rs"]
 mod parakeet;
 #[path = "../src/profile.rs"]

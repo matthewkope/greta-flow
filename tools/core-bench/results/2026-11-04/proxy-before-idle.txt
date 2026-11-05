@@ -1,0 +1,28 @@
+Processes: 729 total, 3 running, 1 stuck, 725 sleeping, 5604 threads 
+2026/11/04 22:27:22
+Load Avg: 7.18, 10.74, 8.66 
+CPU usage: 6.93% user, 10.76% sys, 82.30% idle 
+SharedLibs: 536M resident, 113M data, 87M linkedit.
+MemRegions: 843988 total, 6360M resident, 236M private, 2762M shared.
+PhysMem: 23G used (3690M wired, 8576M compressor), 296M unused.
+VM: 335T vsize, 5702M framework vsize, 3850395(0) swapins, 5794648(0) swapouts.
+Networks: packets: 283396302/260G in, 155205528/111G out.
+Disks: 233648839/4668G read, 223097502/3653G written.
+
+PID    COMMAND          %CPU MEM   POWER
+54680  gretchen-parakee 0.0  16M   0.0  
+54669  core_before      0.0  2576K 0.0  
+Processes: 729 total, 4 running, 1 stuck, 724 sleeping, 5598 threads 
+2026/11/04 22:27:32
+Load Avg: 6.69, 10.52, 8.61 
+CPU usage: 7.55% user, 5.88% sys, 86.56% idle 
+SharedLibs: 536M resident, 113M data, 87M linkedit.
+MemRegions: 0 total, 0B resident, 236M private, 2762M shared.
+PhysMem: 23G used (3773M wired, 8552M compressor), 241M unused.
+VM: 335T vsize, 5702M framework vsize, 3850395(0) swapins, 5794648(0) swapouts.
+Networks: packets: 283406045/260G in, 155207469/111G out.
+Disks: 233648951/4668G read, 223097743/3653G written.
+
+PID    COMMAND          %CPU MEM   POWER
+54680  gretchen-parakee 0.0  16M+  0.0  
+54669  core_before      0.0  2576K 0.0  
