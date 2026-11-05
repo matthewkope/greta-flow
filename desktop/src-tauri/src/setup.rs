@@ -438,33 +438,57 @@ pub(crate) fn initialize(
         set_dock_icon();
     }
 
+    let (tick_tx, tick_rx) = std::sync::mpsc::sync_channel(1);
+    let recovery_app = app.handle().clone();
+    std::thread::spawn(move || {
+        let mut recovery = crate::maintenance::Recovery::default();
+        for () in tick_rx {
+            let state = recovery_app.state::<AppState>();
+            if state.recording.load(Ordering::SeqCst)
+                || state.processing.load(Ordering::SeqCst)
+                || !recovery.due(
+                    state.model_generation.load(Ordering::SeqCst),
+                    std::time::Instant::now(),
+                )
+            {
+                continue;
+            }
+            let engine = match state.engine.try_lock() {
+                Ok(engine) => engine,
+                Err(std::sync::TryLockError::WouldBlock) => continue,
+                Err(std::sync::TryLockError::Poisoned(poisoned)) => {
+                    log::warn!("recovering poisoned engine slot");
+                    state.engine.clear_poison();
+                    poisoned.into_inner()
+                }
+            };
+            let worker = engine.as_ref().and_then(engine::Engine::maintenance_worker);
+            drop(engine); // Model swaps must not wait for a slow helper restart.
+            if let Some(worker) = worker {
+                match worker.ensure_ready() {
+                    Ok(()) => recovery.succeeded(),
+                    Err(error) => {
+                        let delay = recovery.failed(std::time::Instant::now());
+                        log::warn!(
+                            "idle helper recovery failed; retry in {}s: {error}",
+                            delay.as_secs()
+                        );
+                    }
+                }
+            }
+        }
+    });
     let expiry_app = app.handle().clone();
     std::thread::spawn(move || loop {
         std::thread::sleep(std::time::Duration::from_secs(5));
-        let state = expiry_app.state::<AppState>();
-        state
+        expiry_app
+            .state::<AppState>()
             .sessions
             .lock_repair(|sessions| sessions.cancel())
             .expire();
-        if state.recording.load(Ordering::SeqCst) || state.processing.load(Ordering::SeqCst) {
-            continue;
-        }
-        // Reuse the expiry wakeup. Never queue behind active recognition or a
-        // model swap. A crashed helper is reloaded and warmed while idle.
-        let engine = match state.engine.try_lock() {
-            Ok(engine) => engine,
-            Err(std::sync::TryLockError::WouldBlock) => continue,
-            Err(std::sync::TryLockError::Poisoned(poisoned)) => {
-                log::warn!("recovering poisoned engine slot");
-                state.engine.clear_poison();
-                poisoned.into_inner()
-            }
-        };
-        if let Some(engine) = engine.as_ref() {
-            if let Err(error) = engine.ensure_ready() {
-                log::warn!("idle helper recovery failed: {error}");
-            }
-        }
+        // Reuse the expiry timer, but a helper timeout must never delay audio
+        // expiration. At most one tick queues behind an in-progress restart.
+        let _ = tick_tx.try_send(());
     });
     crate::tray::initialize(app.handle())?;
 

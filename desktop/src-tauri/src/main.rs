@@ -15,6 +15,7 @@ mod history;
 mod inject;
 mod lists;
 mod locks;
+mod maintenance;
 mod metrics;
 mod model;
 mod parakeet;

@@ -81,12 +81,15 @@ One retained final run records 67.07 ms warm-up and 279.69 ms total model load;
 these are cached-machine observations, not a first-install promise or a guarantee
 that every later input shape has identical latency.
 
-The existing five-second recovery-expiry thread also checks the idle helper,
-without waiting behind active inference or model swaps. A dead helper is restarted
+The existing five-second recovery-expiry thread also signals a bounded idle-recovery worker. A slow helper restart
+cannot delay recovery-audio expiry, and the app model-slot lock is released
+before startup so model swaps can proceed. A dead helper is restarted
 and warmed there; a crash found immediately before a request is handled as well.
 An in-flight failure returns an error and drops the process, without automatically
 retrying uncertain recognition. Startup/transcription timeouts remain 120/60 seconds.
-Recovery can still add delay after a crash or while repeatedly failing to load.
+Recovery can still add delay after a crash. Failed background attempts back off
+for 30, 60, 120, 240, then 300 seconds from the end of each attempt. A model
+generation change resets that cooldown; explicit user dictation can retry sooner.
 
 Tests use real child processes for protocol failure, crash and poison recovery.
 A separate real-v2 test kills only the direct child of the offline harness, then
@@ -153,7 +156,7 @@ packaging regression. The prototype remains in CI; its behavior is unchanged.
 
 ## Checks and remaining field work
 
-- Locked all-target Rust tests: 69 application, 36 ASR example, 61 core example,
+- Locked all-target Rust tests: 71 application, 36 ASR example, 61 core example,
   and 51 review example tests pass (shared-module tests repeat across targets).
 - Locked all-target Clippy with `-D warnings`, `cargo fmt --check`, and the release
   application build pass.
