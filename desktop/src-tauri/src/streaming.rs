@@ -34,6 +34,15 @@ impl Drop for Worker {
 }
 impl Worker {
     pub fn spawn(engine: Arc<Mutex<Option<Engine>>>, cfg: Config) -> (Input, Self) {
+        let (tx, ready) = mpsc::channel();
+        let _ = tx.send(cfg);
+        Self::spawn_pending(engine, ready)
+    }
+    /// Capture can start while Accessibility resolves the per-app profile.
+    pub fn spawn_pending(
+        engine: Arc<Mutex<Option<Engine>>>,
+        config: Receiver<Config>,
+    ) -> (Input, Self) {
         let (tx, rx) = mpsc::sync_channel::<(Vec<f32>, u32)>(32);
         let (result_tx, done) = mpsc::channel();
         let failed = Arc::new(AtomicBool::new(false));
@@ -41,6 +50,13 @@ impl Worker {
         let cancelled = Arc::new(AtomicBool::new(false));
         let cancel = cancelled.clone();
         std::thread::spawn(move || {
+            let cfg = match config.recv_timeout(std::time::Duration::from_secs(2)) {
+                Ok(cfg) => cfg,
+                Err(_) => {
+                    let _ = result_tx.send(Err("capture context unavailable".into()));
+                    return;
+                }
+            };
             let mut resampler = Resampler::default();
             let mut segmenter = Segmenter::default();
             let mut parts = vec![];
@@ -102,13 +118,14 @@ impl Worker {
             .map_err(|_| "stream completion timed out")?
     }
 }
-/// Identical gain/padding for batch and incremental paths. Gate only near-digital silence.
+/// Preserve the original pre-gain RMS gate in batch and incremental paths.
+/// Near-silent microphone noise must not be amplified into decoder hallucinations.
 pub fn prepare(samples: &[f32]) -> Vec<f32> {
     if samples.is_empty() || samples.iter().any(|v| !v.is_finite()) {
         return vec![];
     }
     let rms = (samples.iter().map(|v| v * v).sum::<f32>() / samples.len() as f32).sqrt();
-    if rms < 0.0001 {
+    if rms < 0.0015 {
         return vec![];
     }
     let gain = (0.05 / rms).clamp(1., 12.);
@@ -216,6 +233,44 @@ impl Resampler {
 mod tests {
     use super::*;
     #[test]
+    fn original_pre_gain_gate_rejects_room_noise_and_keeps_audible_input() {
+        for rms in [0.0, 0.0002, 0.001, 0.00149] {
+            assert!(prepare(&vec![rms; 16000]).is_empty(), "rms={rms}");
+        }
+        let prepared = prepare(&vec![0.00151; 1600]);
+        assert_eq!(prepared.len(), 17_600);
+        assert!((prepared[0] - 0.00151 * 12.0).abs() < 0.000001);
+        assert!(prepared[1600..].iter().all(|v| *v == 0.0));
+        assert!(prepare(&[f32::NAN]).is_empty());
+    }
+
+    #[test]
+    fn streaming_noise_is_gated_before_attempting_a_decoder_call() {
+        let (input, worker) = Worker::spawn(Arc::new(Mutex::new(None)), Config::default());
+        input.send(vec![0.001; 16000], 16000);
+        input.send(vec![0.; 24000], 16000);
+        drop(input);
+        // No engine is loaded: any attempted decode would return an error.
+        assert_eq!(worker.finish().unwrap(), "");
+    }
+
+    #[test]
+    fn pending_profile_buffers_early_audio_and_fails_closed_if_unavailable() {
+        let (config_tx, config_rx) = mpsc::channel();
+        let (input, worker) = Worker::spawn_pending(Arc::new(Mutex::new(None)), config_rx);
+        input.send(vec![0.1; 16000], 16000);
+        drop(input);
+        config_tx.send(Config::default()).unwrap();
+        // Early speech was retained and reaches the (deliberately absent) engine.
+        assert_eq!(worker.finish().unwrap_err(), "no engine");
+        let (config_tx, config_rx) = mpsc::channel();
+        let (input, worker) = Worker::spawn_pending(Arc::new(Mutex::new(None)), config_rx);
+        drop(config_tx);
+        drop(input);
+        assert_eq!(worker.finish().unwrap_err(), "capture context unavailable");
+    }
+
+    #[test]
     fn chunk_boundaries_do_not_change_resampling() {
         for rate in [16000, 44100, 48000] {
             let samples: Vec<f32> = (0..10001).map(|n| (n as f32 * 0.1).sin()).collect();
@@ -233,7 +288,7 @@ mod tests {
         }
     }
     #[test]
-    fn silent_audio_never_reaches_decoder_and_quiet_speech_survives() {
+    fn segmenter_preserves_low_energy_samples_before_the_separate_decoder_gate() {
         let mut s = Segmenter::default();
         assert!(s.push(&vec![0.; 160_000]).unwrap().is_empty());
         assert!(s.finish().is_none());

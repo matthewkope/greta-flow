@@ -7,6 +7,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod audio;
+mod bindings;
 mod config;
 mod engine;
 mod history;
@@ -50,6 +51,7 @@ enum TrayState {
 struct AppState {
     recorder: audio::Recorder,
     sessions: Mutex<session::Sessions>,
+    bindings: Mutex<bindings::Bindings>,
     engine: Arc<Mutex<Option<engine::Engine>>>,
     recording: AtomicBool,
     engine_ready: AtomicBool,
@@ -154,28 +156,48 @@ fn start_recording(app: &AppHandle) {
         show_setup(app);
         return;
     }
-    state.recording.store(true, Ordering::SeqCst);
-    let id = state.sessions.lock().unwrap().begin();
-    let handle = app.clone();
+    let snapshot = state.cfg.lock().unwrap().clone();
+    let (context_tx, context_rx) = std::sync::mpsc::channel();
+    let (config_tx, config_rx) = std::sync::mpsc::channel();
+    {
+        let mut sessions = state.sessions.lock().unwrap();
+        if state.processing.load(Ordering::SeqCst) || state.recording.swap(true, Ordering::SeqCst) {
+            return;
+        }
+        let id = sessions.begin();
+        let job = sessions.get(id).unwrap();
+        job.cfg = snapshot.for_app(None);
+        job.pending_context = Some(context_rx);
+        // Queue microphone start before any potentially slow Accessibility calls.
+        if snapshot.streaming {
+            let (input, worker) = if snapshot.app_profiles.is_empty() {
+                streaming::Worker::spawn(state.engine.clone(), job.cfg.clone())
+            } else {
+                streaming::Worker::spawn_pending(state.engine.clone(), config_rx)
+            };
+            job.stream = Some(worker);
+            state.recorder.start_stream(input);
+        } else {
+            state.recorder.start();
+        }
+    }
     std::thread::spawn(move || {
         let target = inject::Target::capture().ok();
-        let state = handle.state::<AppState>();
-        let mut sessions = state.sessions.lock().unwrap();
-        if let Some(job) = sessions.get(id) {
-            if state.recording.load(Ordering::SeqCst) {
-                let bundle = target.as_ref().and_then(|t| objc2_app_kit::NSRunningApplication::runningApplicationWithProcessIdentifier(t.pid)).and_then(|a| a.bundleIdentifier()).map(|s| s.to_string());
-                job.cfg = state.cfg.lock().unwrap().for_app(bundle.as_deref());
-                job.target = target;
-                if job.cfg.streaming {
-                    let (input, worker) =
-                        streaming::Worker::spawn(state.engine.clone(), job.cfg.clone());
-                    job.stream = Some(worker);
-                    state.recorder.start_stream(input);
-                } else {
-                    state.recorder.start();
-                }
-            }
-        }
+        let bundle = target
+            .as_ref()
+            .and_then(|t| {
+                objc2_app_kit::NSRunningApplication::runningApplicationWithProcessIdentifier(t.pid)
+            })
+            .and_then(|a| a.bundleIdentifier())
+            .map(|s| s.to_string());
+        let cfg = snapshot.for_app(bundle.as_deref());
+        let context = session::CaptureContext {
+            target,
+            cfg: cfg.clone(),
+            completed: std::time::Instant::now(),
+        };
+        let _ = context_tx.send(context);
+        let _ = config_tx.send(cfg);
     });
     set_tray_state(app, TrayState::Recording);
 }
@@ -183,14 +205,18 @@ fn start_recording(app: &AppHandle) {
 fn stop_and_transcribe(app: &AppHandle) {
     let release = std::time::Instant::now();
     let state = app.state::<AppState>();
-    if !state.recording.swap(false, Ordering::SeqCst) {
-        return;
-    }
-    state.processing.store(true, Ordering::SeqCst);
-    // Queue stop now; waiting for the audio device must never block a hotkey callback.
+    // Serialize start/stop commands with session changes; never wait for the
+    // microphone or Accessibility on the hotkey callback.
     let (id, recording) = {
         let mut sessions = state.sessions.lock().unwrap();
-        (sessions.id().unwrap_or(0), state.recorder.stop_async())
+        if !state.recording.swap(false, Ordering::SeqCst) {
+            return;
+        }
+        state.processing.store(true, Ordering::SeqCst);
+        let id = sessions.id().unwrap_or(0);
+        let recording = state.recorder.stop_async();
+        sessions.resolve_capture(id, release);
+        (id, recording)
     };
     set_tray_state(app, TrayState::Transcribing);
     let app = app.clone();
@@ -291,27 +317,34 @@ fn deliver_result(
 ) -> &'static str {
     let insertion = std::time::Instant::now();
     let state = app.state::<AppState>();
-    let result = state
-        .sessions
-        .lock()
-        .unwrap()
-        .deliver(id, text.clone(), |target, text| {
+    let (result, retained) = {
+        let mut sessions = state.sessions.lock().unwrap();
+        let result = sessions.deliver(id, text, |target, text| {
             target
                 .ok_or("No safe destination captured; use recovery text")?
                 .insert(text)
         });
+        let retained = if matches!(result, Ok(false)) {
+            None
+        } else {
+            sessions.take_history(id)
+        };
+        (result, retained)
+    };
     timing.stage("insertion", insertion);
+    if matches!(result, Ok(true)) {
+        timing.mark("release_to_inserted");
+        timing.inserted();
+    }
+    if let Some(text) = retained {
+        let persistence = std::time::Instant::now();
+        history::append(&text);
+        timing.stage("persistence_enqueue", persistence);
+        let handle = app.clone();
+        std::thread::spawn(move || refresh_menu(&handle));
+    }
     match result {
-        Ok(true) => {
-            timing.mark("release_to_inserted");
-            timing.inserted();
-            let persistence = std::time::Instant::now();
-            history::append(&text);
-            timing.stage("persistence_enqueue", persistence);
-            let handle = app.clone();
-            std::thread::spawn(move || refresh_menu(&handle));
-            "inserted"
-        }
+        Ok(true) => "inserted",
         Ok(false) => "cancelled_or_stale",
         Err(e) => {
             log::warn!("{e}");
@@ -323,9 +356,12 @@ fn deliver_result(
 #[tauri::command]
 fn cancel_dictation(app: AppHandle) {
     let state = app.state::<AppState>();
-    state.sessions.lock().unwrap().cancel();
-    if state.recording.swap(false, Ordering::SeqCst) {
-        let _ = state.recorder.stop_async();
+    {
+        let mut sessions = state.sessions.lock().unwrap();
+        sessions.cancel();
+        if state.recording.swap(false, Ordering::SeqCst) {
+            let _ = state.recorder.stop_async();
+        }
     }
     set_tray_state(&app, TrayState::Idle);
 }
@@ -376,110 +412,85 @@ fn retry_dictation(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 
-fn register_recovery_shortcuts(app: &AppHandle, cfg: &config::Config) -> Result<(), String> {
-    for (kind, key) in [
-        (0, &cfg.cancel_shortcut),
-        (1, &cfg.retry_shortcut),
-        (2, &cfg.recovery_shortcut),
-    ] {
-        let Some(key) = key else {
-            continue;
-        };
-        let shortcut = key.parse::<Shortcut>().map_err(|e| e.to_string())?;
-        app.global_shortcut()
-            .on_shortcut(shortcut, move |app, _, event| {
-                if event.state() != ShortcutState::Pressed {
-                    return;
-                }
-                match kind {
-                    0 => cancel_dictation(app.clone()),
-                    1 => {
-                        if let Err(e) = retry_dictation(app.clone()) {
-                            log::warn!("{e}");
-                        }
-                    }
-                    _ => {
-                        if let Some(text) = recover_dictation(app.clone()) {
-                            let _ = app.run_on_main_thread(move || {
-                                use objc2_app_kit::{NSPasteboard, NSPasteboardTypeString};
-                                use objc2_foundation::NSString;
-                                let pb = NSPasteboard::generalPasteboard();
-                                pb.clearContents();
-                                unsafe {
-                                    pb.setString_forType(
-                                        &NSString::from_str(&text),
-                                        NSPasteboardTypeString,
-                                    );
-                                }
-                            });
-                        }
+fn register_binding(
+    app: &AppHandle,
+    shortcut: Shortcut,
+    dispatch: bindings::Dispatch,
+) -> Result<(), String> {
+    app.global_shortcut()
+        .on_shortcut(shortcut, move |app, shortcut, event| {
+            let action = dispatch.action(shortcut);
+            if action == Some(bindings::Action::Dictate) {
+                on_shortcut(app, event.state());
+                return;
+            }
+            if event.state() != ShortcutState::Pressed {
+                return;
+            }
+            match action {
+                Some(bindings::Action::Cancel) => cancel_dictation(app.clone()),
+                Some(bindings::Action::Retry) => {
+                    if let Err(e) = retry_dictation(app.clone()) {
+                        log::warn!("{e}");
                     }
                 }
-            })
-            .map_err(|e| e.to_string())?;
-    }
+                Some(bindings::Action::Recover) => {
+                    if let Some(text) = recover_dictation(app.clone()) {
+                        let _ = app.run_on_main_thread(move || {
+                            use objc2_app_kit::{NSPasteboard, NSPasteboardTypeString};
+                            use objc2_foundation::NSString;
+                            let pb = NSPasteboard::generalPasteboard();
+                            pb.clearContents();
+                            unsafe {
+                                pb.setString_forType(
+                                    &NSString::from_str(&text),
+                                    NSPasteboardTypeString,
+                                );
+                            }
+                        });
+                    }
+                }
+                _ => {}
+            }
+        })
+        .map_err(|e| e.to_string())
+}
+
+/// Parse a single configuration snapshot before touching any registrations.
+/// Native registration failures preserve the working dispatch table and flags.
+fn install_shortcuts(app: &AppHandle, cfg: &config::Config) -> Result<(), String> {
+    let plan = bindings::Plan::validate(cfg)?;
+    let state = app.state::<AppState>();
+    let mut bindings = state.bindings.lock().unwrap();
+    let dispatch = bindings.dispatch.clone();
+    bindings.apply(
+        &plan,
+        |shortcut| register_binding(app, shortcut, dispatch.clone()),
+        |shortcut| {
+            app.global_shortcut()
+                .unregister(shortcut)
+                .map_err(|e| e.to_string())
+        },
+    )?;
+    drop(bindings);
+    state.watched_flags.store(plan.watched, Ordering::SeqCst);
+    *state.shortcuts.lock().unwrap() = cfg.shortcuts.clone();
+    let mut current = state.cfg.lock().unwrap();
+    current.shortcuts = cfg.shortcuts.clone();
+    current.cancel_shortcut = cfg.cancel_shortcut.clone();
+    current.retry_shortcut = cfg.retry_shortcut.clone();
+    current.recovery_shortcut = cfg.recovery_shortcut.clone();
     Ok(())
 }
 
-/// Register exactly the given set of push-to-talk shortcuts, persist them, and
-/// refresh the UI. "Fn" drives the low-level Fn/Globe listener; every other
-/// entry is registered as a normal global shortcut. All accelerators are
-/// validated before anything is unregistered, so a bad entry leaves the
-/// previous set intact.
+/// Register and persist a new dictation-key list only after every new binding
+/// succeeds. Fn/bare modifiers remain handled by the existing flags listener.
 fn apply_shortcuts(app: &AppHandle, list: Vec<String>) -> Result<(), String> {
-    // Validate recovery bindings and collisions before replacing live shortcuts.
-    let cfg = config::Config::load();
-    let mut seen = Vec::new();
-    for key in list.iter().chain(
-        [
-            &cfg.cancel_shortcut,
-            &cfg.retry_shortcut,
-            &cfg.recovery_shortcut,
-        ]
-        .into_iter()
-        .filter_map(|s| s.as_ref()),
-    ) {
-        if bare_modifier_flag(key).is_some() {
-            continue;
-        }
-        let parsed = key.parse::<Shortcut>().map_err(|e| e.to_string())?;
-        if seen.contains(&parsed) {
-            return Err("Shortcut bindings must be distinct".into());
-        }
-        seen.push(parsed);
-    }
-    // Validate every accelerator up front.
-    for accel in &list {
-        if bare_modifier_flag(accel).is_none() {
-            accel
-                .parse::<Shortcut>()
-                .map_err(|e| format!("\"{accel}\" isn't a usable shortcut: {e}"))?;
-        }
-    }
-
-    let gs = app.global_shortcut();
-    let _ = gs.unregister_all();
-    let mut watched: u64 = 0;
-    for accel in &list {
-        if let Some(flag) = bare_modifier_flag(accel) {
-            watched |= flag;
-            continue;
-        }
-        if let Ok(sc) = accel.parse::<Shortcut>() {
-            if let Err(e) = gs.on_shortcut(sc, |app, _sc, event| on_shortcut(app, event.state())) {
-                log::error!("couldn't register \"{accel}\": {e}");
-            }
-        }
-    }
-
-    register_recovery_shortcuts(app, &config::Config::load())?;
-    let state = app.state::<AppState>();
-    state.watched_flags.store(watched, Ordering::SeqCst);
-    *state.shortcuts.lock().unwrap() = list.clone();
     let mut cfg = config::Config::load();
-    cfg.shortcuts = list.clone();
+    cfg.shortcuts = list;
+    install_shortcuts(app, &cfg)?;
     cfg.save();
-    log::info!("shortcuts: {}", list.join(", "));
+    log::info!("shortcuts: {}", cfg.shortcuts.join(", "));
     refresh_menu(app);
     Ok(())
 }
@@ -1556,7 +1567,7 @@ fn reload_engine(app: AppHandle, cfg: config::Config, generation: u64) {
 /// Menu action: re-read config.json and apply everything live — hotkey,
 /// icon theme, model, and transcription settings — without restarting.
 fn reload_config(app: &AppHandle) {
-    let fresh = config::Config::load();
+    let mut fresh = config::Config::load();
     history::configure(fresh.history.clone());
     let state = app.state::<AppState>();
 
@@ -1568,8 +1579,14 @@ fn reload_config(app: &AppHandle) {
         || fresh.retry_shortcut != old.retry_shortcut
         || fresh.recovery_shortcut != old.recovery_shortcut
     {
-        if let Err(e) = apply_shortcuts(app, fresh.shortcuts.clone()) {
+        if let Err(e) = install_shortcuts(app, &fresh) {
             log::error!("reload config: {e}");
+            // Keep the live snapshot honest; the invalid file can be corrected
+            // and retried on the next reload without losing working shortcuts.
+            fresh.shortcuts = current;
+            fresh.cancel_shortcut = old.cancel_shortcut;
+            fresh.retry_shortcut = old.retry_shortcut;
+            fresh.recovery_shortcut = old.recovery_shortcut;
         }
     }
 
@@ -1607,25 +1624,7 @@ fn main() {
         cfg.hotkey_mode
     );
 
-    // Parse the registrable shortcuts (everything except "Fn", which the
-    // low-level listener handles). Unparseable entries are dropped with a warning.
-    let startup_shortcuts: Vec<Shortcut> = cfg
-        .shortcuts
-        .iter()
-        .filter(|a| bare_modifier_flag(a).is_none())
-        .filter_map(|a| match a.parse::<Shortcut>() {
-            Ok(sc) => Some(sc),
-            Err(e) => {
-                log::error!("ignoring invalid shortcut \"{a}\": {e}");
-                None
-            }
-        })
-        .collect();
-    let startup_watched: u64 = cfg
-        .shortcuts
-        .iter()
-        .filter_map(|a| bare_modifier_flag(a))
-        .fold(0, |acc, f| acc | f);
+    let startup_plan = bindings::Plan::startup(&cfg);
 
     // Surface panics in the log — an unwind across a system callback aborts
     // the process with no crash report otherwise.
@@ -1664,13 +1663,14 @@ fn main() {
         .manage(AppState {
             recorder: audio::Recorder::spawn(),
             sessions: Mutex::new(session::Sessions::default()),
+            bindings: Mutex::new(bindings::Bindings::default()),
             engine: Arc::new(Mutex::new(None)),
             recording: AtomicBool::new(false),
             engine_ready: AtomicBool::new(false),
             model_generation: AtomicU64::new(0),
             processing: AtomicBool::new(false),
             shortcuts: Mutex::new(cfg.shortcuts.clone()),
-            watched_flags: AtomicU64::new(startup_watched),
+            watched_flags: AtomicU64::new(startup_plan.watched),
             pending_replace: Mutex::new(None),
             current_model: Mutex::new(cfg.model.clone()),
             active_model: Mutex::new(cfg.model.clone()),
@@ -1706,14 +1706,16 @@ fn main() {
             MENU_HANDLES.with(|cell| *cell.borrow_mut() = Some(handles));
             refresh_menu(app.handle());
 
-            for shortcut in &startup_shortcuts {
-                app.global_shortcut()
-                    .on_shortcut(*shortcut, |app, _sc, event| on_shortcut(app, event.state()))?;
+            // Optional malformed, colliding, or unavailable recovery controls
+            // must not prevent the application (or its dictation key) starting.
+            {
+                let state = app.state::<AppState>();
+                let mut bindings = state.bindings.lock().unwrap();
+                let dispatch = bindings.dispatch.clone();
+                bindings.startup(&startup_plan, |shortcut| {
+                    register_binding(app.handle(), shortcut, dispatch.clone())
+                });
             }
-            register_recovery_shortcuts(
-                app.handle(),
-                &app.state::<AppState>().cfg.lock().unwrap(),
-            )?;
             spawn_fn_listener(app.handle().clone());
 
             // Proactively ask for Accessibility + Microphone so the app shows up

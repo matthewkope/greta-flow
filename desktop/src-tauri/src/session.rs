@@ -1,6 +1,13 @@
 //! One delivery per session, with bounded, expiring, memory-only recovery.
 use crate::inject::Target;
+use std::sync::mpsc::Receiver;
 use std::time::{Duration, Instant};
+
+pub struct CaptureContext {
+    pub target: Option<Target>,
+    pub cfg: crate::config::Config,
+    pub completed: Instant,
+}
 const TTL: Duration = Duration::from_secs(120);
 const MAX_AUDIO: usize = 16_000 * 120;
 #[derive(Default)]
@@ -13,6 +20,8 @@ pub struct Job {
     pub cfg: crate::config::Config,
     pub stream: Option<crate::streaming::Worker>,
     pub target: Option<Target>,
+    pub pending_context: Option<Receiver<CaptureContext>>,
+    history_text: Option<String>,
     pub audio: Vec<f32>,
     pub text: Option<String>,
     expires: Instant,
@@ -28,6 +37,8 @@ impl Sessions {
             cfg: Default::default(),
             stream: None,
             target: None,
+            pending_context: None,
+            history_text: None,
             audio: vec![],
             text: None,
             expires: Instant::now() + Duration::from_secs(720),
@@ -67,6 +78,38 @@ impl Sessions {
             j.expires = Instant::now() + TTL;
         }
     }
+    /// Resolve only a destination obtained before release. Slow AX calls never
+    /// delay microphone start or retarget a completed recording to a later focus.
+    pub fn resolve_capture(&mut self, id: u64, release: Instant) {
+        let Some(job) = self.get(id) else { return };
+        let Some(pending) = job.pending_context.take() else {
+            return;
+        };
+        match pending.try_recv() {
+            Ok(context) if context.completed <= release => {
+                job.target = context.target;
+                job.cfg = context.cfg;
+            }
+            _ => {
+                // Keep the key-down config snapshot and decode the full captured
+                // audio. The pending worker may have a different app profile.
+                job.stream = None;
+                job.target = None;
+            }
+        }
+    }
+    /// Preserve each distinct result in the existing history surface, including
+    /// insertion failures. History's configured retention/disabled policy still applies.
+    pub fn take_history(&mut self, id: u64) -> Option<String> {
+        self.expire();
+        let job = self.current.as_mut().filter(|j| j.id == id)?;
+        let text = job.text.as_ref().filter(|text| !text.is_empty())?;
+        if job.history_text.as_ref() == Some(text) {
+            return None;
+        }
+        job.history_text = Some(text.clone());
+        Some(text.clone())
+    }
     pub fn recovery(&mut self) -> Option<String> {
         self.expire();
         self.current.as_ref().and_then(|j| j.text.clone())
@@ -101,10 +144,10 @@ impl Sessions {
         let Some(job) = self.get(id) else {
             return Ok(false);
         };
-        job.text = Some(text.clone());
         if job.attempted {
             return Err("Delivery already attempted; use recovery text to avoid duplicates".into());
         }
+        job.text = Some(text.clone());
         validate(job.target.as_ref())?;
         job.attempted = true;
         insert(job.target.as_ref(), &text)?;
@@ -124,6 +167,114 @@ impl Sessions {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn default_config_keeps_failed_transcripts_in_history_without_duplicates() {
+        let cfg = crate::config::Config::default();
+        assert!(cfg.history.enabled);
+        assert!(cfg.recovery_shortcut.is_none());
+        for failure in [
+            "missing target",
+            "unsupported field",
+            "uncertain native setter",
+        ] {
+            let mut sessions = Sessions::default();
+            let id = sessions.begin();
+            assert!(sessions
+                .deliver(id, "recover me".into(), |_, _| Err(failure.into()))
+                .is_err());
+            assert_eq!(sessions.take_history(id).as_deref(), Some("recover me"));
+            assert!(sessions.take_history(id).is_none());
+            assert!(sessions
+                .deliver(id, "do not replace uncertain text".into(), |_, _| panic!())
+                .is_err());
+            assert!(sessions.take_history(id).is_none());
+            assert_eq!(sessions.recovery().as_deref(), Some("recover me"));
+        }
+        let mut sessions = Sessions::default();
+        let id = sessions.begin();
+        assert!(sessions
+            .deliver_checked(
+                id,
+                "focus moved".into(),
+                |_| Err("changed".into()),
+                |_, _| panic!()
+            )
+            .is_err());
+        assert_eq!(sessions.take_history(id).as_deref(), Some("focus moved"));
+        assert!(sessions
+            .deliver_checked(id, "focus moved".into(), |_| Ok(()), |_, _| Ok(()))
+            .unwrap());
+        assert!(sessions.take_history(id).is_none());
+        let id = sessions.begin();
+        sessions.cancel();
+        assert!(!sessions
+            .deliver(id, "cancelled".into(), |_, _| panic!())
+            .unwrap());
+        assert!(sessions.take_history(id).is_none());
+    }
+
+    #[test]
+    fn pending_or_late_capture_cannot_retarget_after_release() {
+        for late in [false, true] {
+            let mut sessions = Sessions::default();
+            let id = sessions.begin();
+            let (tx, rx) = std::sync::mpsc::channel();
+            let release = Instant::now();
+            sessions.get(id).unwrap().pending_context = Some(rx);
+            let (input, worker) = crate::streaming::Worker::spawn(
+                std::sync::Arc::new(std::sync::Mutex::new(None)),
+                crate::config::Config::default(),
+            );
+            let cancelled = worker.cancelled.clone();
+            sessions.get(id).unwrap().stream = Some(worker);
+            if late {
+                tx.send(CaptureContext {
+                    target: None,
+                    cfg: crate::config::Config {
+                        language: "late-profile".into(),
+                        ..Default::default()
+                    },
+                    completed: release + Duration::from_millis(1),
+                })
+                .unwrap();
+            }
+            sessions.resolve_capture(id, release);
+            assert_eq!(sessions.get(id).unwrap().cfg.language, "en");
+            assert!(sessions.get(id).unwrap().stream.is_none());
+            assert!(cancelled.load(std::sync::atomic::Ordering::SeqCst));
+            assert!(tx
+                .send(CaptureContext {
+                    target: None,
+                    cfg: Default::default(),
+                    completed: release
+                })
+                .is_err());
+            drop(input);
+        }
+    }
+
+    #[test]
+    fn timely_context_uses_original_profile_snapshot() {
+        let mut sessions = Sessions::default();
+        let id = sessions.begin();
+        let (tx, rx) = std::sync::mpsc::channel();
+        sessions.get(id).unwrap().pending_context = Some(rx);
+        let mut cfg = crate::config::Config::default();
+        cfg.profile.mode = crate::profile::Mode::Literal;
+        tx.send(CaptureContext {
+            target: None,
+            cfg,
+            completed: Instant::now(),
+        })
+        .unwrap();
+        sessions.resolve_capture(id, Instant::now());
+        assert_eq!(
+            sessions.get(id).unwrap().cfg.profile.mode,
+            crate::profile::Mode::Literal
+        );
+        assert!(sessions.get(id).unwrap().pending_context.is_none());
+    }
+
     #[test]
     fn cancellation_and_stale_results_never_insert() {
         let mut s = Sessions::default();

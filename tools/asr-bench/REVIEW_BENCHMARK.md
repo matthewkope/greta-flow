@@ -2,6 +2,16 @@
 
 Run on the user's M4 Pro, 24GiB Mac. Recognition stays local. No private dictation history or microphone recordings were used. The existing installed app was not replaced.
 
+## Revision caveat
+
+These retained September 19 results used a 0.0001 pre-gain RMS gate. PR #1's
+review follow-up restores the original **0.0015** gate in both batch and streaming
+preparation to reject near-silent microphone noise before amplification/inference.
+The segmenter's separate 0.0001 boundary detector remains unchanged. The numbers
+below have not been rerun against the restored decoder gate and must not be cited
+as current-revision accuracy or quiet-input acceptance evidence. Reproduction on
+the corrected revision can produce different transcripts and timing.
+
 ## Reproduction
 
 Use the pinned Python environment/dependencies from `README.md`, plus the existing pinned Parakeet worker and model files. Here `PYTHON`, `CORPUS`, `SMOKE`, `MODEL`, and `HELPER` are task-specific paths of your choosing; `SMOKE` is the original 24-clip manifest.
