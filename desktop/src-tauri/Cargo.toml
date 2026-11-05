@@ -1,6 +1,6 @@
 [package]
 name = "gretchen-flow"
-version = "0.3.0"
+version = "0.4.0"
 description = "Push-to-talk voice dictation: press a hotkey, speak, and your words appear wherever your cursor is."
 authors = ["Matthew Kope"]
 license = "MIT"

@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Greta Flow",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "identifier": "com.matthewkope.gretchenflow",
   "build": {
     "frontendDist": "../ui",
