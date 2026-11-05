@@ -1,9 +1,9 @@
-# Gretchen Flow (Python prototype)
+# Greta Flow (Python prototype)
 
 Press a hotkey, speak, and your words appear wherever your cursor is —
 open-source, local-first voice dictation powered by Whisper.
 
-This package is the **Python prototype** of [Gretchen Flow](https://github.com/matthewkope/gretchen-flow).
+This package is the **Python prototype** of [Gretchen Flow](https://github.com/matthewkope/greta-flow).
 It validates the full pipeline (global hotkey → record → transcribe → type) and
 is handy for experimenting with models and engines. The shipping desktop app is
 a Tauri 2 + Rust menu-bar application; see the project README for that.

@@ -1,4 +1,4 @@
-# Gretchen Flow backend optimization audit
+# Greta Flow backend optimization audit
 
 Reviewed 2026-09-18, local checkout at `949f398161234695c58f9697bfdf33421eefd411`, including existing uncommitted backend changes. Product scope: `desktop/src-tauri`, not the Python prototype. Existing changes to `main.rs` and `desktop/ui/hotkey.js` were preserved. This deliverable is an audit and implementation backlog, not a deployed optimization.
 

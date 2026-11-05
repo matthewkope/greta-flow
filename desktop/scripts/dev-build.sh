@@ -3,20 +3,10 @@
 # Local dev build that keeps macOS permissions (Accessibility, Microphone,
 # Input Monitoring) across rebuilds.
 #
-# The released app is ad-hoc signed (`signingIdentity: "-"` in tauri.conf.json),
-# which gives every build a NEW code identity — so macOS wipes the TCC grants on
-# each rebuild and you have to re-approve everything. This script instead signs
-# every build with the stable self-signed "Gretchen Flow Dev" certificate. Its
-# designated requirement is
-#
-#   identifier "com.matthewkope.gretchenflow" and certificate leaf = H"<cert>"
-#
-# which depends only on the bundle id + the cert (both stable), NOT the cdhash.
-# So TCC keeps the grants across rebuilds: approve once, never again.
-#
-# One-time setup if the cert is missing: create a self-signed code-signing
-# certificate named exactly "Gretchen Flow Dev" in Keychain Access
-# (Certificate Assistant ▸ Create a Certificate ▸ Code Signing).
+# Release and development bundles must use the existing stable signing identity.
+# Keep the bundle ID and certificate unchanged when renaming the app; permission
+# preservation across the path change still requires a real upgrade check.
+# Never replace a missing certificate with a newly created one.
 #
 # Usage:  desktop/scripts/dev-build.sh        # build, sign, install to /Applications, launch
 #         desktop/scripts/dev-build.sh --no-install   # build + sign only
@@ -26,7 +16,7 @@ set -euo pipefail
 # secret) so local builds and Homebrew installs share one code identity — then a
 # single permission grant covers both. Backup of this cert: ~/gretchen-flow-signing.
 CERT="Gretchen Flow Signing"
-APP_NAME="Gretchen Flow.app"
+APP_NAME="Greta Flow.app"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"   # desktop/
 TAURI_DIR="$HERE/src-tauri"
 BUNDLE="$TAURI_DIR/target/debug/bundle/macos/$APP_NAME"
@@ -37,8 +27,7 @@ INSTALLED="/Applications/$APP_NAME"
 # it even though codesign signs with it fine.
 if ! security find-identity -p codesigning | grep -q "$CERT"; then
   echo "error: code-signing certificate \"$CERT\" not found in the keychain." >&2
-  echo "Create it via Keychain Access ▸ Certificate Assistant ▸ Create a Certificate" >&2
-  echo "(name it exactly \"$CERT\", type: Code Signing), then re-run." >&2
+  echo "Restore access to the existing signing identity; do not create a replacement." >&2
   exit 1
 fi
 
@@ -59,12 +48,14 @@ if [[ "${1:-}" == "--no-install" ]]; then
 fi
 
 echo "==> installing to $INSTALLED"
-osascript -e "quit app \"Gretchen Flow\"" 2>/dev/null || true
+osascript -e 'tell application id "com.matthewkope.gretchenflow" to quit' 2>/dev/null || true
 sleep 1; pkill -f "$APP_NAME" 2>/dev/null || true; sleep 1
 rm -rf "$INSTALLED"
 cp -R "$BUNDLE" /Applications/
+# Remove the legacy bundle only after the replacement has copied successfully.
+rm -rf "/Applications/Gretchen Flow.app"
 xattr -dr com.apple.quarantine "$INSTALLED" 2>/dev/null || true
 
 echo "==> launching"
 open "$INSTALLED"
-echo "==> done. Permissions granted once to this identity now persist across rebuilds."
+echo "==> done. Verify permissions after the app-path rename."

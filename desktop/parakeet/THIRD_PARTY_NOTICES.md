@@ -1,4 +1,4 @@
-# Gretchen Flow Parakeet runtime
+# Greta Flow Parakeet runtime
 
 This test build uses FluidInference FluidAudio, revision
 b68f484789d81fda21efbf81e2ca9fcfd9dc22aa, under the Apache License 2.0.

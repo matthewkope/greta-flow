@@ -1,4 +1,4 @@
-name: Release
+name: Greta Flow Release
 
 # Cut a release by pushing a version tag, e.g.:
 #   git tag v0.2.0 && git push origin v0.2.0
@@ -67,6 +67,6 @@ jobs:
       - name: Publish release with DMG
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
-          files: desktop/src-tauri/target/release/bundle/dmg/*.dmg
+          files: desktop/src-tauri/target/release/bundle/dmg/Greta*Flow_*.dmg
           fail_on_unmatched_files: true
           generate_release_notes: true

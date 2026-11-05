@@ -1,4 +1,4 @@
-# Gretchen Flow — working notes for Claude
+# Greta Flow — working notes for Claude
 
 Open-source macOS push-to-talk dictation: hold a hotkey, speak, and insert the
 transcript at the captured cursor destination. Recognition is local: no API keys,
@@ -27,7 +27,7 @@ optimization, design, and distribution belong to the later workspaces. Keep
 | `desktop/scripts/gen_icons.py` | Tray and app icon generation; Claude-owned. |
 | `tools/asr-bench/` | Offline benchmark tools, public corpus provenance, and results. |
 | `python/` | Original prototype, separate from the desktop product. |
-| `Casks/gretchen-flow.rb` | Homebrew cask. |
+| `Casks/greta-flow.rb` | Homebrew cask. |
 | `.github/workflows/release.yml` | Tagged release build and signing. |
 
 ## Build and validation

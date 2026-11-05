@@ -1,4 +1,4 @@
-# Gretchen Flow: first local model comparison
+# Greta Flow: first local model comparison
 
 **Parakeet TDT v2 is the strongest candidate from this pilot.** It completed warm engine calls about 25× faster than the current Whisper configuration and had slightly lower normalized word error. Moonshine was faster than Whisper but less accurate here. Neither candidate is established as a production replacement yet.
 

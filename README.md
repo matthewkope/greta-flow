@@ -1,13 +1,13 @@
-# Gretchen Flow (GF)
+# Greta Flow (GF)
 
 **Press a hotkey, speak, and your words appear wherever your cursor is.**
 
-Gretchen Flow is an open-source voice dictation app in the spirit of Wispr Flow:
+Greta Flow is an open-source voice dictation app in the spirit of Wispr Flow:
 a global hotkey starts recording, your speech is transcribed locally with
 Parakeet v2 by default, and the text is typed straight into whatever app has focus — your
 editor, browser, chat, anywhere.
 
-- 👧 **Gretchen lives in the menu bar** — a white Gretchen when idle; while recording she shows a black badge, next to macOS's own orange mic indicator
+- 👧 **Greta lives in the menu bar** — a white Greta when idle; while recording she shows a black badge, next to macOS's own orange mic indicator
 - 🎙️ **Push-to-talk or toggle** — hold a key to talk, or tap to start/stop; the **Fn / 🌐 Globe** key works as a hotkey, and you can have up to 3 shortcuts
 - ✍️ **Speech-aware grammar** — pausing while you speak inserts a period; filler
   words ("um", "uh") are removed automatically
@@ -34,17 +34,17 @@ editor, browser, chat, anywhere.
 Apple Silicon Mac, macOS 14+ — one command (it taps and installs):
 
 ```bash
-brew install --cask matthewkope/gretchen-flow/gretchen-flow
+brew install --cask matthewkope/greta-flow/greta-flow
 ```
 
-This copies **Gretchen Flow.app** into `/Applications`. Because the build isn't
+This copies **Greta Flow.app** into `/Applications`. Because the build isn't
 notarized, macOS quarantines it — so after installing, clear the quarantine flag
 and launch it:
 
 ```bash
-brew list --cask gretchen-flow      # confirm it installed
-xattr -dr com.apple.quarantine "/Applications/Gretchen Flow.app"
-open "/Applications/Gretchen Flow.app"
+brew list --cask greta-flow      # confirm it installed
+xattr -dr com.apple.quarantine "/Applications/Greta Flow.app"
+open "/Applications/Greta Flow.app"
 ```
 
 On first launch, download a model in the setup window and grant **Microphone**,
@@ -55,16 +55,37 @@ On first launch, download a model in the setup window and grant **Microphone**,
 
 ```bash
 brew update
-brew upgrade --cask gretchen-flow
-xattr -dr com.apple.quarantine "/Applications/Gretchen Flow.app"
-open "/Applications/Gretchen Flow.app"
+brew upgrade --cask greta-flow
+xattr -dr com.apple.quarantine "/Applications/Greta Flow.app"
+open "/Applications/Greta Flow.app"
 ```
 
-Releases are signed with a stable certificate, so your Microphone /
-Accessibility / Input Monitoring grants carry over — updating does **not** make
-you re-approve them.
+Releases retain the existing signing certificate and bundle ID. Permission
+preservation across the rename still needs a real upgrade check; see
+[rename validation](docs/RENAME_0.4.md).
 
-> The cask installs from the latest [GitHub Release](https://github.com/matthewkope/gretchen-flow/releases).
+If you installed under the old name, quit the app and run this once after the
+renamed cask has been published to the tap:
+
+```bash
+brew update
+brew reinstall --cask matthewkope/gretchen-flow/greta-flow
+xattr -dr com.apple.quarantine "/Applications/Greta Flow.app"
+open "/Applications/Greta Flow.app"
+```
+
+The old tap URL redirects to the renamed repository. Keep that existing tap for
+this migration: `cask_renames.json` maps the old token to the new one. Reinstall
+also changes the installed app path when the release version is still 0.3.0;
+`brew upgrade` alone skips a same-version install. Homebrew removes the previous
+app using its saved installation record. Config, history, and model paths retain
+`gretchen-flow`; do not delete them or download the model again.
+
+The 0.3.0 archive and its internal display name still say Gretchen. The cask
+installs that original signed bundle as `Greta Flow.app`; the next release uses
+the new product name. Window and menu wording is being updated separately.
+
+> The cask installs from the latest [GitHub Release](https://github.com/matthewkope/greta-flow/releases).
 > Builds are not notarized, which is why the one-time `xattr` command above is
 > needed if macOS blocks the app on launch.
 
@@ -74,40 +95,40 @@ Requires Apple Silicon, macOS 14+, Swift 6.2+, [Rust](https://rustup.rs),
 cmake (`brew install cmake`), and Tauri CLI (`cargo install tauri-cli --locked`).
 
 ```bash
-git clone https://github.com/matthewkope/gretchen-flow.git
-cd gretchen-flow/desktop/src-tauri
+git clone https://github.com/matthewkope/greta-flow.git
+cd greta-flow/desktop/src-tauri
 cargo tauri dev
 ```
 
 ## First run — download a model
 
-**Gretchen Flow ships with no speech model**, so you pick the one you want.
+**Greta Flow ships with no speech model**, so you pick the one you want.
 On first launch a **setup window** opens (the menu bar icon shows a small **!**
 until a model is ready). To get going:
 
 1. Click **Download Recommended Model (464 MB)** in the setup window — or open
    the menu bar icon's **Model** submenu and choose one. The recommended
    **Parakeet TDT v2** is the English default; Whisper remains available.
-   The Gretchen icon shows a **↓** while it downloads.
+   The Greta icon shows a **↓** while it downloads.
 2. **Grant permissions** under System Settings ▸ Privacy & Security — the setup
    window has a button for each: **Microphone** (to hear you), **Accessibility**
    (to type the text), and **Input Monitoring** (to detect the Fn key).
 3. **Dictate:** click into any text field, **hold the 🌐 Globe/Fn key** (the
-   default) — Gretchen switches to her recording badge while she listens — then
+   default) — Greta switches to her recording badge while she listens — then
    **let go**; your words type out where the cursor is.
 
 You can reopen the guide anytime from the menu's **Getting Started…** item.
 
-| Menu bar (Gretchen icon) | Meaning |
+| Menu bar (Greta icon) | Meaning |
 |---|---|
-| white Gretchen | idle, ready |
+| white Greta | idle, ready |
 | with ! | no model yet — open the setup guide / Model menu |
 | with ↓ | downloading a model |
 | **black badge** (+ macOS orange mic) | recording — release the key to finish |
 | with ✕ | model failed to load (check the log) |
 
 The macOS **orange microphone** indicator that appears while recording is the
-system's own privacy indicator — it's not part of Gretchen Flow and can't be
+system's own privacy indicator — it's not part of Greta Flow and can't be
 hidden.
 
 ### Configuration
@@ -123,7 +144,7 @@ hidden.
   "pause_punctuation_ms": 700,
   "remove_fillers": true,
   "auto_lists": true,
-  "vocabulary": ["Gretchen Flow"]
+  "vocabulary": ["Greta Flow"]
 }
 ```
 
@@ -166,22 +187,21 @@ System Settings → Privacy & Security — the app (or your terminal, when using
 2. **Accessibility** — to type the transcribed text into other apps
 3. **Input Monitoring** — to detect the Fn / 🌐 Globe key
 
-You grant these **once**. Released builds (the Homebrew cask) are signed with a
-stable certificate, so macOS keeps your grants across `brew upgrade` — updating
-the app does **not** make you re-approve them.
+Released builds retain a stable signing certificate and bundle ID. The app-path
+rename still needs the real upgrade validation described above.
 
 > Building from source is different: a plain `cargo run` / `cargo tauri build`
 > is ad-hoc signed, so every rebuild is a new identity and the grants reset. If
 > you're hacking on the app, use `desktop/scripts/dev-build.sh`, which signs
 > each build with a stable local certificate so your grants persist between
-> rebuilds (one-time setup: a self-signed "Gretchen Flow Signing" code-signing
-> certificate in your keychain).
+> rebuilds. Use the existing "Gretchen Flow Signing" identity; do not create a
+> replacement certificate for this rename.
 
 ### The Fn / 🌐 Globe key vs. macOS Dictation
 
 By default macOS binds the **🌐 Globe (Fn)** key to its own **Dictation**
 feature, which intercepts the key and pops up Apple's dictation bubble — so
-Gretchen never sees the press. If holding Fn does nothing (or a macOS dictation
+Greta never sees the press. If holding Fn does nothing (or a macOS dictation
 popup appears), turn Apple's Dictation off and free the key:
 
 - **System Settings ▸ Keyboard ▸ Dictation** → **Off**
