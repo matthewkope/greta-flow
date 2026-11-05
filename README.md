@@ -243,3 +243,7 @@ does not claim to fix that behavior. See [benchmark results](docs/ASR_BENCHMARK_
 The Homebrew cask downloads the signed v0.3.0 release DMG and verifies its
 SHA-256 checksum. Existing explicit model choices are kept; select Parakeet v2
 from the Model menu to change an older Whisper configuration.
+
+### Backend changes awaiting review
+
+The local five-card implementation, configuration examples, validation evidence, and remaining field checks are documented in [the review notes](docs/FIVE_CARD_REVIEW.md). Streaming is opt-in; these notes do not describe a newly published release.

@@ -30,7 +30,7 @@ pub fn run_if_requested() -> bool {
                 .map(|x| f32::from_le_bytes(*x))
                 .collect();
             let start = std::time::Instant::now();
-            let text = engine.transcribe(&samples)?;
+            let text = engine.transcribe(&samples, &cfg.for_app(None))?;
             println!(
                 "{}",
                 serde_json::json!({"id": clip["id"], "text": text, "seconds":start.elapsed().as_secs_f64()})

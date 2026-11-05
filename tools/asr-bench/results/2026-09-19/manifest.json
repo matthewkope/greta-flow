@@ -1,0 +1,3242 @@
+[
+  {
+    "id": "6930-75918-0000-clean",
+    "path": "CORPUS/6930-75918-0000-clean.f32",
+    "text": "CONCORD RETURNED TO ITS PLACE AMIDST THE TENTS",
+    "seconds": 3.505,
+    "speaker_id": 6930,
+    "condition": "clean",
+    "sha256": "51efadc8c74ac6aed3972c75006d034908a6d73d99bd0af64705693bf1b89909"
+  },
+  {
+    "id": "6930-75918-0000-quiet",
+    "path": "CORPUS/6930-75918-0000-quiet.f32",
+    "text": "CONCORD RETURNED TO ITS PLACE AMIDST THE TENTS",
+    "seconds": 3.505,
+    "speaker_id": 6930,
+    "condition": "quiet",
+    "sha256": "d7d642dabc0ebb8e0eb650e21df5ae02ff2c5846289f3ea0adefefaccbb71ded"
+  },
+  {
+    "id": "6930-75918-0000-noise_20db",
+    "path": "CORPUS/6930-75918-0000-noise_20db.f32",
+    "text": "CONCORD RETURNED TO ITS PLACE AMIDST THE TENTS",
+    "seconds": 3.505,
+    "speaker_id": 6930,
+    "condition": "noise_20db",
+    "sha256": "24ed1e05f51a099e50c38047212a66223de6f70d54a8c09f35a18ea1ed7be7a5"
+  },
+  {
+    "id": "6930-76324-0001-clean",
+    "path": "CORPUS/6930-76324-0001-clean.f32",
+    "text": "THEY WERE CERTAINLY NO NEARER THE SOLUTION OF THEIR PROBLEM",
+    "seconds": 3.2,
+    "speaker_id": 6930,
+    "condition": "clean",
+    "sha256": "2d821c3034b0f23992d82fb6b09e48c68eb64b76e2d5b8996fba2a8963418c86"
+  },
+  {
+    "id": "6930-76324-0001-quiet",
+    "path": "CORPUS/6930-76324-0001-quiet.f32",
+    "text": "THEY WERE CERTAINLY NO NEARER THE SOLUTION OF THEIR PROBLEM",
+    "seconds": 3.2,
+    "speaker_id": 6930,
+    "condition": "quiet",
+    "sha256": "e0ecc9da4ab49e623c45e16102f07994b578b37d711d02acb0775728378ac30f"
+  },
+  {
+    "id": "6930-76324-0001-noise_20db",
+    "path": "CORPUS/6930-76324-0001-noise_20db.f32",
+    "text": "THEY WERE CERTAINLY NO NEARER THE SOLUTION OF THEIR PROBLEM",
+    "seconds": 3.2,
+    "speaker_id": 6930,
+    "condition": "noise_20db",
+    "sha256": "d525ce6db009e75fb13b22c73327da9f4aef7b3bbbe24b1ff8408aa976fcd1cb"
+  },
+  {
+    "id": "6930-76324-0023-clean",
+    "path": "CORPUS/6930-76324-0023-clean.f32",
+    "text": "AND MY POCKET MONEY IS GETTING LOW AGAIN AND YOU HAVEN'T ANY LEFT AS USUAL",
+    "seconds": 4.85,
+    "speaker_id": 6930,
+    "condition": "clean",
+    "sha256": "3528558e1cc3f713de0390893b7a25e2b99d3d785aeae9ddc51ff1c94aa07752"
+  },
+  {
+    "id": "6930-76324-0023-quiet",
+    "path": "CORPUS/6930-76324-0023-quiet.f32",
+    "text": "AND MY POCKET MONEY IS GETTING LOW AGAIN AND YOU HAVEN'T ANY LEFT AS USUAL",
+    "seconds": 4.85,
+    "speaker_id": 6930,
+    "condition": "quiet",
+    "sha256": "2e32a4fad3707aeeb253422910daadfc69a1e33ab7d1752c53c5b097729f8a35"
+  },
+  {
+    "id": "6930-76324-0023-noise_20db",
+    "path": "CORPUS/6930-76324-0023-noise_20db.f32",
+    "text": "AND MY POCKET MONEY IS GETTING LOW AGAIN AND YOU HAVEN'T ANY LEFT AS USUAL",
+    "seconds": 4.85,
+    "speaker_id": 6930,
+    "condition": "noise_20db",
+    "sha256": "5396de980fc6a020da314dfc8620d84fa3105a138b838a41106d0b6586b94047"
+  },
+  {
+    "id": "6930-81414-0016-clean",
+    "path": "CORPUS/6930-81414-0016-clean.f32",
+    "text": "BUT THAT IS KAFFAR'S KNIFE",
+    "seconds": 2.16,
+    "speaker_id": 6930,
+    "condition": "clean",
+    "sha256": "46b9b320c2377bbcc668dbecb5cec67894b442f75c57bb8331592c98db9f5c8c"
+  },
+  {
+    "id": "6930-81414-0016-quiet",
+    "path": "CORPUS/6930-81414-0016-quiet.f32",
+    "text": "BUT THAT IS KAFFAR'S KNIFE",
+    "seconds": 2.16,
+    "speaker_id": 6930,
+    "condition": "quiet",
+    "sha256": "8ea5d63965c1cc0364f35f5faa280f0ce7b710af9e25dce1cd00528d2b147dec"
+  },
+  {
+    "id": "6930-81414-0016-noise_20db",
+    "path": "CORPUS/6930-81414-0016-noise_20db.f32",
+    "text": "BUT THAT IS KAFFAR'S KNIFE",
+    "seconds": 2.16,
+    "speaker_id": 6930,
+    "condition": "noise_20db",
+    "sha256": "06063c2a18e88b64881706e4d36f4a744ae4155c0b8f9da47b72c8c951192e26"
+  },
+  {
+    "id": "1320-122617-0010-clean",
+    "path": "CORPUS/1320-122617-0010-clean.f32",
+    "text": "THE TASK WILL NOT BE DIFFICULT RETURNED DAVID HESITATING THOUGH I GREATLY FEAR YOUR PRESENCE WOULD RATHER INCREASE THAN MITIGATE HIS UNHAPPY FORTUNES",
+    "seconds": 10.0,
+    "speaker_id": 1320,
+    "condition": "clean",
+    "sha256": "ba7238aad53b952b15fc9c14724b3bb1cf2b56a9ecd0fbc54c305fe34c829a4c"
+  },
+  {
+    "id": "1320-122617-0010-quiet",
+    "path": "CORPUS/1320-122617-0010-quiet.f32",
+    "text": "THE TASK WILL NOT BE DIFFICULT RETURNED DAVID HESITATING THOUGH I GREATLY FEAR YOUR PRESENCE WOULD RATHER INCREASE THAN MITIGATE HIS UNHAPPY FORTUNES",
+    "seconds": 10.0,
+    "speaker_id": 1320,
+    "condition": "quiet",
+    "sha256": "0c245afd2e408d6a01453201b55645d1b478e0575943fa1753a6e1768a8bd5c2"
+  },
+  {
+    "id": "1320-122617-0010-noise_20db",
+    "path": "CORPUS/1320-122617-0010-noise_20db.f32",
+    "text": "THE TASK WILL NOT BE DIFFICULT RETURNED DAVID HESITATING THOUGH I GREATLY FEAR YOUR PRESENCE WOULD RATHER INCREASE THAN MITIGATE HIS UNHAPPY FORTUNES",
+    "seconds": 10.0,
+    "speaker_id": 1320,
+    "condition": "noise_20db",
+    "sha256": "d30ecda0c55386470ae1cbdba517c1fd6f6337727c85cdefd9437bfe1c68f95c"
+  },
+  {
+    "id": "1320-122617-0032-clean",
+    "path": "CORPUS/1320-122617-0032-clean.f32",
+    "text": "KEEP SILENT AS LONG AS MAY BE AND IT WOULD BE WISE WHEN YOU DO SPEAK TO BREAK OUT SUDDENLY IN ONE OF YOUR SHOUTINGS WHICH WILL SERVE TO REMIND THE INDIANS THAT YOU ARE NOT ALTOGETHER AS RESPONSIBLE AS MEN SHOULD BE",
+    "seconds": 11.28,
+    "speaker_id": 1320,
+    "condition": "clean",
+    "sha256": "e859e255fd3a69d482be7af3330cadefeaf6b4005ed4113a4d7ea0ca822623a6"
+  },
+  {
+    "id": "1320-122617-0032-quiet",
+    "path": "CORPUS/1320-122617-0032-quiet.f32",
+    "text": "KEEP SILENT AS LONG AS MAY BE AND IT WOULD BE WISE WHEN YOU DO SPEAK TO BREAK OUT SUDDENLY IN ONE OF YOUR SHOUTINGS WHICH WILL SERVE TO REMIND THE INDIANS THAT YOU ARE NOT ALTOGETHER AS RESPONSIBLE AS MEN SHOULD BE",
+    "seconds": 11.28,
+    "speaker_id": 1320,
+    "condition": "quiet",
+    "sha256": "8a07c01652e082fb4af0d953daf526bf1b1809f0e210bb74e603a21b57430f9e"
+  },
+  {
+    "id": "1320-122617-0032-noise_20db",
+    "path": "CORPUS/1320-122617-0032-noise_20db.f32",
+    "text": "KEEP SILENT AS LONG AS MAY BE AND IT WOULD BE WISE WHEN YOU DO SPEAK TO BREAK OUT SUDDENLY IN ONE OF YOUR SHOUTINGS WHICH WILL SERVE TO REMIND THE INDIANS THAT YOU ARE NOT ALTOGETHER AS RESPONSIBLE AS MEN SHOULD BE",
+    "seconds": 11.28,
+    "speaker_id": 1320,
+    "condition": "noise_20db",
+    "sha256": "cb814178e941d3b639928d12b4900a9b32a920561e22667c0b8222a810f62ecc"
+  },
+  {
+    "id": "1320-122612-0012-clean",
+    "path": "CORPUS/1320-122612-0012-clean.f32",
+    "text": "EXTINGUISHED BRANDS WERE LYING AROUND A SPRING THE OFFALS OF A DEER WERE SCATTERED ABOUT THE PLACE AND THE TREES BORE EVIDENT MARKS OF HAVING BEEN BROWSED BY THE HORSES",
+    "seconds": 10.49,
+    "speaker_id": 1320,
+    "condition": "clean",
+    "sha256": "54f6ff0e7708e7af097cf7154d9fa02084d415695901a689dc551146c0707f99"
+  },
+  {
+    "id": "1320-122612-0012-quiet",
+    "path": "CORPUS/1320-122612-0012-quiet.f32",
+    "text": "EXTINGUISHED BRANDS WERE LYING AROUND A SPRING THE OFFALS OF A DEER WERE SCATTERED ABOUT THE PLACE AND THE TREES BORE EVIDENT MARKS OF HAVING BEEN BROWSED BY THE HORSES",
+    "seconds": 10.49,
+    "speaker_id": 1320,
+    "condition": "quiet",
+    "sha256": "e382cf16f45e80c55bd45ff72ac7d47fb0234a0bc535345f94c6d57a396d557f"
+  },
+  {
+    "id": "1320-122612-0012-noise_20db",
+    "path": "CORPUS/1320-122612-0012-noise_20db.f32",
+    "text": "EXTINGUISHED BRANDS WERE LYING AROUND A SPRING THE OFFALS OF A DEER WERE SCATTERED ABOUT THE PLACE AND THE TREES BORE EVIDENT MARKS OF HAVING BEEN BROWSED BY THE HORSES",
+    "seconds": 10.49,
+    "speaker_id": 1320,
+    "condition": "noise_20db",
+    "sha256": "9e8e987b9ede9dcea2fde23ed6e11e5979903e254e14bfdd8c6dd9e9850dbe8d"
+  },
+  {
+    "id": "5639-40744-0017-clean",
+    "path": "CORPUS/5639-40744-0017-clean.f32",
+    "text": "CHOKING WITH EMOTION LEOCADI MADE A SIGN TO HER PARENTS THAT SHE WISHED TO BE ALONE WITH THEM",
+    "seconds": 5.88,
+    "speaker_id": 5639,
+    "condition": "clean",
+    "sha256": "d98dff5529c78862b40205c59d8b4b52dfb000da934f710aafee157c633cd7af"
+  },
+  {
+    "id": "5639-40744-0017-quiet",
+    "path": "CORPUS/5639-40744-0017-quiet.f32",
+    "text": "CHOKING WITH EMOTION LEOCADI MADE A SIGN TO HER PARENTS THAT SHE WISHED TO BE ALONE WITH THEM",
+    "seconds": 5.88,
+    "speaker_id": 5639,
+    "condition": "quiet",
+    "sha256": "6f2123c24c4c4795f565e80ff62f9d31c580813f758784784745e3eb99a0ea6a"
+  },
+  {
+    "id": "5639-40744-0017-noise_20db",
+    "path": "CORPUS/5639-40744-0017-noise_20db.f32",
+    "text": "CHOKING WITH EMOTION LEOCADI MADE A SIGN TO HER PARENTS THAT SHE WISHED TO BE ALONE WITH THEM",
+    "seconds": 5.88,
+    "speaker_id": 5639,
+    "condition": "noise_20db",
+    "sha256": "98b579f34f4e04d76807d59fbda76b08af12ee27890c77f9648779649e1236ae"
+  },
+  {
+    "id": "5639-40744-0039-clean",
+    "path": "CORPUS/5639-40744-0039-clean.f32",
+    "text": "WHEN SHE CAME TO HER SENSES AND BLUSHING TO FIND HERSELF IN RODOLFO'S ARMS WOULD HAVE DISENGAGED HERSELF NO SENORA HE SAID THAT MUST NOT BE STRIVE NOT TO WITHDRAW FROM THE ARMS OF HIM WHO HOLDS YOU IN HIS SOUL",
+    "seconds": 14.375,
+    "speaker_id": 5639,
+    "condition": "clean",
+    "sha256": "f6f0b24820027ebb93338495263b23fbf0727265198cd80a215dfdeddecd9fc8"
+  },
+  {
+    "id": "5639-40744-0039-quiet",
+    "path": "CORPUS/5639-40744-0039-quiet.f32",
+    "text": "WHEN SHE CAME TO HER SENSES AND BLUSHING TO FIND HERSELF IN RODOLFO'S ARMS WOULD HAVE DISENGAGED HERSELF NO SENORA HE SAID THAT MUST NOT BE STRIVE NOT TO WITHDRAW FROM THE ARMS OF HIM WHO HOLDS YOU IN HIS SOUL",
+    "seconds": 14.375,
+    "speaker_id": 5639,
+    "condition": "quiet",
+    "sha256": "1538bb13d63be7dc7273082cb56db5d131beb3e37e2e87b86c2d7a55405426eb"
+  },
+  {
+    "id": "5639-40744-0039-noise_20db",
+    "path": "CORPUS/5639-40744-0039-noise_20db.f32",
+    "text": "WHEN SHE CAME TO HER SENSES AND BLUSHING TO FIND HERSELF IN RODOLFO'S ARMS WOULD HAVE DISENGAGED HERSELF NO SENORA HE SAID THAT MUST NOT BE STRIVE NOT TO WITHDRAW FROM THE ARMS OF HIM WHO HOLDS YOU IN HIS SOUL",
+    "seconds": 14.375,
+    "speaker_id": 5639,
+    "condition": "noise_20db",
+    "sha256": "cac3c2e163c67895f4b5014f47618e6f588866745715113b8359ebc97c7993a5"
+  },
+  {
+    "id": "260-123440-0019-clean",
+    "path": "CORPUS/260-123440-0019-clean.f32",
+    "text": "CRIED ALICE AGAIN FOR THIS TIME THE MOUSE WAS BRISTLING ALL OVER AND SHE FELT CERTAIN IT MUST BE REALLY OFFENDED",
+    "seconds": 6.63,
+    "speaker_id": 260,
+    "condition": "clean",
+    "sha256": "7bcdb1eef2289b0914fcf5d02d8f5d35cdceac6583ae5394acda6b0457fa7dc6"
+  },
+  {
+    "id": "260-123440-0019-quiet",
+    "path": "CORPUS/260-123440-0019-quiet.f32",
+    "text": "CRIED ALICE AGAIN FOR THIS TIME THE MOUSE WAS BRISTLING ALL OVER AND SHE FELT CERTAIN IT MUST BE REALLY OFFENDED",
+    "seconds": 6.63,
+    "speaker_id": 260,
+    "condition": "quiet",
+    "sha256": "6d3fefb89939922273c03295fa55bf3a93392714b1220c70cb3d41f9df4ae8b6"
+  },
+  {
+    "id": "260-123440-0019-noise_20db",
+    "path": "CORPUS/260-123440-0019-noise_20db.f32",
+    "text": "CRIED ALICE AGAIN FOR THIS TIME THE MOUSE WAS BRISTLING ALL OVER AND SHE FELT CERTAIN IT MUST BE REALLY OFFENDED",
+    "seconds": 6.63,
+    "speaker_id": 260,
+    "condition": "noise_20db",
+    "sha256": "1eae8df31480ffdb2da74c9230fef47b02d505b196b11d4859dd404bc2f0c331"
+  },
+  {
+    "id": "260-123286-0020-clean",
+    "path": "CORPUS/260-123286-0020-clean.f32",
+    "text": "TUESDAY AUGUST EIGHTEENTH",
+    "seconds": 3.06,
+    "speaker_id": 260,
+    "condition": "clean",
+    "sha256": "c022d5661757767eedc277ab968352a99719a0528fa11174631ea57b622eccec"
+  },
+  {
+    "id": "260-123286-0020-quiet",
+    "path": "CORPUS/260-123286-0020-quiet.f32",
+    "text": "TUESDAY AUGUST EIGHTEENTH",
+    "seconds": 3.06,
+    "speaker_id": 260,
+    "condition": "quiet",
+    "sha256": "3a619078d36743adc983547601f32a15d12f6f971c90f0820e2da9edbb63301f"
+  },
+  {
+    "id": "260-123286-0020-noise_20db",
+    "path": "CORPUS/260-123286-0020-noise_20db.f32",
+    "text": "TUESDAY AUGUST EIGHTEENTH",
+    "seconds": 3.06,
+    "speaker_id": 260,
+    "condition": "noise_20db",
+    "sha256": "009cd83613461509b1e232ebc772de6a9d5762baf51f6f9be94a1539e9f5fcde"
+  },
+  {
+    "id": "260-123288-0010-clean",
+    "path": "CORPUS/260-123288-0010-clean.f32",
+    "text": "ON THE MAST ALREADY I SEE THE LIGHT PLAY OF A LAMBENT SAINT ELMO'S FIRE THE OUTSTRETCHED SAIL CATCHES NOT A BREATH OF WIND AND HANGS LIKE A SHEET OF LEAD",
+    "seconds": 9.995,
+    "speaker_id": 260,
+    "condition": "clean",
+    "sha256": "26e94cec58e2a0001540014c437a772172710caacddc5b43c6107793939c9359"
+  },
+  {
+    "id": "260-123288-0010-quiet",
+    "path": "CORPUS/260-123288-0010-quiet.f32",
+    "text": "ON THE MAST ALREADY I SEE THE LIGHT PLAY OF A LAMBENT SAINT ELMO'S FIRE THE OUTSTRETCHED SAIL CATCHES NOT A BREATH OF WIND AND HANGS LIKE A SHEET OF LEAD",
+    "seconds": 9.995,
+    "speaker_id": 260,
+    "condition": "quiet",
+    "sha256": "7470626854ce3609054a078aaebfdb0a34a4e4a52544413ad7b4139b09654fa1"
+  },
+  {
+    "id": "260-123288-0010-noise_20db",
+    "path": "CORPUS/260-123288-0010-noise_20db.f32",
+    "text": "ON THE MAST ALREADY I SEE THE LIGHT PLAY OF A LAMBENT SAINT ELMO'S FIRE THE OUTSTRETCHED SAIL CATCHES NOT A BREATH OF WIND AND HANGS LIKE A SHEET OF LEAD",
+    "seconds": 9.995,
+    "speaker_id": 260,
+    "condition": "noise_20db",
+    "sha256": "dae6fa2a819f61f0c52cdcde184f4a0a3462222ca888fc930d41ca2f96ccc035"
+  },
+  {
+    "id": "7729-102255-0003-clean",
+    "path": "CORPUS/7729-102255-0003-clean.f32",
+    "text": "FOR GENERAL SERVICE THEREFORE REQUIRING NO SPECIAL EFFORT THE NUMERICAL STRENGTH OF THE FACTIONS WAS ABOUT EQUAL WHILE ON EXTRAORDINARY OCCASIONS THE TWO THOUSAND BORDER RUFFIAN RESERVE LYING A LITTLE FARTHER BACK FROM THE STATE LINE COULD AT ANY TIME EASILY TURN THE SCALE",
+    "seconds": 19.8050625,
+    "speaker_id": 7729,
+    "condition": "clean",
+    "sha256": "2e6f35d49d3d5ed911f4803d4d92ac90dc04ff6fed12d0fff7e98f23c2e1a987"
+  },
+  {
+    "id": "7729-102255-0003-quiet",
+    "path": "CORPUS/7729-102255-0003-quiet.f32",
+    "text": "FOR GENERAL SERVICE THEREFORE REQUIRING NO SPECIAL EFFORT THE NUMERICAL STRENGTH OF THE FACTIONS WAS ABOUT EQUAL WHILE ON EXTRAORDINARY OCCASIONS THE TWO THOUSAND BORDER RUFFIAN RESERVE LYING A LITTLE FARTHER BACK FROM THE STATE LINE COULD AT ANY TIME EASILY TURN THE SCALE",
+    "seconds": 19.8050625,
+    "speaker_id": 7729,
+    "condition": "quiet",
+    "sha256": "9579cf0f6ea504880aaab6ee7add8c0792201baf264cb89b3fae3c5085798861"
+  },
+  {
+    "id": "7729-102255-0003-noise_20db",
+    "path": "CORPUS/7729-102255-0003-noise_20db.f32",
+    "text": "FOR GENERAL SERVICE THEREFORE REQUIRING NO SPECIAL EFFORT THE NUMERICAL STRENGTH OF THE FACTIONS WAS ABOUT EQUAL WHILE ON EXTRAORDINARY OCCASIONS THE TWO THOUSAND BORDER RUFFIAN RESERVE LYING A LITTLE FARTHER BACK FROM THE STATE LINE COULD AT ANY TIME EASILY TURN THE SCALE",
+    "seconds": 19.8050625,
+    "speaker_id": 7729,
+    "condition": "noise_20db",
+    "sha256": "4d92701b66704a40ffb726e1a52bf2ade8564bb7228cb19e8e0d3ba42c1fb311"
+  },
+  {
+    "id": "7729-102255-0025-clean",
+    "path": "CORPUS/7729-102255-0025-clean.f32",
+    "text": "THEIR ASSUMED CHARACTER CHANGED WITH THEIR CHANGING OPPORTUNITIES OR NECESSITIES",
+    "seconds": 5.485,
+    "speaker_id": 7729,
+    "condition": "clean",
+    "sha256": "a4f6ffc584df86320d83d5a56b942e041c77bf247b8471ab6b1b345cfb028962"
+  },
+  {
+    "id": "7729-102255-0025-quiet",
+    "path": "CORPUS/7729-102255-0025-quiet.f32",
+    "text": "THEIR ASSUMED CHARACTER CHANGED WITH THEIR CHANGING OPPORTUNITIES OR NECESSITIES",
+    "seconds": 5.485,
+    "speaker_id": 7729,
+    "condition": "quiet",
+    "sha256": "4194780454ef42ae9f229ac39a64ce2c016b47fd0123be8909fd0f901bbba773"
+  },
+  {
+    "id": "7729-102255-0025-noise_20db",
+    "path": "CORPUS/7729-102255-0025-noise_20db.f32",
+    "text": "THEIR ASSUMED CHARACTER CHANGED WITH THEIR CHANGING OPPORTUNITIES OR NECESSITIES",
+    "seconds": 5.485,
+    "speaker_id": 7729,
+    "condition": "noise_20db",
+    "sha256": "13315e6179f959a7a9b9b92d28c26b9e1ca16ee1ad2049aeb946015855f4c831"
+  },
+  {
+    "id": "2094-142345-0000-clean",
+    "path": "CORPUS/2094-142345-0000-clean.f32",
+    "text": "IT IS A VERY FINE OLD PLACE OF RED BRICK SOFTENED BY A PALE POWDERY LICHEN WHICH HAS DISPERSED ITSELF WITH HAPPY IRREGULARITY SO AS TO BRING THE RED BRICK INTO TERMS OF FRIENDLY COMPANIONSHIP WITH THE LIMESTONE ORNAMENTS SURROUNDING THE THREE GABLES THE WINDOWS AND THE DOOR PLACE",
+    "seconds": 22.57,
+    "speaker_id": 2094,
+    "condition": "clean",
+    "sha256": "09beb167ab0f6024a7ff9fe51ee3356e44b9d875b50353ee5d1e5cc1bbbb6824"
+  },
+  {
+    "id": "2094-142345-0000-quiet",
+    "path": "CORPUS/2094-142345-0000-quiet.f32",
+    "text": "IT IS A VERY FINE OLD PLACE OF RED BRICK SOFTENED BY A PALE POWDERY LICHEN WHICH HAS DISPERSED ITSELF WITH HAPPY IRREGULARITY SO AS TO BRING THE RED BRICK INTO TERMS OF FRIENDLY COMPANIONSHIP WITH THE LIMESTONE ORNAMENTS SURROUNDING THE THREE GABLES THE WINDOWS AND THE DOOR PLACE",
+    "seconds": 22.57,
+    "speaker_id": 2094,
+    "condition": "quiet",
+    "sha256": "5b0b023e3b3781aa912c3b0dc82ef0c56302503f1a944d23b8d93527b0e07a14"
+  },
+  {
+    "id": "2094-142345-0000-noise_20db",
+    "path": "CORPUS/2094-142345-0000-noise_20db.f32",
+    "text": "IT IS A VERY FINE OLD PLACE OF RED BRICK SOFTENED BY A PALE POWDERY LICHEN WHICH HAS DISPERSED ITSELF WITH HAPPY IRREGULARITY SO AS TO BRING THE RED BRICK INTO TERMS OF FRIENDLY COMPANIONSHIP WITH THE LIMESTONE ORNAMENTS SURROUNDING THE THREE GABLES THE WINDOWS AND THE DOOR PLACE",
+    "seconds": 22.57,
+    "speaker_id": 2094,
+    "condition": "noise_20db",
+    "sha256": "58bb33ef615206cd9697d9f40a6da7ebe6f7508df296ca89f9b3d539cc73972a"
+  },
+  {
+    "id": "2094-142345-0022-clean",
+    "path": "CORPUS/2094-142345-0022-clean.f32",
+    "text": "MISTER OTTLEY'S INDEED",
+    "seconds": 2.28,
+    "speaker_id": 2094,
+    "condition": "clean",
+    "sha256": "179fe26b74111382ba05fa0535261d88ef1bc1601873d66cbb64095fcfa17edf"
+  },
+  {
+    "id": "2094-142345-0022-quiet",
+    "path": "CORPUS/2094-142345-0022-quiet.f32",
+    "text": "MISTER OTTLEY'S INDEED",
+    "seconds": 2.28,
+    "speaker_id": 2094,
+    "condition": "quiet",
+    "sha256": "107795d32f6a4c69642dc39c5f761391c67ace3ae5e7f3a71e87b332b372b142"
+  },
+  {
+    "id": "2094-142345-0022-noise_20db",
+    "path": "CORPUS/2094-142345-0022-noise_20db.f32",
+    "text": "MISTER OTTLEY'S INDEED",
+    "seconds": 2.28,
+    "speaker_id": 2094,
+    "condition": "noise_20db",
+    "sha256": "e8af8e2f9c997154932ce2e06641dc9ec181231be1e1e12218d0995082b1f451"
+  },
+  {
+    "id": "2094-142345-0044-clean",
+    "path": "CORPUS/2094-142345-0044-clean.f32",
+    "text": "SAID MISTER IRWINE WITH HIS STATELY CORDIALITY",
+    "seconds": 3.52,
+    "speaker_id": 2094,
+    "condition": "clean",
+    "sha256": "aa6a8c821f48320d2ff4aab7237f8979dfbf1042bb4e0203f56363a37cc3b3eb"
+  },
+  {
+    "id": "2094-142345-0044-quiet",
+    "path": "CORPUS/2094-142345-0044-quiet.f32",
+    "text": "SAID MISTER IRWINE WITH HIS STATELY CORDIALITY",
+    "seconds": 3.52,
+    "speaker_id": 2094,
+    "condition": "quiet",
+    "sha256": "d9ab613206bb784460f17a621b85d9d22afb85c3d7c7057a2c7c9a6df1916db0"
+  },
+  {
+    "id": "2094-142345-0044-noise_20db",
+    "path": "CORPUS/2094-142345-0044-noise_20db.f32",
+    "text": "SAID MISTER IRWINE WITH HIS STATELY CORDIALITY",
+    "seconds": 3.52,
+    "speaker_id": 2094,
+    "condition": "noise_20db",
+    "sha256": "b054a9b45034ea2651678d30fbec631873363f83fface0c44648945dcf254b51"
+  },
+  {
+    "id": "3575-170457-0005-clean",
+    "path": "CORPUS/3575-170457-0005-clean.f32",
+    "text": "SHE A TORY AND CLERGYMAN'S DAUGHTER WAS ALWAYS IN A MINORITY OF ONE IN OUR HOUSE OF VIOLENT DISSENT AND RADICALISM",
+    "seconds": 7.34,
+    "speaker_id": 3575,
+    "condition": "clean",
+    "sha256": "74745d71639717a7558746d6c0be702d8a321281b16f0d31c4dbb14b93aed1cf"
+  },
+  {
+    "id": "3575-170457-0005-quiet",
+    "path": "CORPUS/3575-170457-0005-quiet.f32",
+    "text": "SHE A TORY AND CLERGYMAN'S DAUGHTER WAS ALWAYS IN A MINORITY OF ONE IN OUR HOUSE OF VIOLENT DISSENT AND RADICALISM",
+    "seconds": 7.34,
+    "speaker_id": 3575,
+    "condition": "quiet",
+    "sha256": "b638b9c7ab0fe31f08f3f9b87a9eed6ee3c6cb7ec732b6bc695316fb724011c1"
+  },
+  {
+    "id": "3575-170457-0005-noise_20db",
+    "path": "CORPUS/3575-170457-0005-noise_20db.f32",
+    "text": "SHE A TORY AND CLERGYMAN'S DAUGHTER WAS ALWAYS IN A MINORITY OF ONE IN OUR HOUSE OF VIOLENT DISSENT AND RADICALISM",
+    "seconds": 7.34,
+    "speaker_id": 3575,
+    "condition": "noise_20db",
+    "sha256": "38d13741f60c21a320e4daf40f73a6350a4e7fdfc52b97808cc531c915bfa809"
+  },
+  {
+    "id": "3575-170457-0027-clean",
+    "path": "CORPUS/3575-170457-0027-clean.f32",
+    "text": "I CANNOT DENY MYSELF THE GRATIFICATION OF INSERTING SOUTHEY'S REPLY",
+    "seconds": 4.58,
+    "speaker_id": 3575,
+    "condition": "clean",
+    "sha256": "28222330519a3790ac8ef57e4d62e47d97ea4b4d245e6f0d949c226c53d40f1c"
+  },
+  {
+    "id": "3575-170457-0027-quiet",
+    "path": "CORPUS/3575-170457-0027-quiet.f32",
+    "text": "I CANNOT DENY MYSELF THE GRATIFICATION OF INSERTING SOUTHEY'S REPLY",
+    "seconds": 4.58,
+    "speaker_id": 3575,
+    "condition": "quiet",
+    "sha256": "664d6d9f3b946311b79d615f21eea6164145b3c99f09e26bef7a2a3ad2a75004"
+  },
+  {
+    "id": "3575-170457-0027-noise_20db",
+    "path": "CORPUS/3575-170457-0027-noise_20db.f32",
+    "text": "I CANNOT DENY MYSELF THE GRATIFICATION OF INSERTING SOUTHEY'S REPLY",
+    "seconds": 4.58,
+    "speaker_id": 3575,
+    "condition": "noise_20db",
+    "sha256": "13aada5f7a5574d1941e1762a45544c8498c78b17315b52699638d20e6900e48"
+  },
+  {
+    "id": "3575-170457-0049-clean",
+    "path": "CORPUS/3575-170457-0049-clean.f32",
+    "text": "THIS DECISION WAS COMMUNICATED TO THE GIRLS",
+    "seconds": 2.715,
+    "speaker_id": 3575,
+    "condition": "clean",
+    "sha256": "c82c559847e280cff65d1035100b168b03641a9b1acedb0f54a231e12e63407f"
+  },
+  {
+    "id": "3575-170457-0049-quiet",
+    "path": "CORPUS/3575-170457-0049-quiet.f32",
+    "text": "THIS DECISION WAS COMMUNICATED TO THE GIRLS",
+    "seconds": 2.715,
+    "speaker_id": 3575,
+    "condition": "quiet",
+    "sha256": "d9970fa5fbc44d9facaf97f9225d9d3e63e95ad44e2130fe7ebc728c821a2654"
+  },
+  {
+    "id": "3575-170457-0049-noise_20db",
+    "path": "CORPUS/3575-170457-0049-noise_20db.f32",
+    "text": "THIS DECISION WAS COMMUNICATED TO THE GIRLS",
+    "seconds": 2.715,
+    "speaker_id": 3575,
+    "condition": "noise_20db",
+    "sha256": "94a9eaf877495738779ebfca03886e16444ad3045dc60de77c0106ee9f0afeaa"
+  },
+  {
+    "id": "7127-75947-0014-clean",
+    "path": "CORPUS/7127-75947-0014-clean.f32",
+    "text": "FORGIVE ME I HARDLY KNOW WHAT I AM SAYING A THOUSAND TIMES FORGIVE ME MADAME WAS RIGHT QUITE RIGHT THIS BRUTAL EXILE HAS COMPLETELY TURNED MY BRAIN",
+    "seconds": 10.115,
+    "speaker_id": 7127,
+    "condition": "clean",
+    "sha256": "b9a3993ff93d4a333dcd40ed810631b26c59f6b32c172499484beb3a888618d1"
+  },
+  {
+    "id": "7127-75947-0014-quiet",
+    "path": "CORPUS/7127-75947-0014-quiet.f32",
+    "text": "FORGIVE ME I HARDLY KNOW WHAT I AM SAYING A THOUSAND TIMES FORGIVE ME MADAME WAS RIGHT QUITE RIGHT THIS BRUTAL EXILE HAS COMPLETELY TURNED MY BRAIN",
+    "seconds": 10.115,
+    "speaker_id": 7127,
+    "condition": "quiet",
+    "sha256": "83cf228bd2bc42e9b55f89585e8bca3650c3c39cc678a30621c73b36619a3053"
+  },
+  {
+    "id": "7127-75947-0014-noise_20db",
+    "path": "CORPUS/7127-75947-0014-noise_20db.f32",
+    "text": "FORGIVE ME I HARDLY KNOW WHAT I AM SAYING A THOUSAND TIMES FORGIVE ME MADAME WAS RIGHT QUITE RIGHT THIS BRUTAL EXILE HAS COMPLETELY TURNED MY BRAIN",
+    "seconds": 10.115,
+    "speaker_id": 7127,
+    "condition": "noise_20db",
+    "sha256": "d66838f37a6de41fe729d7a59c0ec4c705b3f88929965374e3f039d3a9c34b16"
+  },
+  {
+    "id": "7127-75947-0036-clean",
+    "path": "CORPUS/7127-75947-0036-clean.f32",
+    "text": "I GIVE MY CONSENT",
+    "seconds": 2.44,
+    "speaker_id": 7127,
+    "condition": "clean",
+    "sha256": "5a669aae507aff8bd4b10b9b3b7bfbc7218be96d654c0c9dacd678910480f23e"
+  },
+  {
+    "id": "7127-75947-0036-quiet",
+    "path": "CORPUS/7127-75947-0036-quiet.f32",
+    "text": "I GIVE MY CONSENT",
+    "seconds": 2.44,
+    "speaker_id": 7127,
+    "condition": "quiet",
+    "sha256": "313721794a9f05299fd7a751690b93919c0bab004a30d8098e70dda8b7c451b6"
+  },
+  {
+    "id": "7127-75947-0036-noise_20db",
+    "path": "CORPUS/7127-75947-0036-noise_20db.f32",
+    "text": "I GIVE MY CONSENT",
+    "seconds": 2.44,
+    "speaker_id": 7127,
+    "condition": "noise_20db",
+    "sha256": "8c88607a08a87e23cb4a99c2a1b58bca0dd3ad5e1462ed569f4b83336a234148"
+  },
+  {
+    "id": "7127-75946-0017-clean",
+    "path": "CORPUS/7127-75946-0017-clean.f32",
+    "text": "HIS LEGS THE BEST SHAPED AT COURT WERE DISPLAYED TO GREAT ADVANTAGE IN FLESH COLORED SILKEN HOSE OF SILK SO FINE AND SO TRANSPARENT THAT IT SEEMED ALMOST LIKE FLESH ITSELF",
+    "seconds": 12.33,
+    "speaker_id": 7127,
+    "condition": "clean",
+    "sha256": "7a116d9170dd8e62b6c03533e984ef428c789b824e3ec6933ffcf35b6aaeade8"
+  },
+  {
+    "id": "7127-75946-0017-quiet",
+    "path": "CORPUS/7127-75946-0017-quiet.f32",
+    "text": "HIS LEGS THE BEST SHAPED AT COURT WERE DISPLAYED TO GREAT ADVANTAGE IN FLESH COLORED SILKEN HOSE OF SILK SO FINE AND SO TRANSPARENT THAT IT SEEMED ALMOST LIKE FLESH ITSELF",
+    "seconds": 12.33,
+    "speaker_id": 7127,
+    "condition": "quiet",
+    "sha256": "168bc52cffdb883093edbe16f9a204068fb6e8d72f329d08f8789a504b3e4889"
+  },
+  {
+    "id": "7127-75946-0017-noise_20db",
+    "path": "CORPUS/7127-75946-0017-noise_20db.f32",
+    "text": "HIS LEGS THE BEST SHAPED AT COURT WERE DISPLAYED TO GREAT ADVANTAGE IN FLESH COLORED SILKEN HOSE OF SILK SO FINE AND SO TRANSPARENT THAT IT SEEMED ALMOST LIKE FLESH ITSELF",
+    "seconds": 12.33,
+    "speaker_id": 7127,
+    "condition": "noise_20db",
+    "sha256": "bd6b5f937b6b0f09b88cb679e3c95b546b353c40ff401fd3b6ecddcd499993d5"
+  },
+  {
+    "id": "2961-960-0009-clean",
+    "path": "CORPUS/2961-960-0009-clean.f32",
+    "text": "THE DIALOGUE IS PRIMARILY CONCERNED WITH THE ANIMAL CREATION INCLUDING UNDER THIS TERM THE HEAVENLY BODIES AND WITH MAN ONLY AS ONE AMONG THE ANIMALS",
+    "seconds": 11.86,
+    "speaker_id": 2961,
+    "condition": "clean",
+    "sha256": "229973640dc12fbb877ae11379710d068467da7d9d6518c45856d5cbb33e62de"
+  },
+  {
+    "id": "2961-960-0009-quiet",
+    "path": "CORPUS/2961-960-0009-quiet.f32",
+    "text": "THE DIALOGUE IS PRIMARILY CONCERNED WITH THE ANIMAL CREATION INCLUDING UNDER THIS TERM THE HEAVENLY BODIES AND WITH MAN ONLY AS ONE AMONG THE ANIMALS",
+    "seconds": 11.86,
+    "speaker_id": 2961,
+    "condition": "quiet",
+    "sha256": "5e6e68bb4003850ffb9a25c6a154b28ae8e313ba538e2310281d0d46872cc878"
+  },
+  {
+    "id": "2961-960-0009-noise_20db",
+    "path": "CORPUS/2961-960-0009-noise_20db.f32",
+    "text": "THE DIALOGUE IS PRIMARILY CONCERNED WITH THE ANIMAL CREATION INCLUDING UNDER THIS TERM THE HEAVENLY BODIES AND WITH MAN ONLY AS ONE AMONG THE ANIMALS",
+    "seconds": 11.86,
+    "speaker_id": 2961,
+    "condition": "noise_20db",
+    "sha256": "3400a78cc8e696b314ea4ec5c837707b8f92fc48972b3f53b9e31f953aedb2a8"
+  },
+  {
+    "id": "2961-961-0008-clean",
+    "path": "CORPUS/2961-961-0008-clean.f32",
+    "text": "BUT THE MEMORY OF THEIR EXPLOITS HAS PASSED AWAY OWING TO THE LAPSE OF TIME AND THE EXTINCTION OF THE ACTORS",
+    "seconds": 7.155,
+    "speaker_id": 2961,
+    "condition": "clean",
+    "sha256": "2d5ed6e2a9b66143eb5764e210b6fab6f6943aacc1cdb8ac301d57d41c0299b5"
+  },
+  {
+    "id": "2961-961-0008-quiet",
+    "path": "CORPUS/2961-961-0008-quiet.f32",
+    "text": "BUT THE MEMORY OF THEIR EXPLOITS HAS PASSED AWAY OWING TO THE LAPSE OF TIME AND THE EXTINCTION OF THE ACTORS",
+    "seconds": 7.155,
+    "speaker_id": 2961,
+    "condition": "quiet",
+    "sha256": "6fa17b668a4311eba18297ef7830a7a77a7a0702421f148336fd04a8e97839a6"
+  },
+  {
+    "id": "2961-961-0008-noise_20db",
+    "path": "CORPUS/2961-961-0008-noise_20db.f32",
+    "text": "BUT THE MEMORY OF THEIR EXPLOITS HAS PASSED AWAY OWING TO THE LAPSE OF TIME AND THE EXTINCTION OF THE ACTORS",
+    "seconds": 7.155,
+    "speaker_id": 2961,
+    "condition": "noise_20db",
+    "sha256": "d8b4adc3c712f9931d7846d216e2ffe896a8d773b4cec628db64656a00cfe494"
+  },
+  {
+    "id": "8463-287645-0007-clean",
+    "path": "CORPUS/8463-287645-0007-clean.f32",
+    "text": "ANOTHER CASE SAID JOHN WESLEY WAS A LITTLE GIRL HALF GROWN WHO WAS WASHING WINDOWS UP STAIRS ONE DAY AND UNLUCKILY FELL ASLEEP IN THE WINDOW AND IN THIS POSITION WAS FOUND BY HER MISTRESS IN A RAGE THE MISTRESS HIT HER A HEAVY SLAP KNOCKED HER OUT OF THE WINDOW AND SHE FELL TO THE PAVEMENT AND DIED IN A FEW HOURS FROM THE EFFECTS THEREOF",
+    "seconds": 21.5,
+    "speaker_id": 8463,
+    "condition": "clean",
+    "sha256": "0428ae12f00506c4d242e7fae6e046fa54415052c2ba5bea6bd39f4ceaa3961f"
+  },
+  {
+    "id": "8463-287645-0007-quiet",
+    "path": "CORPUS/8463-287645-0007-quiet.f32",
+    "text": "ANOTHER CASE SAID JOHN WESLEY WAS A LITTLE GIRL HALF GROWN WHO WAS WASHING WINDOWS UP STAIRS ONE DAY AND UNLUCKILY FELL ASLEEP IN THE WINDOW AND IN THIS POSITION WAS FOUND BY HER MISTRESS IN A RAGE THE MISTRESS HIT HER A HEAVY SLAP KNOCKED HER OUT OF THE WINDOW AND SHE FELL TO THE PAVEMENT AND DIED IN A FEW HOURS FROM THE EFFECTS THEREOF",
+    "seconds": 21.5,
+    "speaker_id": 8463,
+    "condition": "quiet",
+    "sha256": "14f0be7ddec70ca2beffe80f167c8ba9e21556b528102ea0b35eb9e6a6249c96"
+  },
+  {
+    "id": "8463-287645-0007-noise_20db",
+    "path": "CORPUS/8463-287645-0007-noise_20db.f32",
+    "text": "ANOTHER CASE SAID JOHN WESLEY WAS A LITTLE GIRL HALF GROWN WHO WAS WASHING WINDOWS UP STAIRS ONE DAY AND UNLUCKILY FELL ASLEEP IN THE WINDOW AND IN THIS POSITION WAS FOUND BY HER MISTRESS IN A RAGE THE MISTRESS HIT HER A HEAVY SLAP KNOCKED HER OUT OF THE WINDOW AND SHE FELL TO THE PAVEMENT AND DIED IN A FEW HOURS FROM THE EFFECTS THEREOF",
+    "seconds": 21.5,
+    "speaker_id": 8463,
+    "condition": "noise_20db",
+    "sha256": "4cefed52c2779231a12dfb0b67c7e2f1da7a2ce1b7b2085395bc4114d8b40ed6"
+  },
+  {
+    "id": "8463-294825-0014-clean",
+    "path": "CORPUS/8463-294825-0014-clean.f32",
+    "text": "FATHOM SIX FEET",
+    "seconds": 2.415,
+    "speaker_id": 8463,
+    "condition": "clean",
+    "sha256": "a12b87062a2c3eae0fe5e0945146ba22787910fe115eb094a18d219f00324ecb"
+  },
+  {
+    "id": "8463-294825-0014-quiet",
+    "path": "CORPUS/8463-294825-0014-quiet.f32",
+    "text": "FATHOM SIX FEET",
+    "seconds": 2.415,
+    "speaker_id": 8463,
+    "condition": "quiet",
+    "sha256": "225c08af8e0be93e3dca4c2080ab59a3fefe4cce8437fb047349918cf13d2b9a"
+  },
+  {
+    "id": "8463-294825-0014-noise_20db",
+    "path": "CORPUS/8463-294825-0014-noise_20db.f32",
+    "text": "FATHOM SIX FEET",
+    "seconds": 2.415,
+    "speaker_id": 8463,
+    "condition": "noise_20db",
+    "sha256": "9663346fbb68239af396569147a37422755fb10a3812d5cfb638667cce8b8bce"
+  },
+  {
+    "id": "8463-294828-0016-clean",
+    "path": "CORPUS/8463-294828-0016-clean.f32",
+    "text": "DID MASTER SUMMON ME HE SAID ENTERING",
+    "seconds": 3.295,
+    "speaker_id": 8463,
+    "condition": "clean",
+    "sha256": "bc5f0ed4e4c6572e3477cd2d8c529f5f06d5558830119bf320cf55d87b354f08"
+  },
+  {
+    "id": "8463-294828-0016-quiet",
+    "path": "CORPUS/8463-294828-0016-quiet.f32",
+    "text": "DID MASTER SUMMON ME HE SAID ENTERING",
+    "seconds": 3.295,
+    "speaker_id": 8463,
+    "condition": "quiet",
+    "sha256": "44d5ca54a9d0638d99b8be2ef6d70bc06822c364e161faf99477904de7d09941"
+  },
+  {
+    "id": "8463-294828-0016-noise_20db",
+    "path": "CORPUS/8463-294828-0016-noise_20db.f32",
+    "text": "DID MASTER SUMMON ME HE SAID ENTERING",
+    "seconds": 3.295,
+    "speaker_id": 8463,
+    "condition": "noise_20db",
+    "sha256": "78fb6a71d6aba68fe3a55e2868ac9257729c894c2b04119cd7fbc872f880ad11"
+  },
+  {
+    "id": "8463-294828-0038-clean",
+    "path": "CORPUS/8463-294828-0038-clean.f32",
+    "text": "THOUSANDS OF HANDKERCHIEFS WERE WAVING ABOVE THESE TIGHTLY PACKED MASSES HAILING THE ABRAHAM LINCOLN UNTIL IT REACHED THE WATERS OF THE HUDSON RIVER AT THE TIP OF THE LONG PENINSULA THAT FORMS NEW YORK CITY",
+    "seconds": 13.14,
+    "speaker_id": 8463,
+    "condition": "clean",
+    "sha256": "71f289a3bdb7cd4708817e487ecd1904e6ea2196d837f31cdc015eef57eafaab"
+  },
+  {
+    "id": "8463-294828-0038-quiet",
+    "path": "CORPUS/8463-294828-0038-quiet.f32",
+    "text": "THOUSANDS OF HANDKERCHIEFS WERE WAVING ABOVE THESE TIGHTLY PACKED MASSES HAILING THE ABRAHAM LINCOLN UNTIL IT REACHED THE WATERS OF THE HUDSON RIVER AT THE TIP OF THE LONG PENINSULA THAT FORMS NEW YORK CITY",
+    "seconds": 13.14,
+    "speaker_id": 8463,
+    "condition": "quiet",
+    "sha256": "b5153a0eb1df28392616d7c12c9b58cceb526b057ac6827f040b36bba70a3f10"
+  },
+  {
+    "id": "8463-294828-0038-noise_20db",
+    "path": "CORPUS/8463-294828-0038-noise_20db.f32",
+    "text": "THOUSANDS OF HANDKERCHIEFS WERE WAVING ABOVE THESE TIGHTLY PACKED MASSES HAILING THE ABRAHAM LINCOLN UNTIL IT REACHED THE WATERS OF THE HUDSON RIVER AT THE TIP OF THE LONG PENINSULA THAT FORMS NEW YORK CITY",
+    "seconds": 13.14,
+    "speaker_id": 8463,
+    "condition": "noise_20db",
+    "sha256": "5cf65c8a2b4a3655f434c351c0ea995965e73fcd66b64430936f398ce3744e15"
+  },
+  {
+    "id": "8230-279154-0021-clean",
+    "path": "CORPUS/8230-279154-0021-clean.f32",
+    "text": "REMEMBERING HAS TO BE A PRESENT OCCURRENCE IN SOME WAY RESEMBLING OR RELATED TO WHAT IS REMEMBERED",
+    "seconds": 6.56,
+    "speaker_id": 8230,
+    "condition": "clean",
+    "sha256": "d4688e63a2b426cc40f401ec28c18a7abedb42f908a308e106735a8f3a52e10d"
+  },
+  {
+    "id": "8230-279154-0021-quiet",
+    "path": "CORPUS/8230-279154-0021-quiet.f32",
+    "text": "REMEMBERING HAS TO BE A PRESENT OCCURRENCE IN SOME WAY RESEMBLING OR RELATED TO WHAT IS REMEMBERED",
+    "seconds": 6.56,
+    "speaker_id": 8230,
+    "condition": "quiet",
+    "sha256": "428a6bc20f62b7332d094d870cd21d107a5a432126b2fdeaad8ace0ec0d3606b"
+  },
+  {
+    "id": "8230-279154-0021-noise_20db",
+    "path": "CORPUS/8230-279154-0021-noise_20db.f32",
+    "text": "REMEMBERING HAS TO BE A PRESENT OCCURRENCE IN SOME WAY RESEMBLING OR RELATED TO WHAT IS REMEMBERED",
+    "seconds": 6.56,
+    "speaker_id": 8230,
+    "condition": "noise_20db",
+    "sha256": "88247e7823492380defa1085441febff24a1c75f716692ab13a3af0d89e971f0"
+  },
+  {
+    "id": "8230-279154-0043-clean",
+    "path": "CORPUS/8230-279154-0043-clean.f32",
+    "text": "OF COURSE THE WORDS THIS HAS EXISTED BEFORE ARE A VERY INADEQUATE TRANSLATION OF WHAT ACTUALLY HAPPENS WHEN WE FORM A JUDGMENT OF RECOGNITION BUT THAT IS UNAVOIDABLE WORDS ARE FRAMED TO EXPRESS A LEVEL OF THOUGHT WHICH IS BY NO MEANS PRIMITIVE AND ARE QUITE INCAPABLE OF EXPRESSING SUCH AN ELEMENTARY OCCURRENCE AS RECOGNITION",
+    "seconds": 24.485,
+    "speaker_id": 8230,
+    "condition": "clean",
+    "sha256": "64f49011d101a6f39c929a825430fe60b2d7c49555c2d69cda8e219dc8330332"
+  },
+  {
+    "id": "8230-279154-0043-quiet",
+    "path": "CORPUS/8230-279154-0043-quiet.f32",
+    "text": "OF COURSE THE WORDS THIS HAS EXISTED BEFORE ARE A VERY INADEQUATE TRANSLATION OF WHAT ACTUALLY HAPPENS WHEN WE FORM A JUDGMENT OF RECOGNITION BUT THAT IS UNAVOIDABLE WORDS ARE FRAMED TO EXPRESS A LEVEL OF THOUGHT WHICH IS BY NO MEANS PRIMITIVE AND ARE QUITE INCAPABLE OF EXPRESSING SUCH AN ELEMENTARY OCCURRENCE AS RECOGNITION",
+    "seconds": 24.485,
+    "speaker_id": 8230,
+    "condition": "quiet",
+    "sha256": "f0bfa7c78b083a318f5d3a10f59de34c3062962020594e1f9e9afaa57e7c4998"
+  },
+  {
+    "id": "8230-279154-0043-noise_20db",
+    "path": "CORPUS/8230-279154-0043-noise_20db.f32",
+    "text": "OF COURSE THE WORDS THIS HAS EXISTED BEFORE ARE A VERY INADEQUATE TRANSLATION OF WHAT ACTUALLY HAPPENS WHEN WE FORM A JUDGMENT OF RECOGNITION BUT THAT IS UNAVOIDABLE WORDS ARE FRAMED TO EXPRESS A LEVEL OF THOUGHT WHICH IS BY NO MEANS PRIMITIVE AND ARE QUITE INCAPABLE OF EXPRESSING SUCH AN ELEMENTARY OCCURRENCE AS RECOGNITION",
+    "seconds": 24.485,
+    "speaker_id": 8230,
+    "condition": "noise_20db",
+    "sha256": "be176e8a1c350657980b7bc94a90a8cfc3188e52471af346dcf65501f6ee2807"
+  },
+  {
+    "id": "7176-92135-0021-clean",
+    "path": "CORPUS/7176-92135-0021-clean.f32",
+    "text": "I SAY I'VE BEEN WONDERING ABOUT THIS BUSINESS",
+    "seconds": 2.565,
+    "speaker_id": 7176,
+    "condition": "clean",
+    "sha256": "4e3241d808058a2bae600dd1ea070bfd9af02ab0bed33257a06ff7c5be0c42b3"
+  },
+  {
+    "id": "7176-92135-0021-quiet",
+    "path": "CORPUS/7176-92135-0021-quiet.f32",
+    "text": "I SAY I'VE BEEN WONDERING ABOUT THIS BUSINESS",
+    "seconds": 2.565,
+    "speaker_id": 7176,
+    "condition": "quiet",
+    "sha256": "901e46f3aadca581233e97ccb9710f9be362429a9bf3f94cf5728e90ac706422"
+  },
+  {
+    "id": "7176-92135-0021-noise_20db",
+    "path": "CORPUS/7176-92135-0021-noise_20db.f32",
+    "text": "I SAY I'VE BEEN WONDERING ABOUT THIS BUSINESS",
+    "seconds": 2.565,
+    "speaker_id": 7176,
+    "condition": "noise_20db",
+    "sha256": "f11f8ef9f264a188cd2c5e9565fb00cd97bcf6777d18ca3cd3073bcea873b9a0"
+  },
+  {
+    "id": "7176-92135-0043-clean",
+    "path": "CORPUS/7176-92135-0043-clean.f32",
+    "text": "TWO BITES ARE MADE AND THE BREAD IS CRUMBLED WITH AN AIR OF GREAT EAGERNESS INDEED ONE FEELS THAT IN REAL LIFE THE GUEST WOULD CLUTCH HOLD OF THE FOOTMAN AND SAY HALF A MO OLD CHAP I HAVEN'T NEARLY FINISHED BUT THE ACTOR IS BETTER SCHOOLED THAN THIS",
+    "seconds": 13.28,
+    "speaker_id": 7176,
+    "condition": "clean",
+    "sha256": "00cfff4c8620a42d61480bab0b7ced0eb61dbb4451d13aeb6d317665914cdc8a"
+  },
+  {
+    "id": "7176-92135-0043-quiet",
+    "path": "CORPUS/7176-92135-0043-quiet.f32",
+    "text": "TWO BITES ARE MADE AND THE BREAD IS CRUMBLED WITH AN AIR OF GREAT EAGERNESS INDEED ONE FEELS THAT IN REAL LIFE THE GUEST WOULD CLUTCH HOLD OF THE FOOTMAN AND SAY HALF A MO OLD CHAP I HAVEN'T NEARLY FINISHED BUT THE ACTOR IS BETTER SCHOOLED THAN THIS",
+    "seconds": 13.28,
+    "speaker_id": 7176,
+    "condition": "quiet",
+    "sha256": "c027f2489a929baff99010c93bcbf19c0ce9d643a3f2b35e469aa0a52ad0d9bc"
+  },
+  {
+    "id": "7176-92135-0043-noise_20db",
+    "path": "CORPUS/7176-92135-0043-noise_20db.f32",
+    "text": "TWO BITES ARE MADE AND THE BREAD IS CRUMBLED WITH AN AIR OF GREAT EAGERNESS INDEED ONE FEELS THAT IN REAL LIFE THE GUEST WOULD CLUTCH HOLD OF THE FOOTMAN AND SAY HALF A MO OLD CHAP I HAVEN'T NEARLY FINISHED BUT THE ACTOR IS BETTER SCHOOLED THAN THIS",
+    "seconds": 13.28,
+    "speaker_id": 7176,
+    "condition": "noise_20db",
+    "sha256": "498bdbeb4f1c52795cdf2dbe6c8bad76d9bf6a6cccf63e5d126c380dfb1c9edf"
+  },
+  {
+    "id": "7176-88083-0019-clean",
+    "path": "CORPUS/7176-88083-0019-clean.f32",
+    "text": "AS HE FLEW HIS DOWN REACHING CLUTCHING TALONS WERE NOT HALF A YARD ABOVE THE FUGITIVE'S HEAD",
+    "seconds": 5.81,
+    "speaker_id": 7176,
+    "condition": "clean",
+    "sha256": "1b0125f48000257f47c55fbe22a23986c0615fa5326cf847cedc0804f272e6d0"
+  },
+  {
+    "id": "7176-88083-0019-quiet",
+    "path": "CORPUS/7176-88083-0019-quiet.f32",
+    "text": "AS HE FLEW HIS DOWN REACHING CLUTCHING TALONS WERE NOT HALF A YARD ABOVE THE FUGITIVE'S HEAD",
+    "seconds": 5.81,
+    "speaker_id": 7176,
+    "condition": "quiet",
+    "sha256": "d7a1de34b6bac2b9d7d5dd944cc2086258a443983291b6b0341ae628e01f9ade"
+  },
+  {
+    "id": "7176-88083-0019-noise_20db",
+    "path": "CORPUS/7176-88083-0019-noise_20db.f32",
+    "text": "AS HE FLEW HIS DOWN REACHING CLUTCHING TALONS WERE NOT HALF A YARD ABOVE THE FUGITIVE'S HEAD",
+    "seconds": 5.81,
+    "speaker_id": 7176,
+    "condition": "noise_20db",
+    "sha256": "242b9537d5aaf3467bb61052de8b5949078b1e9b268cf5124630e10035e4a673"
+  },
+  {
+    "id": "1995-1836-0013-clean",
+    "path": "CORPUS/1995-1836-0013-clean.f32",
+    "text": "MARY TAYLOR HOWEVER RELATED THE TALE OF ZORA TO MISSUS GREY'S PRIVATE EAR LATER",
+    "seconds": 5.3,
+    "speaker_id": 1995,
+    "condition": "clean",
+    "sha256": "063154afe169645d9477856245ac120b754b774f3f00c20ac72248b3ce89877d"
+  },
+  {
+    "id": "1995-1836-0013-quiet",
+    "path": "CORPUS/1995-1836-0013-quiet.f32",
+    "text": "MARY TAYLOR HOWEVER RELATED THE TALE OF ZORA TO MISSUS GREY'S PRIVATE EAR LATER",
+    "seconds": 5.3,
+    "speaker_id": 1995,
+    "condition": "quiet",
+    "sha256": "d27253b610a329dd7578cc9748e9148b45777608c63abc840bb065a8892e4aff"
+  },
+  {
+    "id": "1995-1836-0013-noise_20db",
+    "path": "CORPUS/1995-1836-0013-noise_20db.f32",
+    "text": "MARY TAYLOR HOWEVER RELATED THE TALE OF ZORA TO MISSUS GREY'S PRIVATE EAR LATER",
+    "seconds": 5.3,
+    "speaker_id": 1995,
+    "condition": "noise_20db",
+    "sha256": "16a1818d940f63954ac918c3a54e355f87f5f4e4839aa650464221657a3dc0e4"
+  },
+  {
+    "id": "1995-1826-0020-clean",
+    "path": "CORPUS/1995-1826-0020-clean.f32",
+    "text": "MISS TAYLOR DID NOT KNOW MUCH ABOUT COTTON BUT AT LEAST ONE MORE REMARK SEEMED CALLED FOR",
+    "seconds": 6.12,
+    "speaker_id": 1995,
+    "condition": "clean",
+    "sha256": "9613f0f170f1cdcda8851cfd411627941ba5895cf590931e711e613f7e9196e5"
+  },
+  {
+    "id": "1995-1826-0020-quiet",
+    "path": "CORPUS/1995-1826-0020-quiet.f32",
+    "text": "MISS TAYLOR DID NOT KNOW MUCH ABOUT COTTON BUT AT LEAST ONE MORE REMARK SEEMED CALLED FOR",
+    "seconds": 6.12,
+    "speaker_id": 1995,
+    "condition": "quiet",
+    "sha256": "aee997ca9eae70e591fe2d1b09a620ee24f789eef7842a0012bfcf257137095f"
+  },
+  {
+    "id": "1995-1826-0020-noise_20db",
+    "path": "CORPUS/1995-1826-0020-noise_20db.f32",
+    "text": "MISS TAYLOR DID NOT KNOW MUCH ABOUT COTTON BUT AT LEAST ONE MORE REMARK SEEMED CALLED FOR",
+    "seconds": 6.12,
+    "speaker_id": 1995,
+    "condition": "noise_20db",
+    "sha256": "b79da5a48419443190357f0c71eda60a7935b3b6e4e950591fc2628d4fbf8a52"
+  },
+  {
+    "id": "1995-1837-0015-clean",
+    "path": "CORPUS/1995-1837-0015-clean.f32",
+    "text": "THE SQUARES OF COTTON SHARP EDGED HEAVY WERE JUST ABOUT TO BURST TO BOLLS",
+    "seconds": 4.485,
+    "speaker_id": 1995,
+    "condition": "clean",
+    "sha256": "6babf1b541348a531401e594be40faf296dd3c08c04567896ee0286b5b17025f"
+  },
+  {
+    "id": "1995-1837-0015-quiet",
+    "path": "CORPUS/1995-1837-0015-quiet.f32",
+    "text": "THE SQUARES OF COTTON SHARP EDGED HEAVY WERE JUST ABOUT TO BURST TO BOLLS",
+    "seconds": 4.485,
+    "speaker_id": 1995,
+    "condition": "quiet",
+    "sha256": "d2642a14971113423818d51b07b076bda31899125312903c53f9ed09d91c0f1b"
+  },
+  {
+    "id": "1995-1837-0015-noise_20db",
+    "path": "CORPUS/1995-1837-0015-noise_20db.f32",
+    "text": "THE SQUARES OF COTTON SHARP EDGED HEAVY WERE JUST ABOUT TO BURST TO BOLLS",
+    "seconds": 4.485,
+    "speaker_id": 1995,
+    "condition": "noise_20db",
+    "sha256": "0e430a7f5adc9a10c6f86f588c5d23d8d72b9207145cad2c31350fd4cf36cd3d"
+  },
+  {
+    "id": "1284-1181-0007-clean",
+    "path": "CORPUS/1284-1181-0007-clean.f32",
+    "text": "SHE POURED INTO THE DISH A QUANTITY FROM EACH OF THESE BOTTLES",
+    "seconds": 4.04,
+    "speaker_id": 1284,
+    "condition": "clean",
+    "sha256": "bfdb27e8a607961e5d38813628adc60af7cf98126035096851a6af98b0542b11"
+  },
+  {
+    "id": "1284-1181-0007-quiet",
+    "path": "CORPUS/1284-1181-0007-quiet.f32",
+    "text": "SHE POURED INTO THE DISH A QUANTITY FROM EACH OF THESE BOTTLES",
+    "seconds": 4.04,
+    "speaker_id": 1284,
+    "condition": "quiet",
+    "sha256": "234ffba57ddd1fd45411f79027d33380d7b15f5bc848ae152dd5266d1368f375"
+  },
+  {
+    "id": "1284-1181-0007-noise_20db",
+    "path": "CORPUS/1284-1181-0007-noise_20db.f32",
+    "text": "SHE POURED INTO THE DISH A QUANTITY FROM EACH OF THESE BOTTLES",
+    "seconds": 4.04,
+    "speaker_id": 1284,
+    "condition": "noise_20db",
+    "sha256": "2a533357cf2aabf53ec77beaf4493a6dcca3e890a3f866f8487614a97fcc4ea2"
+  },
+  {
+    "id": "1284-1180-0007-clean",
+    "path": "CORPUS/1284-1180-0007-clean.f32",
+    "text": "HE KNEW IT WOULD TAKE THEM TO THE HOUSE OF THE CROOKED MAGICIAN WHOM HE HAD NEVER SEEN BUT WHO WAS THEIR NEAREST NEIGHBOR",
+    "seconds": 6.265,
+    "speaker_id": 1284,
+    "condition": "clean",
+    "sha256": "ab324246ef0b4df95e3556c8549755532d5674bb70fd0fc0790ae4b80150b461"
+  },
+  {
+    "id": "1284-1180-0007-quiet",
+    "path": "CORPUS/1284-1180-0007-quiet.f32",
+    "text": "HE KNEW IT WOULD TAKE THEM TO THE HOUSE OF THE CROOKED MAGICIAN WHOM HE HAD NEVER SEEN BUT WHO WAS THEIR NEAREST NEIGHBOR",
+    "seconds": 6.265,
+    "speaker_id": 1284,
+    "condition": "quiet",
+    "sha256": "2fb982510c44aa18ca2b97fee60cda54a245e8577b0ed74cdfd8249d8e1db36a"
+  },
+  {
+    "id": "1284-1180-0007-noise_20db",
+    "path": "CORPUS/1284-1180-0007-noise_20db.f32",
+    "text": "HE KNEW IT WOULD TAKE THEM TO THE HOUSE OF THE CROOKED MAGICIAN WHOM HE HAD NEVER SEEN BUT WHO WAS THEIR NEAREST NEIGHBOR",
+    "seconds": 6.265,
+    "speaker_id": 1284,
+    "condition": "noise_20db",
+    "sha256": "84c767420a4f1b62a32d944e651ea8ae7d5e64c191e2395bbfde995c52c0fa69"
+  },
+  {
+    "id": "1284-1180-0029-clean",
+    "path": "CORPUS/1284-1180-0029-clean.f32",
+    "text": "SOMETIMES IT IS CALLED A CRAZY QUILT BECAUSE THE PATCHES AND COLORS ARE SO MIXED UP",
+    "seconds": 5.335,
+    "speaker_id": 1284,
+    "condition": "clean",
+    "sha256": "ebc82d5f94aacd19166eae78004dadcb211a8dfabb02debffbb2eec8b9a1d682"
+  },
+  {
+    "id": "1284-1180-0029-quiet",
+    "path": "CORPUS/1284-1180-0029-quiet.f32",
+    "text": "SOMETIMES IT IS CALLED A CRAZY QUILT BECAUSE THE PATCHES AND COLORS ARE SO MIXED UP",
+    "seconds": 5.335,
+    "speaker_id": 1284,
+    "condition": "quiet",
+    "sha256": "c78b9c91afd3a29a29717dbde9195e14a55766b1d7bf48352c957b2b18aaf9b1"
+  },
+  {
+    "id": "1284-1180-0029-noise_20db",
+    "path": "CORPUS/1284-1180-0029-noise_20db.f32",
+    "text": "SOMETIMES IT IS CALLED A CRAZY QUILT BECAUSE THE PATCHES AND COLORS ARE SO MIXED UP",
+    "seconds": 5.335,
+    "speaker_id": 1284,
+    "condition": "noise_20db",
+    "sha256": "2187f44793b7bb109dae852fb992a734d4d3a96352aedcbb774d07b0375fc779"
+  },
+  {
+    "id": "5142-36377-0010-clean",
+    "path": "CORPUS/5142-36377-0010-clean.f32",
+    "text": "HE IS NOT WELL HE HAS COME OVER THE OCEAN FOR REST AND CHANGE OF SCENE",
+    "seconds": 4.2949375,
+    "speaker_id": 5142,
+    "condition": "clean",
+    "sha256": "ad8534a2ae27aac6365d40beb47be1fbf872bfe57f6480d911e724fe9c393b00"
+  },
+  {
+    "id": "5142-36377-0010-quiet",
+    "path": "CORPUS/5142-36377-0010-quiet.f32",
+    "text": "HE IS NOT WELL HE HAS COME OVER THE OCEAN FOR REST AND CHANGE OF SCENE",
+    "seconds": 4.2949375,
+    "speaker_id": 5142,
+    "condition": "quiet",
+    "sha256": "c93f775fd4b0160a3ade8b6e96671bcf72ff1bb342ef286670c09bab86405259"
+  },
+  {
+    "id": "5142-36377-0010-noise_20db",
+    "path": "CORPUS/5142-36377-0010-noise_20db.f32",
+    "text": "HE IS NOT WELL HE HAS COME OVER THE OCEAN FOR REST AND CHANGE OF SCENE",
+    "seconds": 4.2949375,
+    "speaker_id": 5142,
+    "condition": "noise_20db",
+    "sha256": "0aeb5bfea692fce95de34afecb0008b0095e2bc61d827a1c4bc2b53b0f6776ed"
+  },
+  {
+    "id": "5142-33396-0004-clean",
+    "path": "CORPUS/5142-33396-0004-clean.f32",
+    "text": "THESE HE GAVE TO THREE OF MY BROTHERS",
+    "seconds": 2.215,
+    "speaker_id": 5142,
+    "condition": "clean",
+    "sha256": "1ad73327fa1b4ff2974d4e3b1f96126e29f582c6b5b3f0b0ce2b4c984694e6ed"
+  },
+  {
+    "id": "5142-33396-0004-quiet",
+    "path": "CORPUS/5142-33396-0004-quiet.f32",
+    "text": "THESE HE GAVE TO THREE OF MY BROTHERS",
+    "seconds": 2.215,
+    "speaker_id": 5142,
+    "condition": "quiet",
+    "sha256": "d2e27110140d923eb9688bb434ba19db4b36de55aeb189b7cfbc41ae8e8ad057"
+  },
+  {
+    "id": "5142-33396-0004-noise_20db",
+    "path": "CORPUS/5142-33396-0004-noise_20db.f32",
+    "text": "THESE HE GAVE TO THREE OF MY BROTHERS",
+    "seconds": 2.215,
+    "speaker_id": 5142,
+    "condition": "noise_20db",
+    "sha256": "0862e3925a4eb70e6d8d91ad001a432fa8a35508fb92920020cff8e15ae77b0d"
+  },
+  {
+    "id": "5142-33396-0026-clean",
+    "path": "CORPUS/5142-33396-0026-clean.f32",
+    "text": "MY MEN LAUGHED YES A STINGY HOST",
+    "seconds": 3.075,
+    "speaker_id": 5142,
+    "condition": "clean",
+    "sha256": "275bd297bcd87e8cc00b7f41953fef19e0c273a9accddc762cf3b1a7a983852e"
+  },
+  {
+    "id": "5142-33396-0026-quiet",
+    "path": "CORPUS/5142-33396-0026-quiet.f32",
+    "text": "MY MEN LAUGHED YES A STINGY HOST",
+    "seconds": 3.075,
+    "speaker_id": 5142,
+    "condition": "quiet",
+    "sha256": "13065618b5763b0a87f4ccd645cee15b67dd8589b6e761539b9413870a4c584d"
+  },
+  {
+    "id": "5142-33396-0026-noise_20db",
+    "path": "CORPUS/5142-33396-0026-noise_20db.f32",
+    "text": "MY MEN LAUGHED YES A STINGY HOST",
+    "seconds": 3.075,
+    "speaker_id": 5142,
+    "condition": "noise_20db",
+    "sha256": "895af77e5be30182a20eef152795c2a950c9afc4127fc55947d28719af04b98b"
+  },
+  {
+    "id": "5142-33396-0048-clean",
+    "path": "CORPUS/5142-33396-0048-clean.f32",
+    "text": "BY THE HAMMER OF THOR SHOUTED GRIM HERE IS NO STINGY COWARD",
+    "seconds": 3.96,
+    "speaker_id": 5142,
+    "condition": "clean",
+    "sha256": "40f54eb0243ec33743c9b68026bee9da160ca83f6d6f3dc9cf0ad5a290f7486b"
+  },
+  {
+    "id": "5142-33396-0048-quiet",
+    "path": "CORPUS/5142-33396-0048-quiet.f32",
+    "text": "BY THE HAMMER OF THOR SHOUTED GRIM HERE IS NO STINGY COWARD",
+    "seconds": 3.96,
+    "speaker_id": 5142,
+    "condition": "quiet",
+    "sha256": "d247b5fa710c89b637c99ea8544564a5c07fa207a471061706f750f325adfc49"
+  },
+  {
+    "id": "5142-33396-0048-noise_20db",
+    "path": "CORPUS/5142-33396-0048-noise_20db.f32",
+    "text": "BY THE HAMMER OF THOR SHOUTED GRIM HERE IS NO STINGY COWARD",
+    "seconds": 3.96,
+    "speaker_id": 5142,
+    "condition": "noise_20db",
+    "sha256": "a6a477a7e7d9e9ede979b4a9ed70f30fbf7726a2b37d02f3db96f15ade58167c"
+  },
+  {
+    "id": "5142-36586-0001-clean",
+    "path": "CORPUS/5142-36586-0001-clean.f32",
+    "text": "SO IT IS WITH THE LOWER ANIMALS",
+    "seconds": 2.215,
+    "speaker_id": 5142,
+    "condition": "clean",
+    "sha256": "6b799bf580b32a7761b74096525857f13969c594cb9c72b0a5a5af17c606bcdf"
+  },
+  {
+    "id": "5142-36586-0001-quiet",
+    "path": "CORPUS/5142-36586-0001-quiet.f32",
+    "text": "SO IT IS WITH THE LOWER ANIMALS",
+    "seconds": 2.215,
+    "speaker_id": 5142,
+    "condition": "quiet",
+    "sha256": "51102f260992cb73e687921c0d27cc790cd6bc8a42e0deb3f79c223861d597f8"
+  },
+  {
+    "id": "5142-36586-0001-noise_20db",
+    "path": "CORPUS/5142-36586-0001-noise_20db.f32",
+    "text": "SO IT IS WITH THE LOWER ANIMALS",
+    "seconds": 2.215,
+    "speaker_id": 5142,
+    "condition": "noise_20db",
+    "sha256": "351f9f1fdcdc8315b5948d7172d2da940560c69b7df3e37c24a720ae192063a0"
+  },
+  {
+    "id": "8455-210777-0018-clean",
+    "path": "CORPUS/8455-210777-0018-clean.f32",
+    "text": "THIS SHE SAID WAS TRUE HOSPITALITY AND I AM NOT SURE THAT I DID NOT AGREE WITH HER",
+    "seconds": 5.925,
+    "speaker_id": 8455,
+    "condition": "clean",
+    "sha256": "b3cb902f876b4f94c5f6136524bbcf037d3c47cf37de8704ce4cf38d89114a01"
+  },
+  {
+    "id": "8455-210777-0018-quiet",
+    "path": "CORPUS/8455-210777-0018-quiet.f32",
+    "text": "THIS SHE SAID WAS TRUE HOSPITALITY AND I AM NOT SURE THAT I DID NOT AGREE WITH HER",
+    "seconds": 5.925,
+    "speaker_id": 8455,
+    "condition": "quiet",
+    "sha256": "da065113444b3f2ee7a397ac0fad2e1996d0a8aa68954fcc087cd38397d33fb3"
+  },
+  {
+    "id": "8455-210777-0018-noise_20db",
+    "path": "CORPUS/8455-210777-0018-noise_20db.f32",
+    "text": "THIS SHE SAID WAS TRUE HOSPITALITY AND I AM NOT SURE THAT I DID NOT AGREE WITH HER",
+    "seconds": 5.925,
+    "speaker_id": 8455,
+    "condition": "noise_20db",
+    "sha256": "bb267c3fcf4f61a45defa9d4502a795b84452a1f77ee9a4964831343a8131c22"
+  },
+  {
+    "id": "8455-210777-0040-clean",
+    "path": "CORPUS/8455-210777-0040-clean.f32",
+    "text": "THEN SAID SIR FERDINANDO THERE IS NOTHING FOR IT BUT THAT HE MUST TAKE YOU WITH HIM",
+    "seconds": 6.195,
+    "speaker_id": 8455,
+    "condition": "clean",
+    "sha256": "b94a1087d73c9b3f8c5b2212a3839ab15fcfa8a5e147897c6b590f49d0e0d352"
+  },
+  {
+    "id": "8455-210777-0040-quiet",
+    "path": "CORPUS/8455-210777-0040-quiet.f32",
+    "text": "THEN SAID SIR FERDINANDO THERE IS NOTHING FOR IT BUT THAT HE MUST TAKE YOU WITH HIM",
+    "seconds": 6.195,
+    "speaker_id": 8455,
+    "condition": "quiet",
+    "sha256": "75bdb4a78603ed4111b84c8eccf1222f78b686f9aeb2622118654240149f7c92"
+  },
+  {
+    "id": "8455-210777-0040-noise_20db",
+    "path": "CORPUS/8455-210777-0040-noise_20db.f32",
+    "text": "THEN SAID SIR FERDINANDO THERE IS NOTHING FOR IT BUT THAT HE MUST TAKE YOU WITH HIM",
+    "seconds": 6.195,
+    "speaker_id": 8455,
+    "condition": "noise_20db",
+    "sha256": "968fe05c0c5c83246141b7c60a8a611a9ab1459d257c96fdcbd224418454183d"
+  },
+  {
+    "id": "8455-210777-0062-clean",
+    "path": "CORPUS/8455-210777-0062-clean.f32",
+    "text": "WHEN DO YOU INTEND THAT THE JOHN BRIGHT SHALL START",
+    "seconds": 3.05,
+    "speaker_id": 8455,
+    "condition": "clean",
+    "sha256": "13a509fdb462b7fa519f5c58d25a1e5b2f31cf8b209bc081767060f0a0dceccc"
+  },
+  {
+    "id": "8455-210777-0062-quiet",
+    "path": "CORPUS/8455-210777-0062-quiet.f32",
+    "text": "WHEN DO YOU INTEND THAT THE JOHN BRIGHT SHALL START",
+    "seconds": 3.05,
+    "speaker_id": 8455,
+    "condition": "quiet",
+    "sha256": "24ffa9b1e9ba5e661937878fd9e9499651ccd637909384beed1af3702c59e550"
+  },
+  {
+    "id": "8455-210777-0062-noise_20db",
+    "path": "CORPUS/8455-210777-0062-noise_20db.f32",
+    "text": "WHEN DO YOU INTEND THAT THE JOHN BRIGHT SHALL START",
+    "seconds": 3.05,
+    "speaker_id": 8455,
+    "condition": "noise_20db",
+    "sha256": "b9c9e45f0d1b02640f6fe195a7bd98d9cd5e5338819457fd0bb4491a77fa5225"
+  },
+  {
+    "id": "2830-3980-0013-clean",
+    "path": "CORPUS/2830-3980-0013-clean.f32",
+    "text": "HE MENTIONS THE APOSTLES FIRST BECAUSE THEY WERE APPOINTED DIRECTLY BY GOD",
+    "seconds": 4.145,
+    "speaker_id": 2830,
+    "condition": "clean",
+    "sha256": "d149eddfb6c2c1f1c871c8ac94fd3049fb10b337df4550fd104d43b201939868"
+  },
+  {
+    "id": "2830-3980-0013-quiet",
+    "path": "CORPUS/2830-3980-0013-quiet.f32",
+    "text": "HE MENTIONS THE APOSTLES FIRST BECAUSE THEY WERE APPOINTED DIRECTLY BY GOD",
+    "seconds": 4.145,
+    "speaker_id": 2830,
+    "condition": "quiet",
+    "sha256": "9f63d9c46f9f6ebe6b23f4b82f651fd10f17e3d17fad57d354050477b58b8537"
+  },
+  {
+    "id": "2830-3980-0013-noise_20db",
+    "path": "CORPUS/2830-3980-0013-noise_20db.f32",
+    "text": "HE MENTIONS THE APOSTLES FIRST BECAUSE THEY WERE APPOINTED DIRECTLY BY GOD",
+    "seconds": 4.145,
+    "speaker_id": 2830,
+    "condition": "noise_20db",
+    "sha256": "35ef288c45ad18a5274bd5bbd1ac7e4fc7a0045cd3388deeb95b2c918dc4bbf3"
+  },
+  {
+    "id": "2830-3980-0035-clean",
+    "path": "CORPUS/2830-3980-0035-clean.f32",
+    "text": "THEY REMAIN DIVINE REGARDLESS OF MEN'S OPINION",
+    "seconds": 3.335,
+    "speaker_id": 2830,
+    "condition": "clean",
+    "sha256": "9cd5cc4316cbaceff57aa63752e62cbc220094fc23d195214f3c893756bef632"
+  },
+  {
+    "id": "2830-3980-0035-quiet",
+    "path": "CORPUS/2830-3980-0035-quiet.f32",
+    "text": "THEY REMAIN DIVINE REGARDLESS OF MEN'S OPINION",
+    "seconds": 3.335,
+    "speaker_id": 2830,
+    "condition": "quiet",
+    "sha256": "9813a1b4b59561d89f6bb883e3d308841e8d111354893b38dfd7cc973ed6f74e"
+  },
+  {
+    "id": "2830-3980-0035-noise_20db",
+    "path": "CORPUS/2830-3980-0035-noise_20db.f32",
+    "text": "THEY REMAIN DIVINE REGARDLESS OF MEN'S OPINION",
+    "seconds": 3.335,
+    "speaker_id": 2830,
+    "condition": "noise_20db",
+    "sha256": "88fb957b4e591002d2e1f07222a5de0a5a9a2155513894ada26b19f792167605"
+  },
+  {
+    "id": "2830-3980-0057-clean",
+    "path": "CORPUS/2830-3980-0057-clean.f32",
+    "text": "THE ARIANS TOOK CHRIST FOR A NOBLE AND PERFECT CREATURE SUPERIOR EVEN TO THE ANGELS BECAUSE BY HIM GOD CREATED HEAVEN AND EARTH",
+    "seconds": 8.07,
+    "speaker_id": 2830,
+    "condition": "clean",
+    "sha256": "06dcc8144c3dcbde44e09771b0ba654280b114c602eb1d0bdbe1bbe77d0869c5"
+  },
+  {
+    "id": "2830-3980-0057-quiet",
+    "path": "CORPUS/2830-3980-0057-quiet.f32",
+    "text": "THE ARIANS TOOK CHRIST FOR A NOBLE AND PERFECT CREATURE SUPERIOR EVEN TO THE ANGELS BECAUSE BY HIM GOD CREATED HEAVEN AND EARTH",
+    "seconds": 8.07,
+    "speaker_id": 2830,
+    "condition": "quiet",
+    "sha256": "7562e3d526c53cc858d84f4254b7e093bfda505425cb920606a6c77d054c4c4b"
+  },
+  {
+    "id": "2830-3980-0057-noise_20db",
+    "path": "CORPUS/2830-3980-0057-noise_20db.f32",
+    "text": "THE ARIANS TOOK CHRIST FOR A NOBLE AND PERFECT CREATURE SUPERIOR EVEN TO THE ANGELS BECAUSE BY HIM GOD CREATED HEAVEN AND EARTH",
+    "seconds": 8.07,
+    "speaker_id": 2830,
+    "condition": "noise_20db",
+    "sha256": "5b710703e0401a012ebb922b014054b6a1378bad20ea48d5537da8872a9a7050"
+  },
+  {
+    "id": "2830-3979-0002-clean",
+    "path": "CORPUS/2830-3979-0002-clean.f32",
+    "text": "LET US BEGIN WITH THAT HIS COMMENTARY ON GALATIANS",
+    "seconds": 4.315,
+    "speaker_id": 2830,
+    "condition": "clean",
+    "sha256": "34cd5bd7165fd4ef5705267b9587c1ee369fe1719bf9525505e011d3b58c6d22"
+  },
+  {
+    "id": "2830-3979-0002-quiet",
+    "path": "CORPUS/2830-3979-0002-quiet.f32",
+    "text": "LET US BEGIN WITH THAT HIS COMMENTARY ON GALATIANS",
+    "seconds": 4.315,
+    "speaker_id": 2830,
+    "condition": "quiet",
+    "sha256": "0e19553d6172100a41cea706374b09b8e82b318ed67d2168cb2e8fbb96fdc027"
+  },
+  {
+    "id": "2830-3979-0002-noise_20db",
+    "path": "CORPUS/2830-3979-0002-noise_20db.f32",
+    "text": "LET US BEGIN WITH THAT HIS COMMENTARY ON GALATIANS",
+    "seconds": 4.315,
+    "speaker_id": 2830,
+    "condition": "noise_20db",
+    "sha256": "5bfa9fd6cd7cf629482b9330b380111959d78a72b87a22a7ea33b1ce75a9db99"
+  },
+  {
+    "id": "4446-2271-0011-clean",
+    "path": "CORPUS/4446-2271-0011-clean.f32",
+    "text": "SIR HARRY TOWNE MISTER BARTLEY ALEXANDER THE AMERICAN ENGINEER",
+    "seconds": 3.945,
+    "speaker_id": 4446,
+    "condition": "clean",
+    "sha256": "987c698c4fe0f5d19e06192ffb20aefee7202378301cff0d442dbf346dccbacc"
+  },
+  {
+    "id": "4446-2271-0011-quiet",
+    "path": "CORPUS/4446-2271-0011-quiet.f32",
+    "text": "SIR HARRY TOWNE MISTER BARTLEY ALEXANDER THE AMERICAN ENGINEER",
+    "seconds": 3.945,
+    "speaker_id": 4446,
+    "condition": "quiet",
+    "sha256": "788ea7913a9e03f9254935ea9616aeb46f5cf4cde15ba980845bf0cebe710b9d"
+  },
+  {
+    "id": "4446-2271-0011-noise_20db",
+    "path": "CORPUS/4446-2271-0011-noise_20db.f32",
+    "text": "SIR HARRY TOWNE MISTER BARTLEY ALEXANDER THE AMERICAN ENGINEER",
+    "seconds": 3.945,
+    "speaker_id": 4446,
+    "condition": "noise_20db",
+    "sha256": "df2e1f8ebbf4ce15d0674907188e21ab0e28bf0b4da968bcd28ee66bc7979449"
+  },
+  {
+    "id": "4446-2273-0008-clean",
+    "path": "CORPUS/4446-2273-0008-clean.f32",
+    "text": "I'VE MANAGED TO SAVE SOMETHING EVERY YEAR AND THAT WITH HELPING MY THREE SISTERS NOW AND THEN AND TIDING POOR COUSIN MIKE OVER BAD SEASONS",
+    "seconds": 7.715,
+    "speaker_id": 4446,
+    "condition": "clean",
+    "sha256": "8f2b510f6934893640419c78f77ec76691e30ff017aff1bc36c78d089d730f74"
+  },
+  {
+    "id": "4446-2273-0008-quiet",
+    "path": "CORPUS/4446-2273-0008-quiet.f32",
+    "text": "I'VE MANAGED TO SAVE SOMETHING EVERY YEAR AND THAT WITH HELPING MY THREE SISTERS NOW AND THEN AND TIDING POOR COUSIN MIKE OVER BAD SEASONS",
+    "seconds": 7.715,
+    "speaker_id": 4446,
+    "condition": "quiet",
+    "sha256": "790b1b670c2ccbdc1d13ca86ffe4f294adb0632f76f917f3685aa37af65d7495"
+  },
+  {
+    "id": "4446-2273-0008-noise_20db",
+    "path": "CORPUS/4446-2273-0008-noise_20db.f32",
+    "text": "I'VE MANAGED TO SAVE SOMETHING EVERY YEAR AND THAT WITH HELPING MY THREE SISTERS NOW AND THEN AND TIDING POOR COUSIN MIKE OVER BAD SEASONS",
+    "seconds": 7.715,
+    "speaker_id": 4446,
+    "condition": "noise_20db",
+    "sha256": "ecc7c99ef5c5a15c41cadb1c7c3789db5c18ccc4dae1e5ce882e85aa05c8fd39"
+  },
+  {
+    "id": "4446-2273-0030-clean",
+    "path": "CORPUS/4446-2273-0030-clean.f32",
+    "text": "ALEXANDER WENT OVER AND OPENED THE WINDOW FOR HER",
+    "seconds": 2.885,
+    "speaker_id": 4446,
+    "condition": "clean",
+    "sha256": "aff333b4d6b317e7afacf5dd44fdc74a963cc228eef5b7ab9157a7fab07c20f1"
+  },
+  {
+    "id": "4446-2273-0030-quiet",
+    "path": "CORPUS/4446-2273-0030-quiet.f32",
+    "text": "ALEXANDER WENT OVER AND OPENED THE WINDOW FOR HER",
+    "seconds": 2.885,
+    "speaker_id": 4446,
+    "condition": "quiet",
+    "sha256": "8d60da8cd3f969b43085ffdc1e2a24bf188bd4310e409407e597360d789f01ce"
+  },
+  {
+    "id": "4446-2273-0030-noise_20db",
+    "path": "CORPUS/4446-2273-0030-noise_20db.f32",
+    "text": "ALEXANDER WENT OVER AND OPENED THE WINDOW FOR HER",
+    "seconds": 2.885,
+    "speaker_id": 4446,
+    "condition": "noise_20db",
+    "sha256": "a5de766450b2bd3d2d5d5079de37b7b457a98feedb0f8e62d10a3df8c7e50bd5"
+  },
+  {
+    "id": "4446-2275-0015-clean",
+    "path": "CORPUS/4446-2275-0015-clean.f32",
+    "text": "HE PULLED UP A WINDOW AS IF THE AIR WERE HEAVY",
+    "seconds": 2.98,
+    "speaker_id": 4446,
+    "condition": "clean",
+    "sha256": "50c05f3f4f1f1cbdbf856245e81fd0f0979bc026a79a10b1edc9c11cbe6b9cc2"
+  },
+  {
+    "id": "4446-2275-0015-quiet",
+    "path": "CORPUS/4446-2275-0015-quiet.f32",
+    "text": "HE PULLED UP A WINDOW AS IF THE AIR WERE HEAVY",
+    "seconds": 2.98,
+    "speaker_id": 4446,
+    "condition": "quiet",
+    "sha256": "57cd58dd92f22b700b23111e59e1a68d42795376db6bdb23a12fd3005e6569ca"
+  },
+  {
+    "id": "4446-2275-0015-noise_20db",
+    "path": "CORPUS/4446-2275-0015-noise_20db.f32",
+    "text": "HE PULLED UP A WINDOW AS IF THE AIR WERE HEAVY",
+    "seconds": 2.98,
+    "speaker_id": 4446,
+    "condition": "noise_20db",
+    "sha256": "6078c6661ceab8ea8bf06d8723eca43fac2462a53e969bb4659295ce7b0fcaa9"
+  },
+  {
+    "id": "4446-2275-0037-clean",
+    "path": "CORPUS/4446-2275-0037-clean.f32",
+    "text": "OH BARTLEY WHAT AM I TO DO",
+    "seconds": 2.09,
+    "speaker_id": 4446,
+    "condition": "clean",
+    "sha256": "26a8772a11ab30c2a4ec7ab921e26779688789cb25fe0509cde042b7769522dd"
+  },
+  {
+    "id": "4446-2275-0037-quiet",
+    "path": "CORPUS/4446-2275-0037-quiet.f32",
+    "text": "OH BARTLEY WHAT AM I TO DO",
+    "seconds": 2.09,
+    "speaker_id": 4446,
+    "condition": "quiet",
+    "sha256": "95e69cf97bf6f01e46f2d2017eca31f00899defe10dee4f5691238ba03a4caae"
+  },
+  {
+    "id": "4446-2275-0037-noise_20db",
+    "path": "CORPUS/4446-2275-0037-noise_20db.f32",
+    "text": "OH BARTLEY WHAT AM I TO DO",
+    "seconds": 2.09,
+    "speaker_id": 4446,
+    "condition": "noise_20db",
+    "sha256": "a20f17e80febba47c885a093602452534d21238ebf9856781786aef37931e1fb"
+  },
+  {
+    "id": "4077-13754-0013-clean",
+    "path": "CORPUS/4077-13754-0013-clean.f32",
+    "text": "BEFORE THIS TRAVESTY ON THE ADMINISTRATION OF LAW COULD BE BROUGHT BEFORE THE COURT OF LAST RESORT AND THERE MEET WITH THE REVERSAL AND REBUKE IT DESERVED MEN WERE IMPRISONED UNDER SENTENCES OF MANY YEARS DURATION",
+    "seconds": 12.87,
+    "speaker_id": 4077,
+    "condition": "clean",
+    "sha256": "07e67007c5829bc97a1e319dda4d7d11f9c936d12dcdf633fc3b37c35f380812"
+  },
+  {
+    "id": "4077-13754-0013-quiet",
+    "path": "CORPUS/4077-13754-0013-quiet.f32",
+    "text": "BEFORE THIS TRAVESTY ON THE ADMINISTRATION OF LAW COULD BE BROUGHT BEFORE THE COURT OF LAST RESORT AND THERE MEET WITH THE REVERSAL AND REBUKE IT DESERVED MEN WERE IMPRISONED UNDER SENTENCES OF MANY YEARS DURATION",
+    "seconds": 12.87,
+    "speaker_id": 4077,
+    "condition": "quiet",
+    "sha256": "1fe90a9162ce643e164ee948cc4bb8ebbcbdc44baafe0d59b069fdd2adcea2fd"
+  },
+  {
+    "id": "4077-13754-0013-noise_20db",
+    "path": "CORPUS/4077-13754-0013-noise_20db.f32",
+    "text": "BEFORE THIS TRAVESTY ON THE ADMINISTRATION OF LAW COULD BE BROUGHT BEFORE THE COURT OF LAST RESORT AND THERE MEET WITH THE REVERSAL AND REBUKE IT DESERVED MEN WERE IMPRISONED UNDER SENTENCES OF MANY YEARS DURATION",
+    "seconds": 12.87,
+    "speaker_id": 4077,
+    "condition": "noise_20db",
+    "sha256": "32d45f55413becde9ae5b82d0d9fcfaf4433de55f310ada6c0fe51e2287d2059"
+  },
+  {
+    "id": "4077-13751-0018-clean",
+    "path": "CORPUS/4077-13751-0018-clean.f32",
+    "text": "AMERICAN SCHOOL BOYS READ WITH EMOTIONS OF HORROR OF THE ALBIGENSES DRIVEN BEATEN AND KILLED WITH A PAPAL LEGATE DIRECTING THE BUTCHERY AND OF THE VAUDOIS HUNTED AND HOUNDED LIKE BEASTS AS THE EFFECT OF A ROYAL DECREE AND THEY YET SHALL READ IN THE HISTORY OF THEIR OWN COUNTRY OF SCENES AS TERRIBLE AS THESE IN THE EXHIBITION OF INJUSTICE AND INHUMAN HATE",
+    "seconds": 26.115,
+    "speaker_id": 4077,
+    "condition": "clean",
+    "sha256": "30fd54c47870d1a37e86b1ec835464f87677ec653e678db0ab02700b96ff1ff8"
+  },
+  {
+    "id": "4077-13751-0018-quiet",
+    "path": "CORPUS/4077-13751-0018-quiet.f32",
+    "text": "AMERICAN SCHOOL BOYS READ WITH EMOTIONS OF HORROR OF THE ALBIGENSES DRIVEN BEATEN AND KILLED WITH A PAPAL LEGATE DIRECTING THE BUTCHERY AND OF THE VAUDOIS HUNTED AND HOUNDED LIKE BEASTS AS THE EFFECT OF A ROYAL DECREE AND THEY YET SHALL READ IN THE HISTORY OF THEIR OWN COUNTRY OF SCENES AS TERRIBLE AS THESE IN THE EXHIBITION OF INJUSTICE AND INHUMAN HATE",
+    "seconds": 26.115,
+    "speaker_id": 4077,
+    "condition": "quiet",
+    "sha256": "58030d736b9a93ff6beb3b7af2234452206fcf207d15cf59a8745cfe8d290c59"
+  },
+  {
+    "id": "4077-13751-0018-noise_20db",
+    "path": "CORPUS/4077-13751-0018-noise_20db.f32",
+    "text": "AMERICAN SCHOOL BOYS READ WITH EMOTIONS OF HORROR OF THE ALBIGENSES DRIVEN BEATEN AND KILLED WITH A PAPAL LEGATE DIRECTING THE BUTCHERY AND OF THE VAUDOIS HUNTED AND HOUNDED LIKE BEASTS AS THE EFFECT OF A ROYAL DECREE AND THEY YET SHALL READ IN THE HISTORY OF THEIR OWN COUNTRY OF SCENES AS TERRIBLE AS THESE IN THE EXHIBITION OF INJUSTICE AND INHUMAN HATE",
+    "seconds": 26.115,
+    "speaker_id": 4077,
+    "condition": "noise_20db",
+    "sha256": "7e7a46adb20fa24e9694fb77a85ace687421fbd1273ff55334802ffe39ae9b01"
+  },
+  {
+    "id": "1221-135767-0018-clean",
+    "path": "CORPUS/1221-135767-0018-clean.f32",
+    "text": "LITTLE PEARL WHO WAS AS GREATLY PLEASED WITH THE GLEAMING ARMOUR AS SHE HAD BEEN WITH THE GLITTERING FRONTISPIECE OF THE HOUSE SPENT SOME TIME LOOKING INTO THE POLISHED MIRROR OF THE BREASTPLATE",
+    "seconds": 11.16,
+    "speaker_id": 1221,
+    "condition": "clean",
+    "sha256": "f6529c02442743bc4f4f6139bc0553d1fe1f0d5c6e4496767517c270f21bd15e"
+  },
+  {
+    "id": "1221-135767-0018-quiet",
+    "path": "CORPUS/1221-135767-0018-quiet.f32",
+    "text": "LITTLE PEARL WHO WAS AS GREATLY PLEASED WITH THE GLEAMING ARMOUR AS SHE HAD BEEN WITH THE GLITTERING FRONTISPIECE OF THE HOUSE SPENT SOME TIME LOOKING INTO THE POLISHED MIRROR OF THE BREASTPLATE",
+    "seconds": 11.16,
+    "speaker_id": 1221,
+    "condition": "quiet",
+    "sha256": "6f73fd379352e1f9ac12a4081ae4f9bd05d7f5599fa223f43f0f0adf49419414"
+  },
+  {
+    "id": "1221-135767-0018-noise_20db",
+    "path": "CORPUS/1221-135767-0018-noise_20db.f32",
+    "text": "LITTLE PEARL WHO WAS AS GREATLY PLEASED WITH THE GLEAMING ARMOUR AS SHE HAD BEEN WITH THE GLITTERING FRONTISPIECE OF THE HOUSE SPENT SOME TIME LOOKING INTO THE POLISHED MIRROR OF THE BREASTPLATE",
+    "seconds": 11.16,
+    "speaker_id": 1221,
+    "condition": "noise_20db",
+    "sha256": "7263075bcf658b56f6696b02bce04e3ba97ef323ce6eeb62e6c54520225978ff"
+  },
+  {
+    "id": "1221-135766-0015-clean",
+    "path": "CORPUS/1221-135766-0015-clean.f32",
+    "text": "IF SPOKEN TO SHE WOULD NOT SPEAK AGAIN",
+    "seconds": 2.63,
+    "speaker_id": 1221,
+    "condition": "clean",
+    "sha256": "e1b4bce4662569741376b17dc7bc011859cc03bf59db8a12149c314e3d5bb344"
+  },
+  {
+    "id": "1221-135766-0015-quiet",
+    "path": "CORPUS/1221-135766-0015-quiet.f32",
+    "text": "IF SPOKEN TO SHE WOULD NOT SPEAK AGAIN",
+    "seconds": 2.63,
+    "speaker_id": 1221,
+    "condition": "quiet",
+    "sha256": "80673ae6c38a5f2dc117eeceb99ed757d722028818b5fdf9a246845cd419cfaa"
+  },
+  {
+    "id": "1221-135766-0015-noise_20db",
+    "path": "CORPUS/1221-135766-0015-noise_20db.f32",
+    "text": "IF SPOKEN TO SHE WOULD NOT SPEAK AGAIN",
+    "seconds": 2.63,
+    "speaker_id": 1221,
+    "condition": "noise_20db",
+    "sha256": "654813271cb78e572a3816cc7737328b81f22f6ec628a7160b9b27e4ab16c437"
+  },
+  {
+    "id": "908-157963-0021-clean",
+    "path": "CORPUS/908-157963-0021-clean.f32",
+    "text": "LIVES NOT ALONE NOR OR ITSELF FEAR NOT AND I WILL CALL THE WEAK WORM FROM ITS LOWLY BED AND THOU SHALT HEAR ITS VOICE",
+    "seconds": 10.24,
+    "speaker_id": 908,
+    "condition": "clean",
+    "sha256": "4d6a58da13c5b49f8d95fa48a7a1003a725518b74e852602cd4575eeee887a67"
+  },
+  {
+    "id": "908-157963-0021-quiet",
+    "path": "CORPUS/908-157963-0021-quiet.f32",
+    "text": "LIVES NOT ALONE NOR OR ITSELF FEAR NOT AND I WILL CALL THE WEAK WORM FROM ITS LOWLY BED AND THOU SHALT HEAR ITS VOICE",
+    "seconds": 10.24,
+    "speaker_id": 908,
+    "condition": "quiet",
+    "sha256": "e0162ff41609db91a997530d1c25915d3a7a40c16420aa2e0ee29cbd9a23904a"
+  },
+  {
+    "id": "908-157963-0021-noise_20db",
+    "path": "CORPUS/908-157963-0021-noise_20db.f32",
+    "text": "LIVES NOT ALONE NOR OR ITSELF FEAR NOT AND I WILL CALL THE WEAK WORM FROM ITS LOWLY BED AND THOU SHALT HEAR ITS VOICE",
+    "seconds": 10.24,
+    "speaker_id": 908,
+    "condition": "noise_20db",
+    "sha256": "cd32422f828ee83e73c61a0e191104642145326887f3a170dfdcabf94f6a8c73"
+  },
+  {
+    "id": "908-31957-0012-clean",
+    "path": "CORPUS/908-31957-0012-clean.f32",
+    "text": "IF HE TO KEEP ONE OATH MUST LOSE ONE JOY BY HIS LIFE'S STAR FORETOLD",
+    "seconds": 7.615,
+    "speaker_id": 908,
+    "condition": "clean",
+    "sha256": "14cc1c559e8f3455ba1a7d3ecac9c569585817e341bce41e23e0d53a6f518ebc"
+  },
+  {
+    "id": "908-31957-0012-quiet",
+    "path": "CORPUS/908-31957-0012-quiet.f32",
+    "text": "IF HE TO KEEP ONE OATH MUST LOSE ONE JOY BY HIS LIFE'S STAR FORETOLD",
+    "seconds": 7.615,
+    "speaker_id": 908,
+    "condition": "quiet",
+    "sha256": "24352cb3e5d0fcb95f6037897672934fc8a8fb163a6a4c1964a02a245d1bcd6d"
+  },
+  {
+    "id": "908-31957-0012-noise_20db",
+    "path": "CORPUS/908-31957-0012-noise_20db.f32",
+    "text": "IF HE TO KEEP ONE OATH MUST LOSE ONE JOY BY HIS LIFE'S STAR FORETOLD",
+    "seconds": 7.615,
+    "speaker_id": 908,
+    "condition": "noise_20db",
+    "sha256": "a79f481feae70ecb0f78808a36b9347ad4ee388817de84cc6c178211fdc69da3"
+  },
+  {
+    "id": "7021-79740-0002-clean",
+    "path": "CORPUS/7021-79740-0002-clean.f32",
+    "text": "NOW DELIA CONTRIVED TO OBTAIN A GREAT INFLUENCE AND ASCENDENCY OVER THE MINDS OF THE CHILDREN BY MEANS OF THESE DOLLS",
+    "seconds": 9.225,
+    "speaker_id": 7021,
+    "condition": "clean",
+    "sha256": "37d49692e40e106c93b7e1753624f37b17bdb34e0260c9a5c70a91e3a7af72af"
+  },
+  {
+    "id": "7021-79740-0002-quiet",
+    "path": "CORPUS/7021-79740-0002-quiet.f32",
+    "text": "NOW DELIA CONTRIVED TO OBTAIN A GREAT INFLUENCE AND ASCENDENCY OVER THE MINDS OF THE CHILDREN BY MEANS OF THESE DOLLS",
+    "seconds": 9.225,
+    "speaker_id": 7021,
+    "condition": "quiet",
+    "sha256": "1d682ffeedbb3adfdcdd81aa32b4aa1d7e69c9d52d861005c4dd309ac5f9aa1a"
+  },
+  {
+    "id": "7021-79740-0002-noise_20db",
+    "path": "CORPUS/7021-79740-0002-noise_20db.f32",
+    "text": "NOW DELIA CONTRIVED TO OBTAIN A GREAT INFLUENCE AND ASCENDENCY OVER THE MINDS OF THE CHILDREN BY MEANS OF THESE DOLLS",
+    "seconds": 9.225,
+    "speaker_id": 7021,
+    "condition": "noise_20db",
+    "sha256": "acfd970663c2adb917a04a6208b11279fc3d7191acdb234385528cf7a122b69a"
+  },
+  {
+    "id": "7021-79730-0009-clean",
+    "path": "CORPUS/7021-79730-0009-clean.f32",
+    "text": "IT IS INDEED TRUE THAT THE IMPORTANCE OF TACT AND SKILL IN THE TRAINING OF THE YOUNG AND OF CULTIVATING THEIR REASON AND SECURING THEIR AFFECTION CAN NOT BE OVERRATED",
+    "seconds": 12.585,
+    "speaker_id": 7021,
+    "condition": "clean",
+    "sha256": "4e864b01a289ab558fc19961fa5b476990a3a93ba5e59a446e971d8c006cea02"
+  },
+  {
+    "id": "7021-79730-0009-quiet",
+    "path": "CORPUS/7021-79730-0009-quiet.f32",
+    "text": "IT IS INDEED TRUE THAT THE IMPORTANCE OF TACT AND SKILL IN THE TRAINING OF THE YOUNG AND OF CULTIVATING THEIR REASON AND SECURING THEIR AFFECTION CAN NOT BE OVERRATED",
+    "seconds": 12.585,
+    "speaker_id": 7021,
+    "condition": "quiet",
+    "sha256": "d79109a11b0145db0306e3ddb5d82b5bffaeff5629459d0cb94337f64ead49d5"
+  },
+  {
+    "id": "7021-79730-0009-noise_20db",
+    "path": "CORPUS/7021-79730-0009-noise_20db.f32",
+    "text": "IT IS INDEED TRUE THAT THE IMPORTANCE OF TACT AND SKILL IN THE TRAINING OF THE YOUNG AND OF CULTIVATING THEIR REASON AND SECURING THEIR AFFECTION CAN NOT BE OVERRATED",
+    "seconds": 12.585,
+    "speaker_id": 7021,
+    "condition": "noise_20db",
+    "sha256": "7a8c64f6abfd58adeead2ac498d7652030dc6419c49a4294faebfc7c835e3d00"
+  },
+  {
+    "id": "7021-85628-0021-clean",
+    "path": "CORPUS/7021-85628-0021-clean.f32",
+    "text": "HE STILL HELD ON TO IT WITH BOTH HANDS AS HE RUSHED INTO HIS MOTHER'S COTTAGE",
+    "seconds": 5.365,
+    "speaker_id": 7021,
+    "condition": "clean",
+    "sha256": "2b3ef1731cc52e24696aea984d6784790a8f37cc1d0172c0ea7a8726b4eeaf06"
+  },
+  {
+    "id": "7021-85628-0021-quiet",
+    "path": "CORPUS/7021-85628-0021-quiet.f32",
+    "text": "HE STILL HELD ON TO IT WITH BOTH HANDS AS HE RUSHED INTO HIS MOTHER'S COTTAGE",
+    "seconds": 5.365,
+    "speaker_id": 7021,
+    "condition": "quiet",
+    "sha256": "7dffd63a09d47b429314a6254cc132415840cf4a1339f89a3d7189f2111d240b"
+  },
+  {
+    "id": "7021-85628-0021-noise_20db",
+    "path": "CORPUS/7021-85628-0021-noise_20db.f32",
+    "text": "HE STILL HELD ON TO IT WITH BOTH HANDS AS HE RUSHED INTO HIS MOTHER'S COTTAGE",
+    "seconds": 5.365,
+    "speaker_id": 7021,
+    "condition": "noise_20db",
+    "sha256": "c23265c3c6d190240cb38a7b03d4ec64ee339f161ce360d7b91808aefbcced61"
+  },
+  {
+    "id": "8224-274381-0001-clean",
+    "path": "CORPUS/8224-274381-0001-clean.f32",
+    "text": "AMONG OTHER PERSONS OF DISTINCTION WHO UNITED THEMSELVES TO HIM WAS LORD NAPIER OF MERCHISTON SON OF THE FAMOUS INVENTOR OF THE LOGARITHMS THE PERSON TO WHOM THE TITLE OF A GREAT MAN IS MORE JUSTLY DUE THAN TO ANY OTHER WHOM HIS COUNTRY EVER PRODUCED",
+    "seconds": 22.45,
+    "speaker_id": 8224,
+    "condition": "clean",
+    "sha256": "54ad3ced7bb4e23ee4034760b10adf73dd36ba993be096f7766f0232762e3a8b"
+  },
+  {
+    "id": "8224-274381-0001-quiet",
+    "path": "CORPUS/8224-274381-0001-quiet.f32",
+    "text": "AMONG OTHER PERSONS OF DISTINCTION WHO UNITED THEMSELVES TO HIM WAS LORD NAPIER OF MERCHISTON SON OF THE FAMOUS INVENTOR OF THE LOGARITHMS THE PERSON TO WHOM THE TITLE OF A GREAT MAN IS MORE JUSTLY DUE THAN TO ANY OTHER WHOM HIS COUNTRY EVER PRODUCED",
+    "seconds": 22.45,
+    "speaker_id": 8224,
+    "condition": "quiet",
+    "sha256": "454e7db79b429e5cc38c75e3c045e5c3b11fea024b5236b41b454dd0be855e85"
+  },
+  {
+    "id": "8224-274381-0001-noise_20db",
+    "path": "CORPUS/8224-274381-0001-noise_20db.f32",
+    "text": "AMONG OTHER PERSONS OF DISTINCTION WHO UNITED THEMSELVES TO HIM WAS LORD NAPIER OF MERCHISTON SON OF THE FAMOUS INVENTOR OF THE LOGARITHMS THE PERSON TO WHOM THE TITLE OF A GREAT MAN IS MORE JUSTLY DUE THAN TO ANY OTHER WHOM HIS COUNTRY EVER PRODUCED",
+    "seconds": 22.45,
+    "speaker_id": 8224,
+    "condition": "noise_20db",
+    "sha256": "fa0d51463bec3f29fd92dcf8d5175ed4dcd14141b8f202d089944d0d11090767"
+  },
+  {
+    "id": "4507-16021-0005-clean",
+    "path": "CORPUS/4507-16021-0005-clean.f32",
+    "text": "WE HAVE NEVER UNDERSTOOD THIS SORT OF OBJECTIONS",
+    "seconds": 4.21,
+    "speaker_id": 4507,
+    "condition": "clean",
+    "sha256": "b5edf879fd0d06d631a5524a3a74562e571c540f3f0f66d837cb2edaa1dc458f"
+  },
+  {
+    "id": "4507-16021-0005-quiet",
+    "path": "CORPUS/4507-16021-0005-quiet.f32",
+    "text": "WE HAVE NEVER UNDERSTOOD THIS SORT OF OBJECTIONS",
+    "seconds": 4.21,
+    "speaker_id": 4507,
+    "condition": "quiet",
+    "sha256": "9398eddad9b9c34946101b578463852321dd414b5030b6cdedf28608a7e52ce0"
+  },
+  {
+    "id": "4507-16021-0005-noise_20db",
+    "path": "CORPUS/4507-16021-0005-noise_20db.f32",
+    "text": "WE HAVE NEVER UNDERSTOOD THIS SORT OF OBJECTIONS",
+    "seconds": 4.21,
+    "speaker_id": 4507,
+    "condition": "noise_20db",
+    "sha256": "20626939bf0fe34d59f1d560d62fb00ce4c16667b767cb923488bde26bcbbc94"
+  },
+  {
+    "id": "4507-16021-0027-clean",
+    "path": "CORPUS/4507-16021-0027-clean.f32",
+    "text": "PHOENICIAN VERY GOOD",
+    "seconds": 1.995,
+    "speaker_id": 4507,
+    "condition": "clean",
+    "sha256": "69d38c364056fdcca8509b36cbf7aa530bd1aea7f323cc71a209b8c80138f0f4"
+  },
+  {
+    "id": "4507-16021-0027-quiet",
+    "path": "CORPUS/4507-16021-0027-quiet.f32",
+    "text": "PHOENICIAN VERY GOOD",
+    "seconds": 1.995,
+    "speaker_id": 4507,
+    "condition": "quiet",
+    "sha256": "309f23e8e26499ab30bfc5bac9e642c6defcfd4894339a7bfca5d4ff5212b6e2"
+  },
+  {
+    "id": "4507-16021-0027-noise_20db",
+    "path": "CORPUS/4507-16021-0027-noise_20db.f32",
+    "text": "PHOENICIAN VERY GOOD",
+    "seconds": 1.995,
+    "speaker_id": 4507,
+    "condition": "noise_20db",
+    "sha256": "47f1e1b64da81c290f9276bd0ff94f2dcbcdd497f7392b9df9c82354d479b848"
+  },
+  {
+    "id": "4507-16021-0049-clean",
+    "path": "CORPUS/4507-16021-0049-clean.f32",
+    "text": "THERE IS HARDLY ONE DAY OUT OF A HUNDRED WHICH IS WHOLLY JOYOUS AND SUNNY",
+    "seconds": 5.91,
+    "speaker_id": 4507,
+    "condition": "clean",
+    "sha256": "4d86d2141fcedb001851efb9dd4b1fc770f41539d1ae39225bfd4653bde7b478"
+  },
+  {
+    "id": "4507-16021-0049-quiet",
+    "path": "CORPUS/4507-16021-0049-quiet.f32",
+    "text": "THERE IS HARDLY ONE DAY OUT OF A HUNDRED WHICH IS WHOLLY JOYOUS AND SUNNY",
+    "seconds": 5.91,
+    "speaker_id": 4507,
+    "condition": "quiet",
+    "sha256": "46e914cf2e7b587b9205f62f11a966666155cedb651060e2f41ccfff8d2c0a25"
+  },
+  {
+    "id": "4507-16021-0049-noise_20db",
+    "path": "CORPUS/4507-16021-0049-noise_20db.f32",
+    "text": "THERE IS HARDLY ONE DAY OUT OF A HUNDRED WHICH IS WHOLLY JOYOUS AND SUNNY",
+    "seconds": 5.91,
+    "speaker_id": 4507,
+    "condition": "noise_20db",
+    "sha256": "129ff318627d9f1ac0f70612b4022c4a60e702840bfb9c163b45c94eed0451b3"
+  },
+  {
+    "id": "672-122797-0011-clean",
+    "path": "CORPUS/672-122797-0011-clean.f32",
+    "text": "AND THEN WHAT HAPPENS THEN",
+    "seconds": 2.54,
+    "speaker_id": 672,
+    "condition": "clean",
+    "sha256": "133b91fd8feba458c6cc92220baad1d31205440f94852dd0a018ec76ff8a3ee4"
+  },
+  {
+    "id": "672-122797-0011-quiet",
+    "path": "CORPUS/672-122797-0011-quiet.f32",
+    "text": "AND THEN WHAT HAPPENS THEN",
+    "seconds": 2.54,
+    "speaker_id": 672,
+    "condition": "quiet",
+    "sha256": "0a28fa524e1c81739aa9021834fe2c838507abf9e20670d1a4654ac931229284"
+  },
+  {
+    "id": "672-122797-0011-noise_20db",
+    "path": "CORPUS/672-122797-0011-noise_20db.f32",
+    "text": "AND THEN WHAT HAPPENS THEN",
+    "seconds": 2.54,
+    "speaker_id": 672,
+    "condition": "noise_20db",
+    "sha256": "723d783da2ae8a131baf4c16a8fc160c0a929af9ca69b2d9242ccc708bea8ef5"
+  },
+  {
+    "id": "672-122797-0033-clean",
+    "path": "CORPUS/672-122797-0033-clean.f32",
+    "text": "A STORY",
+    "seconds": 1.285,
+    "speaker_id": 672,
+    "condition": "clean",
+    "sha256": "947aae7eac8cadfb4db1bc61aa4bc123e0beb9c19f7a6fa8d7f0279a446d932e"
+  },
+  {
+    "id": "672-122797-0033-quiet",
+    "path": "CORPUS/672-122797-0033-quiet.f32",
+    "text": "A STORY",
+    "seconds": 1.285,
+    "speaker_id": 672,
+    "condition": "quiet",
+    "sha256": "d42a1ed8b5d80f6558cd2d5a3cdf56299b9e2a2b79c943a5c0f399999a9d333a"
+  },
+  {
+    "id": "672-122797-0033-noise_20db",
+    "path": "CORPUS/672-122797-0033-noise_20db.f32",
+    "text": "A STORY",
+    "seconds": 1.285,
+    "speaker_id": 672,
+    "condition": "noise_20db",
+    "sha256": "5216ff0d397629bf297f27618103990778447a3f54f6ef12170add70a3e7b52b"
+  },
+  {
+    "id": "672-122797-0055-clean",
+    "path": "CORPUS/672-122797-0055-clean.f32",
+    "text": "AND THEN HE TOLD ALL ABOUT HIS YOUTH AND THE LITTLE MICE HAD NEVER HEARD THE LIKE BEFORE AND THEY LISTENED AND SAID",
+    "seconds": 8.23,
+    "speaker_id": 672,
+    "condition": "clean",
+    "sha256": "db7a428c5de7cbd4e909f4826a780fdd4c968ff85d4cfb07e91fb828c7a48cd7"
+  },
+  {
+    "id": "672-122797-0055-quiet",
+    "path": "CORPUS/672-122797-0055-quiet.f32",
+    "text": "AND THEN HE TOLD ALL ABOUT HIS YOUTH AND THE LITTLE MICE HAD NEVER HEARD THE LIKE BEFORE AND THEY LISTENED AND SAID",
+    "seconds": 8.23,
+    "speaker_id": 672,
+    "condition": "quiet",
+    "sha256": "de5ede3c816c29c64a6857ca40d3e70fe115013dc2e615dbbd32675b598e86a0"
+  },
+  {
+    "id": "672-122797-0055-noise_20db",
+    "path": "CORPUS/672-122797-0055-noise_20db.f32",
+    "text": "AND THEN HE TOLD ALL ABOUT HIS YOUTH AND THE LITTLE MICE HAD NEVER HEARD THE LIKE BEFORE AND THEY LISTENED AND SAID",
+    "seconds": 8.23,
+    "speaker_id": 672,
+    "condition": "noise_20db",
+    "sha256": "572fcbebb562263f84f1912d4e435415a8d82d36fd0a4dc68cc300bac246f9e9"
+  },
+  {
+    "id": "5105-28241-0002-clean",
+    "path": "CORPUS/5105-28241-0002-clean.f32",
+    "text": "THE LATE ASTOUNDING EVENTS HOWEVER HAD RENDERED PROCOPE MANIFESTLY UNEASY AND NOT THE LESS SO FROM HIS CONSCIOUSNESS THAT THE COUNT SECRETLY PARTOOK OF HIS OWN ANXIETY",
+    "seconds": 10.96,
+    "speaker_id": 5105,
+    "condition": "clean",
+    "sha256": "acc977c0a96e21cb387e274a4dab93b29491367d718399baf9ac77f009c2a677"
+  },
+  {
+    "id": "5105-28241-0002-quiet",
+    "path": "CORPUS/5105-28241-0002-quiet.f32",
+    "text": "THE LATE ASTOUNDING EVENTS HOWEVER HAD RENDERED PROCOPE MANIFESTLY UNEASY AND NOT THE LESS SO FROM HIS CONSCIOUSNESS THAT THE COUNT SECRETLY PARTOOK OF HIS OWN ANXIETY",
+    "seconds": 10.96,
+    "speaker_id": 5105,
+    "condition": "quiet",
+    "sha256": "c618691d01bf637744d537c450bf710d7062dc96ff361962c67b8411d5b3ac41"
+  },
+  {
+    "id": "5105-28241-0002-noise_20db",
+    "path": "CORPUS/5105-28241-0002-noise_20db.f32",
+    "text": "THE LATE ASTOUNDING EVENTS HOWEVER HAD RENDERED PROCOPE MANIFESTLY UNEASY AND NOT THE LESS SO FROM HIS CONSCIOUSNESS THAT THE COUNT SECRETLY PARTOOK OF HIS OWN ANXIETY",
+    "seconds": 10.96,
+    "speaker_id": 5105,
+    "condition": "noise_20db",
+    "sha256": "71228bd58c073b4fe0807dcb3054b811f7ca0ed94375fabe6b221263c2c16ba9"
+  },
+  {
+    "id": "5105-28240-0004-clean",
+    "path": "CORPUS/5105-28240-0004-clean.f32",
+    "text": "IF THE COUNT WERE ON BOARD A STRANGE FATALITY WAS BRINGING HIM TO THE PRESENCE OF HIS RIVAL",
+    "seconds": 6.015,
+    "speaker_id": 5105,
+    "condition": "clean",
+    "sha256": "f92df8e78f0712b2de9498a0f8184f154bccedf36e841783c65aeceab0e61cdd"
+  },
+  {
+    "id": "5105-28240-0004-quiet",
+    "path": "CORPUS/5105-28240-0004-quiet.f32",
+    "text": "IF THE COUNT WERE ON BOARD A STRANGE FATALITY WAS BRINGING HIM TO THE PRESENCE OF HIS RIVAL",
+    "seconds": 6.015,
+    "speaker_id": 5105,
+    "condition": "quiet",
+    "sha256": "fa93b976dfc675f4639720bde7760b9f574bfa783cf5e11e297cc08b9c5bf0fa"
+  },
+  {
+    "id": "5105-28240-0004-noise_20db",
+    "path": "CORPUS/5105-28240-0004-noise_20db.f32",
+    "text": "IF THE COUNT WERE ON BOARD A STRANGE FATALITY WAS BRINGING HIM TO THE PRESENCE OF HIS RIVAL",
+    "seconds": 6.015,
+    "speaker_id": 5105,
+    "condition": "noise_20db",
+    "sha256": "68f91fbe314fa2bec547213783d857144996c4fb953af20c9c9d8adea096b2b7"
+  },
+  {
+    "id": "5105-28233-0001-clean",
+    "path": "CORPUS/5105-28233-0001-clean.f32",
+    "text": "HE SEEMED BORN TO PLEASE WITHOUT BEING CONSCIOUS OF THE POWER HE POSSESSED",
+    "seconds": 4.49,
+    "speaker_id": 5105,
+    "condition": "clean",
+    "sha256": "f7eb74078673d1c7ff89b58e72ab79e4d92c15bed09d1cc6c1fe40eb14db5d00"
+  },
+  {
+    "id": "5105-28233-0001-quiet",
+    "path": "CORPUS/5105-28233-0001-quiet.f32",
+    "text": "HE SEEMED BORN TO PLEASE WITHOUT BEING CONSCIOUS OF THE POWER HE POSSESSED",
+    "seconds": 4.49,
+    "speaker_id": 5105,
+    "condition": "quiet",
+    "sha256": "df7c8ae477abcf2fe4819a474c4fcc98c059b4f271cba87f1dd51bcd21e6cb5d"
+  },
+  {
+    "id": "5105-28233-0001-noise_20db",
+    "path": "CORPUS/5105-28233-0001-noise_20db.f32",
+    "text": "HE SEEMED BORN TO PLEASE WITHOUT BEING CONSCIOUS OF THE POWER HE POSSESSED",
+    "seconds": 4.49,
+    "speaker_id": 5105,
+    "condition": "noise_20db",
+    "sha256": "454ba80c1078d8baa9de31520e0c6a5950cfe347913f2c811dbfff2a8edab64e"
+  },
+  {
+    "id": "3729-6852-0012-clean",
+    "path": "CORPUS/3729-6852-0012-clean.f32",
+    "text": "I SHALL CALL YOU ESPRIT",
+    "seconds": 2.86,
+    "speaker_id": 3729,
+    "condition": "clean",
+    "sha256": "e43c6f7db078698af41a2f84e1938a4417400383b3a825b483ac3b33cb5ebf38"
+  },
+  {
+    "id": "3729-6852-0012-quiet",
+    "path": "CORPUS/3729-6852-0012-quiet.f32",
+    "text": "I SHALL CALL YOU ESPRIT",
+    "seconds": 2.86,
+    "speaker_id": 3729,
+    "condition": "quiet",
+    "sha256": "d73163d173b8a3ad8548749bdddfe55470a84f4760b160e74d947d50cbcf9203"
+  },
+  {
+    "id": "3729-6852-0012-noise_20db",
+    "path": "CORPUS/3729-6852-0012-noise_20db.f32",
+    "text": "I SHALL CALL YOU ESPRIT",
+    "seconds": 2.86,
+    "speaker_id": 3729,
+    "condition": "noise_20db",
+    "sha256": "5ebb91c5e621fdfccf3cf97b94af47ea414e380c883e3f78aa267878ad8eed19"
+  },
+  {
+    "id": "3729-6852-0034-clean",
+    "path": "CORPUS/3729-6852-0034-clean.f32",
+    "text": "LET A MAN RUN AND EVERYBODY WILL RUN AFTER HIM THE CROWD WILL NOT STOP UNLESS THE MAN IS PROVED TO BE MAD BUT TO PROVE IT IS INDEED A DIFFICULT TASK BECAUSE WE HAVE A CROWD OF MEN WHO MAD FROM THEIR BIRTH ARE STILL CONSIDERED WISE",
+    "seconds": 18.895,
+    "speaker_id": 3729,
+    "condition": "clean",
+    "sha256": "66102237e3493789f1968be0c2fb1faab2e1936d0e3e9197ce157b118d6e16e6"
+  },
+  {
+    "id": "3729-6852-0034-quiet",
+    "path": "CORPUS/3729-6852-0034-quiet.f32",
+    "text": "LET A MAN RUN AND EVERYBODY WILL RUN AFTER HIM THE CROWD WILL NOT STOP UNLESS THE MAN IS PROVED TO BE MAD BUT TO PROVE IT IS INDEED A DIFFICULT TASK BECAUSE WE HAVE A CROWD OF MEN WHO MAD FROM THEIR BIRTH ARE STILL CONSIDERED WISE",
+    "seconds": 18.895,
+    "speaker_id": 3729,
+    "condition": "quiet",
+    "sha256": "66687ba0e5d5a636cf66c98d2997c9e2f90c043a1a5c2d53a9e119d3d88fe906"
+  },
+  {
+    "id": "3729-6852-0034-noise_20db",
+    "path": "CORPUS/3729-6852-0034-noise_20db.f32",
+    "text": "LET A MAN RUN AND EVERYBODY WILL RUN AFTER HIM THE CROWD WILL NOT STOP UNLESS THE MAN IS PROVED TO BE MAD BUT TO PROVE IT IS INDEED A DIFFICULT TASK BECAUSE WE HAVE A CROWD OF MEN WHO MAD FROM THEIR BIRTH ARE STILL CONSIDERED WISE",
+    "seconds": 18.895,
+    "speaker_id": 3729,
+    "condition": "noise_20db",
+    "sha256": "2cdc5506db40c4209fa17e8830bdf44f92329b265255fa9570f5ebeb8475a686"
+  },
+  {
+    "id": "1089-134691-0009-clean",
+    "path": "CORPUS/1089-134691-0009-clean.f32",
+    "text": "ANGRY WITH HIMSELF HE TRIED TO HIDE HIS FACE FROM THEIR EYES BY GAZING DOWN SIDEWAYS INTO THE SHALLOW SWIRLING WATER UNDER THE BRIDGE BUT HE STILL SAW A REFLECTION THEREIN OF THEIR TOP HEAVY SILK HATS AND HUMBLE TAPE LIKE COLLARS AND LOOSELY HANGING CLERICAL CLOTHES BROTHER HICKEY",
+    "seconds": 20.055,
+    "speaker_id": 1089,
+    "condition": "clean",
+    "sha256": "b3847c6e2fb88a265759c3f06d273104469543773d10b6032eb62dba4a4eff8c"
+  },
+  {
+    "id": "1089-134691-0009-quiet",
+    "path": "CORPUS/1089-134691-0009-quiet.f32",
+    "text": "ANGRY WITH HIMSELF HE TRIED TO HIDE HIS FACE FROM THEIR EYES BY GAZING DOWN SIDEWAYS INTO THE SHALLOW SWIRLING WATER UNDER THE BRIDGE BUT HE STILL SAW A REFLECTION THEREIN OF THEIR TOP HEAVY SILK HATS AND HUMBLE TAPE LIKE COLLARS AND LOOSELY HANGING CLERICAL CLOTHES BROTHER HICKEY",
+    "seconds": 20.055,
+    "speaker_id": 1089,
+    "condition": "quiet",
+    "sha256": "f86480aba76a1169c9a0a61f6893a2c7a26dd2f0cb0d6a285c9590c599e4def2"
+  },
+  {
+    "id": "1089-134691-0009-noise_20db",
+    "path": "CORPUS/1089-134691-0009-noise_20db.f32",
+    "text": "ANGRY WITH HIMSELF HE TRIED TO HIDE HIS FACE FROM THEIR EYES BY GAZING DOWN SIDEWAYS INTO THE SHALLOW SWIRLING WATER UNDER THE BRIDGE BUT HE STILL SAW A REFLECTION THEREIN OF THEIR TOP HEAVY SILK HATS AND HUMBLE TAPE LIKE COLLARS AND LOOSELY HANGING CLERICAL CLOTHES BROTHER HICKEY",
+    "seconds": 20.055,
+    "speaker_id": 1089,
+    "condition": "noise_20db",
+    "sha256": "31986a754621707cdafb72c51dbaf902fa947e87d6f677e5069ff38847800d1d"
+  },
+  {
+    "id": "1089-134686-0005-clean",
+    "path": "CORPUS/1089-134686-0005-clean.f32",
+    "text": "THE MUSIC CAME NEARER AND HE RECALLED THE WORDS THE WORDS OF SHELLEY'S FRAGMENT UPON THE MOON WANDERING COMPANIONLESS PALE FOR WEARINESS",
+    "seconds": 9.635,
+    "speaker_id": 1089,
+    "condition": "clean",
+    "sha256": "25e258ea65415231029f9bd22901b3f1f5aac764dd4b36133cbf6c84b897012f"
+  },
+  {
+    "id": "1089-134686-0005-quiet",
+    "path": "CORPUS/1089-134686-0005-quiet.f32",
+    "text": "THE MUSIC CAME NEARER AND HE RECALLED THE WORDS THE WORDS OF SHELLEY'S FRAGMENT UPON THE MOON WANDERING COMPANIONLESS PALE FOR WEARINESS",
+    "seconds": 9.635,
+    "speaker_id": 1089,
+    "condition": "quiet",
+    "sha256": "4044a770c13967aec292501d43e0e607f3053220c7000fac2e2357ef01416a1b"
+  },
+  {
+    "id": "1089-134686-0005-noise_20db",
+    "path": "CORPUS/1089-134686-0005-noise_20db.f32",
+    "text": "THE MUSIC CAME NEARER AND HE RECALLED THE WORDS THE WORDS OF SHELLEY'S FRAGMENT UPON THE MOON WANDERING COMPANIONLESS PALE FOR WEARINESS",
+    "seconds": 9.635,
+    "speaker_id": 1089,
+    "condition": "noise_20db",
+    "sha256": "8f5a2a46660cfdd9b8805c2bffe0c25b00de64062b5f41647ce48c2e14cb98a7"
+  },
+  {
+    "id": "1089-134686-0027-clean",
+    "path": "CORPUS/1089-134686-0027-clean.f32",
+    "text": "HE CLASPED HIS HANDS ON THE DESK AND SAID",
+    "seconds": 2.71,
+    "speaker_id": 1089,
+    "condition": "clean",
+    "sha256": "7a86c7638b945080d61a11d98ed544fa12579a257dc9d2b97f90b5ded6f0cae8"
+  },
+  {
+    "id": "1089-134686-0027-quiet",
+    "path": "CORPUS/1089-134686-0027-quiet.f32",
+    "text": "HE CLASPED HIS HANDS ON THE DESK AND SAID",
+    "seconds": 2.71,
+    "speaker_id": 1089,
+    "condition": "quiet",
+    "sha256": "7e9fbf9f2ad20b977c05d2848831488f2a63cf865bdaf1152520de4adf6468f3"
+  },
+  {
+    "id": "1089-134686-0027-noise_20db",
+    "path": "CORPUS/1089-134686-0027-noise_20db.f32",
+    "text": "HE CLASPED HIS HANDS ON THE DESK AND SAID",
+    "seconds": 2.71,
+    "speaker_id": 1089,
+    "condition": "noise_20db",
+    "sha256": "a4ae7c257ab97ec5d6ccaad53ecd90abc203aa542eedd9382eed15328007430d"
+  },
+  {
+    "id": "1188-133604-0011-clean",
+    "path": "CORPUS/1188-133604-0011-clean.f32",
+    "text": "THEY ARE BEYOND ALL OTHER WORKS THAT I KNOW EXISTING DEPENDENT FOR THEIR EFFECT ON LOW SUBDUED TONES THEIR FAVORITE CHOICE IN TIME OF DAY BEING EITHER DAWN OR TWILIGHT AND EVEN THEIR BRIGHTEST SUNSETS PRODUCED CHIEFLY OUT OF GRAY PAPER",
+    "seconds": 15.19,
+    "speaker_id": 1188,
+    "condition": "clean",
+    "sha256": "9afff6d09882ed72309649b152d6b6be2220530fe7490780a8d6845f459bff23"
+  },
+  {
+    "id": "1188-133604-0011-quiet",
+    "path": "CORPUS/1188-133604-0011-quiet.f32",
+    "text": "THEY ARE BEYOND ALL OTHER WORKS THAT I KNOW EXISTING DEPENDENT FOR THEIR EFFECT ON LOW SUBDUED TONES THEIR FAVORITE CHOICE IN TIME OF DAY BEING EITHER DAWN OR TWILIGHT AND EVEN THEIR BRIGHTEST SUNSETS PRODUCED CHIEFLY OUT OF GRAY PAPER",
+    "seconds": 15.19,
+    "speaker_id": 1188,
+    "condition": "quiet",
+    "sha256": "efb13d633f4d676841b2e92b99397520ce6ef4af98e7ce7512da9e75dad37a31"
+  },
+  {
+    "id": "1188-133604-0011-noise_20db",
+    "path": "CORPUS/1188-133604-0011-noise_20db.f32",
+    "text": "THEY ARE BEYOND ALL OTHER WORKS THAT I KNOW EXISTING DEPENDENT FOR THEIR EFFECT ON LOW SUBDUED TONES THEIR FAVORITE CHOICE IN TIME OF DAY BEING EITHER DAWN OR TWILIGHT AND EVEN THEIR BRIGHTEST SUNSETS PRODUCED CHIEFLY OUT OF GRAY PAPER",
+    "seconds": 15.19,
+    "speaker_id": 1188,
+    "condition": "noise_20db",
+    "sha256": "8d2f2be966c268f14b282b6a73b0810660e63240377f7ce8f19eeccf173f0a61"
+  },
+  {
+    "id": "1188-133604-0033-clean",
+    "path": "CORPUS/1188-133604-0033-clean.f32",
+    "text": "EVERY PLANT IN THE GRASS IS SET FORMALLY GROWS PERFECTLY AND MAY BE REALIZED COMPLETELY",
+    "seconds": 6.625,
+    "speaker_id": 1188,
+    "condition": "clean",
+    "sha256": "34835751e73b4ddd37ccffc1685695da6dce0d535f7e193a6e3ceee8ca124ce6"
+  },
+  {
+    "id": "1188-133604-0033-quiet",
+    "path": "CORPUS/1188-133604-0033-quiet.f32",
+    "text": "EVERY PLANT IN THE GRASS IS SET FORMALLY GROWS PERFECTLY AND MAY BE REALIZED COMPLETELY",
+    "seconds": 6.625,
+    "speaker_id": 1188,
+    "condition": "quiet",
+    "sha256": "2f8da2c296e355d0863f4d789a79a0222a7a06c8816c9d0c0a2a6d20add691b6"
+  },
+  {
+    "id": "1188-133604-0033-noise_20db",
+    "path": "CORPUS/1188-133604-0033-noise_20db.f32",
+    "text": "EVERY PLANT IN THE GRASS IS SET FORMALLY GROWS PERFECTLY AND MAY BE REALIZED COMPLETELY",
+    "seconds": 6.625,
+    "speaker_id": 1188,
+    "condition": "noise_20db",
+    "sha256": "c1e47ddeee7353436afe5e9c3440e144fc11115d406faf087ec18a12406e3f72"
+  },
+  {
+    "id": "2300-131720-0010-clean",
+    "path": "CORPUS/2300-131720-0010-clean.f32",
+    "text": "IT COULD NOT BE USED FOR ELECTROPLATING OR DEPOSITION NOR COULD IT CHARGE STORAGE BATTERIES ALL OF WHICH ARE EASILY WITHIN THE ABILITY OF THE DIRECT CURRENT",
+    "seconds": 10.82,
+    "speaker_id": 2300,
+    "condition": "clean",
+    "sha256": "591c7431a131cb377a8210d187ab519a76a8650808571515bc374b1eae96db74"
+  },
+  {
+    "id": "2300-131720-0010-quiet",
+    "path": "CORPUS/2300-131720-0010-quiet.f32",
+    "text": "IT COULD NOT BE USED FOR ELECTROPLATING OR DEPOSITION NOR COULD IT CHARGE STORAGE BATTERIES ALL OF WHICH ARE EASILY WITHIN THE ABILITY OF THE DIRECT CURRENT",
+    "seconds": 10.82,
+    "speaker_id": 2300,
+    "condition": "quiet",
+    "sha256": "89e1d4ea41c53b7ab8896315dd47ac6bad8367ca41439d40b61d78ec7c489777"
+  },
+  {
+    "id": "2300-131720-0010-noise_20db",
+    "path": "CORPUS/2300-131720-0010-noise_20db.f32",
+    "text": "IT COULD NOT BE USED FOR ELECTROPLATING OR DEPOSITION NOR COULD IT CHARGE STORAGE BATTERIES ALL OF WHICH ARE EASILY WITHIN THE ABILITY OF THE DIRECT CURRENT",
+    "seconds": 10.82,
+    "speaker_id": 2300,
+    "condition": "noise_20db",
+    "sha256": "4aaf55037fc8560a62805665c0b6bc266ea48721e02b4bbb19882379d0eebbc0"
+  },
+  {
+    "id": "2300-131720-0032-clean",
+    "path": "CORPUS/2300-131720-0032-clean.f32",
+    "text": "THE STANDARD EDISON METER PRACTICE WAS TO REMOVE THE CELLS ONCE A MONTH TO THE METER ROOM OF THE CENTRAL STATION COMPANY FOR EXAMINATION ANOTHER SET BEING SUBSTITUTED",
+    "seconds": 11.69,
+    "speaker_id": 2300,
+    "condition": "clean",
+    "sha256": "ed4018779f221545051441f04e7c1d42aed1a8ce4b83c3fa7f428c516dba4ffb"
+  },
+  {
+    "id": "2300-131720-0032-quiet",
+    "path": "CORPUS/2300-131720-0032-quiet.f32",
+    "text": "THE STANDARD EDISON METER PRACTICE WAS TO REMOVE THE CELLS ONCE A MONTH TO THE METER ROOM OF THE CENTRAL STATION COMPANY FOR EXAMINATION ANOTHER SET BEING SUBSTITUTED",
+    "seconds": 11.69,
+    "speaker_id": 2300,
+    "condition": "quiet",
+    "sha256": "c0c85e28efd20752a37776990ae76ea96dbb753de54f078a29080d429c2371b9"
+  },
+  {
+    "id": "2300-131720-0032-noise_20db",
+    "path": "CORPUS/2300-131720-0032-noise_20db.f32",
+    "text": "THE STANDARD EDISON METER PRACTICE WAS TO REMOVE THE CELLS ONCE A MONTH TO THE METER ROOM OF THE CENTRAL STATION COMPANY FOR EXAMINATION ANOTHER SET BEING SUBSTITUTED",
+    "seconds": 11.69,
+    "speaker_id": 2300,
+    "condition": "noise_20db",
+    "sha256": "592f5d9c5f7796449a0427a8ec0cb41ee171dd6fd31e1232e97eec9959267931"
+  },
+  {
+    "id": "6829-68769-0012-clean",
+    "path": "CORPUS/6829-68769-0012-clean.f32",
+    "text": "OH SAY THAT'S DIFFERENT OBSERVED MARKHAM ALTERING HIS DEMEANOR",
+    "seconds": 4.295,
+    "speaker_id": 6829,
+    "condition": "clean",
+    "sha256": "abe1189b88e9e30e1dbde713819256fe7d0c812e1d4c1749107135d95088081a"
+  },
+  {
+    "id": "6829-68769-0012-quiet",
+    "path": "CORPUS/6829-68769-0012-quiet.f32",
+    "text": "OH SAY THAT'S DIFFERENT OBSERVED MARKHAM ALTERING HIS DEMEANOR",
+    "seconds": 4.295,
+    "speaker_id": 6829,
+    "condition": "quiet",
+    "sha256": "b5d909cc27e84cbbf5a10209e16eefcd12194380afda310a03b4fabfce351719"
+  },
+  {
+    "id": "6829-68769-0012-noise_20db",
+    "path": "CORPUS/6829-68769-0012-noise_20db.f32",
+    "text": "OH SAY THAT'S DIFFERENT OBSERVED MARKHAM ALTERING HIS DEMEANOR",
+    "seconds": 4.295,
+    "speaker_id": 6829,
+    "condition": "noise_20db",
+    "sha256": "d81cfb8054dd59a12a3c694d46a58615a72223333637bf314332c504b332c265"
+  },
+  {
+    "id": "6829-68769-0034-clean",
+    "path": "CORPUS/6829-68769-0034-clean.f32",
+    "text": "I'M GOING TO SEE MISTER MARSHALL SAID KENNETH AND DISCOVER WHAT I CAN DO TO ASSIST YOU THANK YOU SIR",
+    "seconds": 6.055,
+    "speaker_id": 6829,
+    "condition": "clean",
+    "sha256": "ba09e3fd969a8c4e7b720cc8ff98ab2dca3931f762d66b2a1de7db0b6e21d54c"
+  },
+  {
+    "id": "6829-68769-0034-quiet",
+    "path": "CORPUS/6829-68769-0034-quiet.f32",
+    "text": "I'M GOING TO SEE MISTER MARSHALL SAID KENNETH AND DISCOVER WHAT I CAN DO TO ASSIST YOU THANK YOU SIR",
+    "seconds": 6.055,
+    "speaker_id": 6829,
+    "condition": "quiet",
+    "sha256": "fb72019d5c6b527a2dfbb3c310f50b264a4fe9bc99c0d7057e7395821f7ba695"
+  },
+  {
+    "id": "6829-68769-0034-noise_20db",
+    "path": "CORPUS/6829-68769-0034-noise_20db.f32",
+    "text": "I'M GOING TO SEE MISTER MARSHALL SAID KENNETH AND DISCOVER WHAT I CAN DO TO ASSIST YOU THANK YOU SIR",
+    "seconds": 6.055,
+    "speaker_id": 6829,
+    "condition": "noise_20db",
+    "sha256": "0011f615416262b1751a08ee46815f4a48a5eb47413855271e2af743d552b613"
+  },
+  {
+    "id": "6829-68771-0002-clean",
+    "path": "CORPUS/6829-68771-0002-clean.f32",
+    "text": "THE WEAK KNEED CONTINGENCY MUST BE STRENGTHENED AND FORTIFIED AND A COUPLE OF HUNDRED VOTES IN ONE WAY OR ANOTHER SECURED FROM THE OPPOSITION",
+    "seconds": 8.94,
+    "speaker_id": 6829,
+    "condition": "clean",
+    "sha256": "21ab083f69c20df2291fc075978c142bb53cfdd8a8b56f6292b36a7d8cc889ce"
+  },
+  {
+    "id": "6829-68771-0002-quiet",
+    "path": "CORPUS/6829-68771-0002-quiet.f32",
+    "text": "THE WEAK KNEED CONTINGENCY MUST BE STRENGTHENED AND FORTIFIED AND A COUPLE OF HUNDRED VOTES IN ONE WAY OR ANOTHER SECURED FROM THE OPPOSITION",
+    "seconds": 8.94,
+    "speaker_id": 6829,
+    "condition": "quiet",
+    "sha256": "e2de3034df2a3570af2d09e0d20ea6ee5d66e377bd0d07d882af47c1d6eacaa3"
+  },
+  {
+    "id": "6829-68771-0002-noise_20db",
+    "path": "CORPUS/6829-68771-0002-noise_20db.f32",
+    "text": "THE WEAK KNEED CONTINGENCY MUST BE STRENGTHENED AND FORTIFIED AND A COUPLE OF HUNDRED VOTES IN ONE WAY OR ANOTHER SECURED FROM THE OPPOSITION",
+    "seconds": 8.94,
+    "speaker_id": 6829,
+    "condition": "noise_20db",
+    "sha256": "45c99a21660695e02acfe1ffd6b7a773b143a4069b229cd4c0cd7cebd8ce8d7b"
+  },
+  {
+    "id": "6829-68771-0024-clean",
+    "path": "CORPUS/6829-68771-0024-clean.f32",
+    "text": "FOR THE FIRST TIME THE MAID SEEMED A LITTLE CONFUSED AND HER GAZE WANDERED FROM THE FACE OF HER VISITOR",
+    "seconds": 6.245,
+    "speaker_id": 6829,
+    "condition": "clean",
+    "sha256": "66ad042866df0158a9f522f57d64b71b3982423fffb09abc09fa0a336dedb45a"
+  },
+  {
+    "id": "6829-68771-0024-quiet",
+    "path": "CORPUS/6829-68771-0024-quiet.f32",
+    "text": "FOR THE FIRST TIME THE MAID SEEMED A LITTLE CONFUSED AND HER GAZE WANDERED FROM THE FACE OF HER VISITOR",
+    "seconds": 6.245,
+    "speaker_id": 6829,
+    "condition": "quiet",
+    "sha256": "d762b15c70251836fedd3dfd550ef757f08cb20445054f9b5cbcceb9a767b039"
+  },
+  {
+    "id": "6829-68771-0024-noise_20db",
+    "path": "CORPUS/6829-68771-0024-noise_20db.f32",
+    "text": "FOR THE FIRST TIME THE MAID SEEMED A LITTLE CONFUSED AND HER GAZE WANDERED FROM THE FACE OF HER VISITOR",
+    "seconds": 6.245,
+    "speaker_id": 6829,
+    "condition": "noise_20db",
+    "sha256": "728bcf418f0f985fbea723eb181ba31fc6f9852071fd58038b500236a567d6fe"
+  },
+  {
+    "id": "1580-141083-0009-clean",
+    "path": "CORPUS/1580-141083-0009-clean.f32",
+    "text": "THE ALTERNATIVE WAS THAT SOMEONE PASSING HAD OBSERVED THE KEY IN THE DOOR HAD KNOWN THAT I WAS OUT AND HAD ENTERED TO LOOK AT THE PAPERS",
+    "seconds": 7.04,
+    "speaker_id": 1580,
+    "condition": "clean",
+    "sha256": "3653b3eb5e9e74ab0083fececb12f357f002aaebe7066e9708c415ecaa0b2522"
+  },
+  {
+    "id": "1580-141083-0009-quiet",
+    "path": "CORPUS/1580-141083-0009-quiet.f32",
+    "text": "THE ALTERNATIVE WAS THAT SOMEONE PASSING HAD OBSERVED THE KEY IN THE DOOR HAD KNOWN THAT I WAS OUT AND HAD ENTERED TO LOOK AT THE PAPERS",
+    "seconds": 7.04,
+    "speaker_id": 1580,
+    "condition": "quiet",
+    "sha256": "9db818fd029b1035c83bfb707dc55b8e3d5bcf65c99c3aeeeadb5bf9dd90bd56"
+  },
+  {
+    "id": "1580-141083-0009-noise_20db",
+    "path": "CORPUS/1580-141083-0009-noise_20db.f32",
+    "text": "THE ALTERNATIVE WAS THAT SOMEONE PASSING HAD OBSERVED THE KEY IN THE DOOR HAD KNOWN THAT I WAS OUT AND HAD ENTERED TO LOOK AT THE PAPERS",
+    "seconds": 7.04,
+    "speaker_id": 1580,
+    "condition": "noise_20db",
+    "sha256": "ca83421baf71d84066840a6578766fec5b02d63b1cbfbc75dfad205ffff61915"
+  },
+  {
+    "id": "1580-141083-0031-clean",
+    "path": "CORPUS/1580-141083-0031-clean.f32",
+    "text": "HOLMES HELD OUT A SMALL CHIP WITH THE LETTERS N N AND A SPACE OF CLEAR WOOD AFTER THEM YOU SEE",
+    "seconds": 6.25,
+    "speaker_id": 1580,
+    "condition": "clean",
+    "sha256": "97641aa75ba4bfe93173891c396fa700563186a77b3c4633f90b683359ee1495"
+  },
+  {
+    "id": "1580-141083-0031-quiet",
+    "path": "CORPUS/1580-141083-0031-quiet.f32",
+    "text": "HOLMES HELD OUT A SMALL CHIP WITH THE LETTERS N N AND A SPACE OF CLEAR WOOD AFTER THEM YOU SEE",
+    "seconds": 6.25,
+    "speaker_id": 1580,
+    "condition": "quiet",
+    "sha256": "802000e5eab9727d060f1eda561b925e3917164080c8df16595ef4b5a1326b00"
+  },
+  {
+    "id": "1580-141083-0031-noise_20db",
+    "path": "CORPUS/1580-141083-0031-noise_20db.f32",
+    "text": "HOLMES HELD OUT A SMALL CHIP WITH THE LETTERS N N AND A SPACE OF CLEAR WOOD AFTER THEM YOU SEE",
+    "seconds": 6.25,
+    "speaker_id": 1580,
+    "condition": "noise_20db",
+    "sha256": "89c6ad1ad4da84caf99f426106eb3ac4d4cce5c21d77f1f651baab3f1b72bd76"
+  },
+  {
+    "id": "1580-141083-0053-clean",
+    "path": "CORPUS/1580-141083-0053-clean.f32",
+    "text": "YOU HAVEN'T SEEN ANY OF THEM NO SIR",
+    "seconds": 4.015,
+    "speaker_id": 1580,
+    "condition": "clean",
+    "sha256": "bd3ec32f450fc6de96f00fd19ac4ae2c0554bf2e99042b779261fe666471a450"
+  },
+  {
+    "id": "1580-141083-0053-quiet",
+    "path": "CORPUS/1580-141083-0053-quiet.f32",
+    "text": "YOU HAVEN'T SEEN ANY OF THEM NO SIR",
+    "seconds": 4.015,
+    "speaker_id": 1580,
+    "condition": "quiet",
+    "sha256": "9555a4402ee97eeaa5a9d42bd201649107114562029ffbfc7a3469b7db425105"
+  },
+  {
+    "id": "1580-141083-0053-noise_20db",
+    "path": "CORPUS/1580-141083-0053-noise_20db.f32",
+    "text": "YOU HAVEN'T SEEN ANY OF THEM NO SIR",
+    "seconds": 4.015,
+    "speaker_id": 1580,
+    "condition": "noise_20db",
+    "sha256": "2df2faef8a900ba663645c06937fda3fa9ba0adf8cbacd8c8bf910c5fe483dfa"
+  },
+  {
+    "id": "1580-141084-0021-clean",
+    "path": "CORPUS/1580-141084-0021-clean.f32",
+    "text": "ON THE PALM WERE THREE LITTLE PYRAMIDS OF BLACK DOUGHY CLAY",
+    "seconds": 4.01,
+    "speaker_id": 1580,
+    "condition": "clean",
+    "sha256": "0434c3d90ca252aa0b605bdd93cfd3346e9462fadc8b3c80a2b0efc4a15cbfd8"
+  },
+  {
+    "id": "1580-141084-0021-quiet",
+    "path": "CORPUS/1580-141084-0021-quiet.f32",
+    "text": "ON THE PALM WERE THREE LITTLE PYRAMIDS OF BLACK DOUGHY CLAY",
+    "seconds": 4.01,
+    "speaker_id": 1580,
+    "condition": "quiet",
+    "sha256": "e1ded3bf24a1597795809fff173892400fcd069d83e47f3503f3859f881cc87a"
+  },
+  {
+    "id": "1580-141084-0021-noise_20db",
+    "path": "CORPUS/1580-141084-0021-noise_20db.f32",
+    "text": "ON THE PALM WERE THREE LITTLE PYRAMIDS OF BLACK DOUGHY CLAY",
+    "seconds": 4.01,
+    "speaker_id": 1580,
+    "condition": "noise_20db",
+    "sha256": "b7f1550892301de193b6554b16ba69949a99fe970bbd6881a3f6f04256e31948"
+  },
+  {
+    "id": "1580-141084-0043-clean",
+    "path": "CORPUS/1580-141084-0043-clean.f32",
+    "text": "HE PUT HIS SHOES ON THE TABLE",
+    "seconds": 2.065,
+    "speaker_id": 1580,
+    "condition": "clean",
+    "sha256": "f894d6f2c40b0b066a7927aca02037fdd80e7d4fd457080d8757bb92d29f5e0a"
+  },
+  {
+    "id": "1580-141084-0043-quiet",
+    "path": "CORPUS/1580-141084-0043-quiet.f32",
+    "text": "HE PUT HIS SHOES ON THE TABLE",
+    "seconds": 2.065,
+    "speaker_id": 1580,
+    "condition": "quiet",
+    "sha256": "ad25ba62f41963ca7d2e6123f015d54f5e243969ca6a2dd369bc5ce2789cdab9"
+  },
+  {
+    "id": "1580-141084-0043-noise_20db",
+    "path": "CORPUS/1580-141084-0043-noise_20db.f32",
+    "text": "HE PUT HIS SHOES ON THE TABLE",
+    "seconds": 2.065,
+    "speaker_id": 1580,
+    "condition": "noise_20db",
+    "sha256": "b8a3f8366fa8eca37f8e82cf355b78ed69c92db765105dd3205e06a3c50ce789"
+  },
+  {
+    "id": "4970-29095-0014-clean",
+    "path": "CORPUS/4970-29095-0014-clean.f32",
+    "text": "WHERE THEE AND THY FAMILY ARE KNOWN",
+    "seconds": 3.26,
+    "speaker_id": 4970,
+    "condition": "clean",
+    "sha256": "013c70835026508d02026ba4bb9acc130c8f3183836032a583b83b20dc32d1dc"
+  },
+  {
+    "id": "4970-29095-0014-quiet",
+    "path": "CORPUS/4970-29095-0014-quiet.f32",
+    "text": "WHERE THEE AND THY FAMILY ARE KNOWN",
+    "seconds": 3.26,
+    "speaker_id": 4970,
+    "condition": "quiet",
+    "sha256": "5b7c4c31d2463f68f3bd7d107edae9cdc8e1e4508ee7bbfb186b03b57470c777"
+  },
+  {
+    "id": "4970-29095-0014-noise_20db",
+    "path": "CORPUS/4970-29095-0014-noise_20db.f32",
+    "text": "WHERE THEE AND THY FAMILY ARE KNOWN",
+    "seconds": 3.26,
+    "speaker_id": 4970,
+    "condition": "noise_20db",
+    "sha256": "3926a8bf8c1cdb5fd56ce1b960f98803940ccb0a4e2fd55d91b6c244e31e7ac4"
+  },
+  {
+    "id": "4970-29095-0036-clean",
+    "path": "CORPUS/4970-29095-0036-clean.f32",
+    "text": "HAS THEE CONSULTED THY MOTHER ABOUT A CAREER I SUPPOSE IT IS A CAREER THEE WANTS",
+    "seconds": 5.25,
+    "speaker_id": 4970,
+    "condition": "clean",
+    "sha256": "219726b2634b0b1a73e7c6e92602536186f59e3ce0f95f0ae06f03d5414a471a"
+  },
+  {
+    "id": "4970-29095-0036-quiet",
+    "path": "CORPUS/4970-29095-0036-quiet.f32",
+    "text": "HAS THEE CONSULTED THY MOTHER ABOUT A CAREER I SUPPOSE IT IS A CAREER THEE WANTS",
+    "seconds": 5.25,
+    "speaker_id": 4970,
+    "condition": "quiet",
+    "sha256": "adc9175f281ff7dfa67f0a86f9ec41704b08fe640cf75b4d2890c420ec116036"
+  },
+  {
+    "id": "4970-29095-0036-noise_20db",
+    "path": "CORPUS/4970-29095-0036-noise_20db.f32",
+    "text": "HAS THEE CONSULTED THY MOTHER ABOUT A CAREER I SUPPOSE IT IS A CAREER THEE WANTS",
+    "seconds": 5.25,
+    "speaker_id": 4970,
+    "condition": "noise_20db",
+    "sha256": "01715b0879dc05cd8dbdf37a1c4add020094032bbc25385600824b0dfab12653"
+  },
+  {
+    "id": "4970-29093-0019-clean",
+    "path": "CORPUS/4970-29093-0019-clean.f32",
+    "text": "THE NIGHT WAS SPENT IN PACKING UP AND WRITING LETTERS FOR PHILIP WOULD NOT TAKE SUCH AN IMPORTANT STEP WITHOUT INFORMING HIS FRIENDS",
+    "seconds": 7.47,
+    "speaker_id": 4970,
+    "condition": "clean",
+    "sha256": "c3ae120813455169836844a0f651b635c461e384d8840b8f283aa12d799669e6"
+  },
+  {
+    "id": "4970-29093-0019-quiet",
+    "path": "CORPUS/4970-29093-0019-quiet.f32",
+    "text": "THE NIGHT WAS SPENT IN PACKING UP AND WRITING LETTERS FOR PHILIP WOULD NOT TAKE SUCH AN IMPORTANT STEP WITHOUT INFORMING HIS FRIENDS",
+    "seconds": 7.47,
+    "speaker_id": 4970,
+    "condition": "quiet",
+    "sha256": "29c97040bb63ef3c4cbe31aa7a1853404a8fbdc19888e8ffff03606d36d45c48"
+  },
+  {
+    "id": "4970-29093-0019-noise_20db",
+    "path": "CORPUS/4970-29093-0019-noise_20db.f32",
+    "text": "THE NIGHT WAS SPENT IN PACKING UP AND WRITING LETTERS FOR PHILIP WOULD NOT TAKE SUCH AN IMPORTANT STEP WITHOUT INFORMING HIS FRIENDS",
+    "seconds": 7.47,
+    "speaker_id": 4970,
+    "condition": "noise_20db",
+    "sha256": "b73d689c06c3d54e5dec4a1bb7631c946c7510c727a773df8b69a309e678da53"
+  },
+  {
+    "id": "4992-41797-0017-clean",
+    "path": "CORPUS/4992-41797-0017-clean.f32",
+    "text": "HE WOULDN'T SEARCH SO DON'T WORRY REPLIED CYRIL QUIETLY AND THE TWO LOOKED AT EACH OTHER AND KNEW THAT IT WAS SO",
+    "seconds": 8.69,
+    "speaker_id": 4992,
+    "condition": "clean",
+    "sha256": "53ff2f3580e9936ec16978de5dd8b41a69fb7b7b3d52e3c091eff36bde0f27fe"
+  },
+  {
+    "id": "4992-41797-0017-quiet",
+    "path": "CORPUS/4992-41797-0017-quiet.f32",
+    "text": "HE WOULDN'T SEARCH SO DON'T WORRY REPLIED CYRIL QUIETLY AND THE TWO LOOKED AT EACH OTHER AND KNEW THAT IT WAS SO",
+    "seconds": 8.69,
+    "speaker_id": 4992,
+    "condition": "quiet",
+    "sha256": "233d4fa3176b642d124c49d91e46b10a1e7e3534a0626be54ad2d86b68f42177"
+  },
+  {
+    "id": "4992-41797-0017-noise_20db",
+    "path": "CORPUS/4992-41797-0017-noise_20db.f32",
+    "text": "HE WOULDN'T SEARCH SO DON'T WORRY REPLIED CYRIL QUIETLY AND THE TWO LOOKED AT EACH OTHER AND KNEW THAT IT WAS SO",
+    "seconds": 8.69,
+    "speaker_id": 4992,
+    "condition": "noise_20db",
+    "sha256": "9b42a2ce63b054c5c9f70e4fc0b338d8122bcaeea8fd8ae2bf1ed7b12eddca49"
+  },
+  {
+    "id": "4992-23283-0016-clean",
+    "path": "CORPUS/4992-23283-0016-clean.f32",
+    "text": "AGAIN HE SEARCHED HIS OWN THOUGHTS NOR INEFFECTUALLY AS BEFORE",
+    "seconds": 4.495,
+    "speaker_id": 4992,
+    "condition": "clean",
+    "sha256": "3cdb94e1da84305f01e63847deb8e69762ad8006b40fa32d05ff8533b0693535"
+  },
+  {
+    "id": "4992-23283-0016-quiet",
+    "path": "CORPUS/4992-23283-0016-quiet.f32",
+    "text": "AGAIN HE SEARCHED HIS OWN THOUGHTS NOR INEFFECTUALLY AS BEFORE",
+    "seconds": 4.495,
+    "speaker_id": 4992,
+    "condition": "quiet",
+    "sha256": "859daae0b8dfae96ed8649e52c0617ab84cde3f265e24a10260b8ee76e99babc"
+  },
+  {
+    "id": "4992-23283-0016-noise_20db",
+    "path": "CORPUS/4992-23283-0016-noise_20db.f32",
+    "text": "AGAIN HE SEARCHED HIS OWN THOUGHTS NOR INEFFECTUALLY AS BEFORE",
+    "seconds": 4.495,
+    "speaker_id": 4992,
+    "condition": "noise_20db",
+    "sha256": "22c51849a0f0af8bb87cd084c1b4713b47b1de98bd0522b92622c788dc49b51f"
+  },
+  {
+    "id": "4992-41806-0017-clean",
+    "path": "CORPUS/4992-41806-0017-clean.f32",
+    "text": "WE SHUT OUR EYES THE FLOWERS BLOOM ON WE MURMUR BUT THE CORN EARS FILL WE CHOOSE THE SHADOW BUT THE SUN THAT CASTS IT SHINES BEHIND US STILL",
+    "seconds": 10.895,
+    "speaker_id": 4992,
+    "condition": "clean",
+    "sha256": "2780821d3f47492dcaff3bfbb17e986843ceb07af4b634df515d6f37200a0053"
+  },
+  {
+    "id": "4992-41806-0017-quiet",
+    "path": "CORPUS/4992-41806-0017-quiet.f32",
+    "text": "WE SHUT OUR EYES THE FLOWERS BLOOM ON WE MURMUR BUT THE CORN EARS FILL WE CHOOSE THE SHADOW BUT THE SUN THAT CASTS IT SHINES BEHIND US STILL",
+    "seconds": 10.895,
+    "speaker_id": 4992,
+    "condition": "quiet",
+    "sha256": "ce1886e6549e6d95a422ad7d4530d35905a82fdc1654df08d8ed84839a68efb7"
+  },
+  {
+    "id": "4992-41806-0017-noise_20db",
+    "path": "CORPUS/4992-41806-0017-noise_20db.f32",
+    "text": "WE SHUT OUR EYES THE FLOWERS BLOOM ON WE MURMUR BUT THE CORN EARS FILL WE CHOOSE THE SHADOW BUT THE SUN THAT CASTS IT SHINES BEHIND US STILL",
+    "seconds": 10.895,
+    "speaker_id": 4992,
+    "condition": "noise_20db",
+    "sha256": "fe37b25a25a4143621fb6c8084cec0c45e6a5d1c58384f7b5d8b7a63474a3405"
+  },
+  {
+    "id": "61-70968-0021-clean",
+    "path": "CORPUS/61-70968-0021-clean.f32",
+    "text": "SURELY WE CAN SUBMIT WITH GOOD GRACE",
+    "seconds": 2.69,
+    "speaker_id": 61,
+    "condition": "clean",
+    "sha256": "f08ee80d3b809df59418c531d8fad57fae22d22c3f9f55c5ef685764d0e53914"
+  },
+  {
+    "id": "61-70968-0021-quiet",
+    "path": "CORPUS/61-70968-0021-quiet.f32",
+    "text": "SURELY WE CAN SUBMIT WITH GOOD GRACE",
+    "seconds": 2.69,
+    "speaker_id": 61,
+    "condition": "quiet",
+    "sha256": "84f5823049af61c4dff879df951eb11849fe0efffe5e9a2f8f5509aa16fd2847"
+  },
+  {
+    "id": "61-70968-0021-noise_20db",
+    "path": "CORPUS/61-70968-0021-noise_20db.f32",
+    "text": "SURELY WE CAN SUBMIT WITH GOOD GRACE",
+    "seconds": 2.69,
+    "speaker_id": 61,
+    "condition": "noise_20db",
+    "sha256": "46d0192605c20b3a0c20ae52c68b873a013b7ef069a6b6f6c40d28abfd3313b0"
+  },
+  {
+    "id": "61-70968-0043-clean",
+    "path": "CORPUS/61-70968-0043-clean.f32",
+    "text": "FRIENDS SAID MONTFICHET FAINTLY TO THE WRESTLERS BEAR US ESCORT SO FAR AS THE SHERIFF'S HOUSE",
+    "seconds": 6.735,
+    "speaker_id": 61,
+    "condition": "clean",
+    "sha256": "0cb8b864d6a571a3366cd230dbe175248c77895dd9985f60f2f1942c45b93df6"
+  },
+  {
+    "id": "61-70968-0043-quiet",
+    "path": "CORPUS/61-70968-0043-quiet.f32",
+    "text": "FRIENDS SAID MONTFICHET FAINTLY TO THE WRESTLERS BEAR US ESCORT SO FAR AS THE SHERIFF'S HOUSE",
+    "seconds": 6.735,
+    "speaker_id": 61,
+    "condition": "quiet",
+    "sha256": "0aa59ab2586ea0bc7c6b000b8a985fa7316a864523247f89f38a0a61bd1f145d"
+  },
+  {
+    "id": "61-70968-0043-noise_20db",
+    "path": "CORPUS/61-70968-0043-noise_20db.f32",
+    "text": "FRIENDS SAID MONTFICHET FAINTLY TO THE WRESTLERS BEAR US ESCORT SO FAR AS THE SHERIFF'S HOUSE",
+    "seconds": 6.735,
+    "speaker_id": 61,
+    "condition": "noise_20db",
+    "sha256": "a0c66a75f47158dd4809e76fb8000d2cebf19f00b1d1cebe5b4934fd7da1a1c4"
+  },
+  {
+    "id": "61-70970-0002-clean",
+    "path": "CORPUS/61-70970-0002-clean.f32",
+    "text": "MOST OF ALL ROBIN THOUGHT OF HIS FATHER WHAT WOULD HE COUNSEL",
+    "seconds": 4.165,
+    "speaker_id": 61,
+    "condition": "clean",
+    "sha256": "c11ec93f7dd49e8c6ea79aefc05df022d3b112ebccd20e464ea670a11390c5fb"
+  },
+  {
+    "id": "61-70970-0002-quiet",
+    "path": "CORPUS/61-70970-0002-quiet.f32",
+    "text": "MOST OF ALL ROBIN THOUGHT OF HIS FATHER WHAT WOULD HE COUNSEL",
+    "seconds": 4.165,
+    "speaker_id": 61,
+    "condition": "quiet",
+    "sha256": "f00bb39cc33d0b7b60bee1f220a4299f276f4860a00751d7305f417a881ede63"
+  },
+  {
+    "id": "61-70970-0002-noise_20db",
+    "path": "CORPUS/61-70970-0002-noise_20db.f32",
+    "text": "MOST OF ALL ROBIN THOUGHT OF HIS FATHER WHAT WOULD HE COUNSEL",
+    "seconds": 4.165,
+    "speaker_id": 61,
+    "condition": "noise_20db",
+    "sha256": "3eaee4919be61655f8da4a5a879551462a5105a7f9dfabe282b0d6ae91444026"
+  },
+  {
+    "id": "61-70970-0024-clean",
+    "path": "CORPUS/61-70970-0024-clean.f32",
+    "text": "THEY MOVED THEREAFTER CAUTIOUSLY ABOUT THE HUT GROPING BEFORE AND ABOUT THEM TO FIND SOMETHING TO SHOW THAT WARRENTON HAD FULFILLED HIS MISSION",
+    "seconds": 7.235,
+    "speaker_id": 61,
+    "condition": "clean",
+    "sha256": "547c8599b5f9379fa9970bb3b49b2fc2f19fd8a3392c8665fd17c83760c6ff98"
+  },
+  {
+    "id": "61-70970-0024-quiet",
+    "path": "CORPUS/61-70970-0024-quiet.f32",
+    "text": "THEY MOVED THEREAFTER CAUTIOUSLY ABOUT THE HUT GROPING BEFORE AND ABOUT THEM TO FIND SOMETHING TO SHOW THAT WARRENTON HAD FULFILLED HIS MISSION",
+    "seconds": 7.235,
+    "speaker_id": 61,
+    "condition": "quiet",
+    "sha256": "80aaaa045c4f25bb4f557cc86dbacf50174fa19f18017b5f0a7f53a1a9aa6929"
+  },
+  {
+    "id": "61-70970-0024-noise_20db",
+    "path": "CORPUS/61-70970-0024-noise_20db.f32",
+    "text": "THEY MOVED THEREAFTER CAUTIOUSLY ABOUT THE HUT GROPING BEFORE AND ABOUT THEM TO FIND SOMETHING TO SHOW THAT WARRENTON HAD FULFILLED HIS MISSION",
+    "seconds": 7.235,
+    "speaker_id": 61,
+    "condition": "noise_20db",
+    "sha256": "4970db7b725dedcfdb2481730033b9d66a1960ba7d23e9c88dfc0d47db869e25"
+  },
+  {
+    "id": "8555-292519-0005-clean",
+    "path": "CORPUS/8555-292519-0005-clean.f32",
+    "text": "WHILE THE OLD GOLD AND THE MARBLE STAYS FOREVER GLEAMING ITS SOFT STRONG BLAZE CALM IN THE EARLY EVENING GLOW",
+    "seconds": 9.575,
+    "speaker_id": 8555,
+    "condition": "clean",
+    "sha256": "08ceb09892b90e19b3c9924e3c64e0e1bb8ff898178f858a72271b1287db4827"
+  },
+  {
+    "id": "8555-292519-0005-quiet",
+    "path": "CORPUS/8555-292519-0005-quiet.f32",
+    "text": "WHILE THE OLD GOLD AND THE MARBLE STAYS FOREVER GLEAMING ITS SOFT STRONG BLAZE CALM IN THE EARLY EVENING GLOW",
+    "seconds": 9.575,
+    "speaker_id": 8555,
+    "condition": "quiet",
+    "sha256": "a7812c89b9d7f81d68bd30a58bff49f65799ee05629d0f4a6f03c3848772cc36"
+  },
+  {
+    "id": "8555-292519-0005-noise_20db",
+    "path": "CORPUS/8555-292519-0005-noise_20db.f32",
+    "text": "WHILE THE OLD GOLD AND THE MARBLE STAYS FOREVER GLEAMING ITS SOFT STRONG BLAZE CALM IN THE EARLY EVENING GLOW",
+    "seconds": 9.575,
+    "speaker_id": 8555,
+    "condition": "noise_20db",
+    "sha256": "e688d2dd87f36028bbdbd83db2930cedf938584b2059ef48b34b9c3412b4efac"
+  },
+  {
+    "id": "8555-284447-0011-clean",
+    "path": "CORPUS/8555-284447-0011-clean.f32",
+    "text": "SUPPOSE IT'S A FRIEND",
+    "seconds": 1.955,
+    "speaker_id": 8555,
+    "condition": "clean",
+    "sha256": "d70f2e7ee60115c2a2317129ee441152bb8d0c71faeaabb4706ed86397e702a2"
+  },
+  {
+    "id": "8555-284447-0011-quiet",
+    "path": "CORPUS/8555-284447-0011-quiet.f32",
+    "text": "SUPPOSE IT'S A FRIEND",
+    "seconds": 1.955,
+    "speaker_id": 8555,
+    "condition": "quiet",
+    "sha256": "137980b282f53be35b673157c293d4cf1421353f9cb381e0ff112ab3b4ef7eff"
+  },
+  {
+    "id": "8555-284447-0011-noise_20db",
+    "path": "CORPUS/8555-284447-0011-noise_20db.f32",
+    "text": "SUPPOSE IT'S A FRIEND",
+    "seconds": 1.955,
+    "speaker_id": 8555,
+    "condition": "noise_20db",
+    "sha256": "3782c584b273982c1d03aff3fec19a93e37bdf8325a3e56f747925b3ad2c6a88"
+  },
+  {
+    "id": "8555-284449-0008-clean",
+    "path": "CORPUS/8555-284449-0008-clean.f32",
+    "text": "THEN SHE GAVE ROSALIE BACK HER MAGIC RING THANKING THE KIND WITCH FOR ALL SHE HAD DONE FOR THEM",
+    "seconds": 6.135,
+    "speaker_id": 8555,
+    "condition": "clean",
+    "sha256": "0028721e7cd4b30b6a1872f7b692457df0fc5e3de0a78d5c08a65d95bd6beb9d"
+  },
+  {
+    "id": "8555-284449-0008-quiet",
+    "path": "CORPUS/8555-284449-0008-quiet.f32",
+    "text": "THEN SHE GAVE ROSALIE BACK HER MAGIC RING THANKING THE KIND WITCH FOR ALL SHE HAD DONE FOR THEM",
+    "seconds": 6.135,
+    "speaker_id": 8555,
+    "condition": "quiet",
+    "sha256": "0855357195cac77548f516ea0a5db33176266377c04aa9c3fc79e7331587cb07"
+  },
+  {
+    "id": "8555-284449-0008-noise_20db",
+    "path": "CORPUS/8555-284449-0008-noise_20db.f32",
+    "text": "THEN SHE GAVE ROSALIE BACK HER MAGIC RING THANKING THE KIND WITCH FOR ALL SHE HAD DONE FOR THEM",
+    "seconds": 6.135,
+    "speaker_id": 8555,
+    "condition": "noise_20db",
+    "sha256": "c1bac61581616e591f1f6aff133b23a35b36d1de5531f382a33db9ec1a8ddddd"
+  },
+  {
+    "id": "237-134500-0009-clean",
+    "path": "CORPUS/237-134500-0009-clean.f32",
+    "text": "I SUPPOSE THAT'S THE WET SEASON TOO THEN",
+    "seconds": 2.22,
+    "speaker_id": 237,
+    "condition": "clean",
+    "sha256": "a7d586875a0a41c1737d3b0b2c442f2947bc105825be28b873aee973f0f88308"
+  },
+  {
+    "id": "237-134500-0009-quiet",
+    "path": "CORPUS/237-134500-0009-quiet.f32",
+    "text": "I SUPPOSE THAT'S THE WET SEASON TOO THEN",
+    "seconds": 2.22,
+    "speaker_id": 237,
+    "condition": "quiet",
+    "sha256": "d6d6cbde076458792ee066cf54fdd710bd9c6b92941612e4f01d4c108df59234"
+  },
+  {
+    "id": "237-134500-0009-noise_20db",
+    "path": "CORPUS/237-134500-0009-noise_20db.f32",
+    "text": "I SUPPOSE THAT'S THE WET SEASON TOO THEN",
+    "seconds": 2.22,
+    "speaker_id": 237,
+    "condition": "noise_20db",
+    "sha256": "09a6014ffea1aae69e4974f9f50492a70447e4fd88b5dea7bc5af5b4c8a01c27"
+  },
+  {
+    "id": "237-134500-0031-clean",
+    "path": "CORPUS/237-134500-0031-clean.f32",
+    "text": "SOMETIMES I DON'T WANT TO DO ANYTHING AT ALL AND SOMETIMES I WANT TO PULL THE FOUR CORNERS OF THE DIVIDE TOGETHER HE THREW OUT HIS ARM AND BROUGHT IT BACK WITH A JERK SO LIKE A TABLE CLOTH",
+    "seconds": 10.61,
+    "speaker_id": 237,
+    "condition": "clean",
+    "sha256": "e8fd7b7a472c84c35bbcd5851a8bbf6c7188db19284b595a2581c241751fc99b"
+  },
+  {
+    "id": "237-134500-0031-quiet",
+    "path": "CORPUS/237-134500-0031-quiet.f32",
+    "text": "SOMETIMES I DON'T WANT TO DO ANYTHING AT ALL AND SOMETIMES I WANT TO PULL THE FOUR CORNERS OF THE DIVIDE TOGETHER HE THREW OUT HIS ARM AND BROUGHT IT BACK WITH A JERK SO LIKE A TABLE CLOTH",
+    "seconds": 10.61,
+    "speaker_id": 237,
+    "condition": "quiet",
+    "sha256": "b5f234ce01bbae8a8310b6d6a3d84a8ae9538c873e915582ac8773438097f200"
+  },
+  {
+    "id": "237-134500-0031-noise_20db",
+    "path": "CORPUS/237-134500-0031-noise_20db.f32",
+    "text": "SOMETIMES I DON'T WANT TO DO ANYTHING AT ALL AND SOMETIMES I WANT TO PULL THE FOUR CORNERS OF THE DIVIDE TOGETHER HE THREW OUT HIS ARM AND BROUGHT IT BACK WITH A JERK SO LIKE A TABLE CLOTH",
+    "seconds": 10.61,
+    "speaker_id": 237,
+    "condition": "noise_20db",
+    "sha256": "8392e0ee2a1b41f2c6797f3a548fce717ea1975a64ef7383b7276847a80310da"
+  },
+  {
+    "id": "237-134493-0010-clean",
+    "path": "CORPUS/237-134493-0010-clean.f32",
+    "text": "I NEVER SEE LOU'S SCYTHE OVER HERE",
+    "seconds": 2.875,
+    "speaker_id": 237,
+    "condition": "clean",
+    "sha256": "45f4284279482a17c3f8abc3f81ca994a3d301b925ba0f9c660025d0dc14942b"
+  },
+  {
+    "id": "237-134493-0010-quiet",
+    "path": "CORPUS/237-134493-0010-quiet.f32",
+    "text": "I NEVER SEE LOU'S SCYTHE OVER HERE",
+    "seconds": 2.875,
+    "speaker_id": 237,
+    "condition": "quiet",
+    "sha256": "e34cf1ee44d60ebb8ff724e377491ef21f2b96310d6295149d4b3a8126c6e8f0"
+  },
+  {
+    "id": "237-134493-0010-noise_20db",
+    "path": "CORPUS/237-134493-0010-noise_20db.f32",
+    "text": "I NEVER SEE LOU'S SCYTHE OVER HERE",
+    "seconds": 2.875,
+    "speaker_id": 237,
+    "condition": "noise_20db",
+    "sha256": "3282c1381399e8e1fe07be07b5948c523c052e9b8d72b51a4b7af05c3295b3df"
+  },
+  {
+    "id": "237-126133-0013-clean",
+    "path": "CORPUS/237-126133-0013-clean.f32",
+    "text": "I KNOW GASPED POLLY CONTROLLING HER SOBS I WON'T ONLY I CAN'T THANK YOU",
+    "seconds": 6.815,
+    "speaker_id": 237,
+    "condition": "clean",
+    "sha256": "e451dff94e6df5df5cbf977475e472efb0acdd98bbedd0aea2025345be47c332"
+  },
+  {
+    "id": "237-126133-0013-quiet",
+    "path": "CORPUS/237-126133-0013-quiet.f32",
+    "text": "I KNOW GASPED POLLY CONTROLLING HER SOBS I WON'T ONLY I CAN'T THANK YOU",
+    "seconds": 6.815,
+    "speaker_id": 237,
+    "condition": "quiet",
+    "sha256": "c4989feb4e3744963fe3b2583adbb4f0eefeca39b78b65ec562e11da604761bd"
+  },
+  {
+    "id": "237-126133-0013-noise_20db",
+    "path": "CORPUS/237-126133-0013-noise_20db.f32",
+    "text": "I KNOW GASPED POLLY CONTROLLING HER SOBS I WON'T ONLY I CAN'T THANK YOU",
+    "seconds": 6.815,
+    "speaker_id": 237,
+    "condition": "noise_20db",
+    "sha256": "5ab1644a340f67288e0422564cd776a2c305d750f9eb31d753842a47ff92a2c6"
+  },
+  {
+    "id": "3570-5694-0009-clean",
+    "path": "CORPUS/3570-5694-0009-clean.f32",
+    "text": "WITH MANY QUALIFICATIONS WITH MORE QUALIFICATIONS AS THE PATRIARCHAL TRADITION HAS GRADUALLY WEAKENED THE GENERAL RULE IS FELT TO BE RIGHT AND BINDING THAT WOMEN SHOULD CONSUME ONLY FOR THE BENEFIT OF THEIR MASTERS",
+    "seconds": 12.605,
+    "speaker_id": 3570,
+    "condition": "clean",
+    "sha256": "69c5bd06ab0cbdb2dcefd628eb3b206c97f0956e75542b3dbcb98464302bb4ab"
+  },
+  {
+    "id": "3570-5694-0009-quiet",
+    "path": "CORPUS/3570-5694-0009-quiet.f32",
+    "text": "WITH MANY QUALIFICATIONS WITH MORE QUALIFICATIONS AS THE PATRIARCHAL TRADITION HAS GRADUALLY WEAKENED THE GENERAL RULE IS FELT TO BE RIGHT AND BINDING THAT WOMEN SHOULD CONSUME ONLY FOR THE BENEFIT OF THEIR MASTERS",
+    "seconds": 12.605,
+    "speaker_id": 3570,
+    "condition": "quiet",
+    "sha256": "a1557988d01bf800ef86061581531775719fe89b249d15340120ac305086332d"
+  },
+  {
+    "id": "3570-5694-0009-noise_20db",
+    "path": "CORPUS/3570-5694-0009-noise_20db.f32",
+    "text": "WITH MANY QUALIFICATIONS WITH MORE QUALIFICATIONS AS THE PATRIARCHAL TRADITION HAS GRADUALLY WEAKENED THE GENERAL RULE IS FELT TO BE RIGHT AND BINDING THAT WOMEN SHOULD CONSUME ONLY FOR THE BENEFIT OF THEIR MASTERS",
+    "seconds": 12.605,
+    "speaker_id": 3570,
+    "condition": "noise_20db",
+    "sha256": "f18d6eeae05b77cb51736f1b5bd6165962b778f1c5a0d082242f1c1f4864b706"
+  },
+  {
+    "id": "3570-5695-0008-clean",
+    "path": "CORPUS/3570-5695-0008-clean.f32",
+    "text": "THE QUESTION IS WHICH OF THE TWO METHODS WILL MOST EFFECTIVELY REACH THE PERSONS WHOSE CONVICTIONS IT IS DESIRED TO AFFECT",
+    "seconds": 6.845,
+    "speaker_id": 3570,
+    "condition": "clean",
+    "sha256": "919840212dffd1cefe27995f923772445ad1c74b877217109106277a00dafaad"
+  },
+  {
+    "id": "3570-5695-0008-quiet",
+    "path": "CORPUS/3570-5695-0008-quiet.f32",
+    "text": "THE QUESTION IS WHICH OF THE TWO METHODS WILL MOST EFFECTIVELY REACH THE PERSONS WHOSE CONVICTIONS IT IS DESIRED TO AFFECT",
+    "seconds": 6.845,
+    "speaker_id": 3570,
+    "condition": "quiet",
+    "sha256": "c69d610ee48c0861dcaac2ff2da3df6905c6187381b2f467027c0bb94b387563"
+  },
+  {
+    "id": "3570-5695-0008-noise_20db",
+    "path": "CORPUS/3570-5695-0008-noise_20db.f32",
+    "text": "THE QUESTION IS WHICH OF THE TWO METHODS WILL MOST EFFECTIVELY REACH THE PERSONS WHOSE CONVICTIONS IT IS DESIRED TO AFFECT",
+    "seconds": 6.845,
+    "speaker_id": 3570,
+    "condition": "noise_20db",
+    "sha256": "cb2ff4a52825b723cd831ce52c537185c3a4a1afc6c365990fc9ede0493ec154"
+  },
+  {
+    "id": "5683-32865-0003-clean",
+    "path": "CORPUS/5683-32865-0003-clean.f32",
+    "text": "THEY ARE COUSINS YOU KNOW WE ARE ALL COUSINS",
+    "seconds": 3.51,
+    "speaker_id": 5683,
+    "condition": "clean",
+    "sha256": "a1f31ada520f0b2fc78b9e59af6240dd1ba8b371025e76e049d29f8986c0448f"
+  },
+  {
+    "id": "5683-32865-0003-quiet",
+    "path": "CORPUS/5683-32865-0003-quiet.f32",
+    "text": "THEY ARE COUSINS YOU KNOW WE ARE ALL COUSINS",
+    "seconds": 3.51,
+    "speaker_id": 5683,
+    "condition": "quiet",
+    "sha256": "796d985921b591ed5e6c7f6e9a4ddcda7fdb3e6d928f5da299be669279cc6bea"
+  },
+  {
+    "id": "5683-32865-0003-noise_20db",
+    "path": "CORPUS/5683-32865-0003-noise_20db.f32",
+    "text": "THEY ARE COUSINS YOU KNOW WE ARE ALL COUSINS",
+    "seconds": 3.51,
+    "speaker_id": 5683,
+    "condition": "noise_20db",
+    "sha256": "f96296d8de7e363fda5de5d5f068230b2a2415795c19e8823376ed7d0fa9425c"
+  },
+  {
+    "id": "5683-32879-0007-clean",
+    "path": "CORPUS/5683-32879-0007-clean.f32",
+    "text": "RACHEL'S PALE AND SHARPENED FEATURES AND DILATED EYE STRUCK HER WITH A PAINFUL SURPRISE",
+    "seconds": 6.795,
+    "speaker_id": 5683,
+    "condition": "clean",
+    "sha256": "acd505bf6d10b0be07af905a3ba95781b52b15cba3c91d7b3ae694ebaea66ebd"
+  },
+  {
+    "id": "5683-32879-0007-quiet",
+    "path": "CORPUS/5683-32879-0007-quiet.f32",
+    "text": "RACHEL'S PALE AND SHARPENED FEATURES AND DILATED EYE STRUCK HER WITH A PAINFUL SURPRISE",
+    "seconds": 6.795,
+    "speaker_id": 5683,
+    "condition": "quiet",
+    "sha256": "0cb8c59d769f28dd0f29b7ae9bdb29b2919dd17b86810577b053a939fc08e9b5"
+  },
+  {
+    "id": "5683-32879-0007-noise_20db",
+    "path": "CORPUS/5683-32879-0007-noise_20db.f32",
+    "text": "RACHEL'S PALE AND SHARPENED FEATURES AND DILATED EYE STRUCK HER WITH A PAINFUL SURPRISE",
+    "seconds": 6.795,
+    "speaker_id": 5683,
+    "condition": "noise_20db",
+    "sha256": "3f716635c22577314c117ae1efa1de669db4a46894aa223a114ba5c566a56d15"
+  },
+  {
+    "id": "5683-32866-0003-clean",
+    "path": "CORPUS/5683-32866-0003-clean.f32",
+    "text": "IN THE MEANTIME I HAD FORMED A NEW IDEA OF HER",
+    "seconds": 2.865,
+    "speaker_id": 5683,
+    "condition": "clean",
+    "sha256": "e339ad430709dacba49295a05256f2ccd8fc3a3a3a837f23ad7b75a0854779aa"
+  },
+  {
+    "id": "5683-32866-0003-quiet",
+    "path": "CORPUS/5683-32866-0003-quiet.f32",
+    "text": "IN THE MEANTIME I HAD FORMED A NEW IDEA OF HER",
+    "seconds": 2.865,
+    "speaker_id": 5683,
+    "condition": "quiet",
+    "sha256": "5f38352e5ef2562671d6fbdb99b98351a9c33659a75f8480e4906b588cb6c84d"
+  },
+  {
+    "id": "5683-32866-0003-noise_20db",
+    "path": "CORPUS/5683-32866-0003-noise_20db.f32",
+    "text": "IN THE MEANTIME I HAD FORMED A NEW IDEA OF HER",
+    "seconds": 2.865,
+    "speaker_id": 5683,
+    "condition": "noise_20db",
+    "sha256": "f94739810eb5a823ed1bed5e44200304e84157e3de7cc2c31decdbb9293e7376"
+  },
+  {
+    "id": "5683-32866-0025-clean",
+    "path": "CORPUS/5683-32866-0025-clean.f32",
+    "text": "I DID NOT EVEN TAKE THE PRECAUTION OF SMOKING UP THE CHIMNEY",
+    "seconds": 3.47,
+    "speaker_id": 5683,
+    "condition": "clean",
+    "sha256": "b518246406e6b55ff6e07c35dc6ff7e0be3e78cf7636684996e2f2c0b64a36ea"
+  },
+  {
+    "id": "5683-32866-0025-quiet",
+    "path": "CORPUS/5683-32866-0025-quiet.f32",
+    "text": "I DID NOT EVEN TAKE THE PRECAUTION OF SMOKING UP THE CHIMNEY",
+    "seconds": 3.47,
+    "speaker_id": 5683,
+    "condition": "quiet",
+    "sha256": "96935fe38b2f81279511ead25f9a6e99e033fc95023d52e8cf14cef660dbca6e"
+  },
+  {
+    "id": "5683-32866-0025-noise_20db",
+    "path": "CORPUS/5683-32866-0025-noise_20db.f32",
+    "text": "I DID NOT EVEN TAKE THE PRECAUTION OF SMOKING UP THE CHIMNEY",
+    "seconds": 3.47,
+    "speaker_id": 5683,
+    "condition": "noise_20db",
+    "sha256": "66a0c224308ef9c0168f3986b448fc96fc0c2852c2fc0fe4cae9f8a2aefd4221"
+  },
+  {
+    "id": "121-123859-0001-clean",
+    "path": "CORPUS/121-123859-0001-clean.f32",
+    "text": "O TIS THE FIRST TIS FLATTERY IN MY SEEING AND MY GREAT MIND MOST KINGLY DRINKS IT UP MINE EYE WELL KNOWS WHAT WITH HIS GUST IS GREEING AND TO HIS PALATE DOTH PREPARE THE CUP IF IT BE POISON'D TIS THE LESSER SIN THAT MINE EYE LOVES IT AND DOTH FIRST BEGIN",
+    "seconds": 25.395,
+    "speaker_id": 121,
+    "condition": "clean",
+    "sha256": "086225625e30f37999131acdfee9ef107ea17c014fcf2743b5043611a6d0c605"
+  },
+  {
+    "id": "121-123859-0001-quiet",
+    "path": "CORPUS/121-123859-0001-quiet.f32",
+    "text": "O TIS THE FIRST TIS FLATTERY IN MY SEEING AND MY GREAT MIND MOST KINGLY DRINKS IT UP MINE EYE WELL KNOWS WHAT WITH HIS GUST IS GREEING AND TO HIS PALATE DOTH PREPARE THE CUP IF IT BE POISON'D TIS THE LESSER SIN THAT MINE EYE LOVES IT AND DOTH FIRST BEGIN",
+    "seconds": 25.395,
+    "speaker_id": 121,
+    "condition": "quiet",
+    "sha256": "ec59f5cb7e0dcf1c99f7f61538af530055c869814a8827e04e1f036920e6c78b"
+  },
+  {
+    "id": "121-123859-0001-noise_20db",
+    "path": "CORPUS/121-123859-0001-noise_20db.f32",
+    "text": "O TIS THE FIRST TIS FLATTERY IN MY SEEING AND MY GREAT MIND MOST KINGLY DRINKS IT UP MINE EYE WELL KNOWS WHAT WITH HIS GUST IS GREEING AND TO HIS PALATE DOTH PREPARE THE CUP IF IT BE POISON'D TIS THE LESSER SIN THAT MINE EYE LOVES IT AND DOTH FIRST BEGIN",
+    "seconds": 25.395,
+    "speaker_id": 121,
+    "condition": "noise_20db",
+    "sha256": "c3a58d12aca8faa98c5de7fde3d0b5d07eb3777d1cb533c3c94ff1167adc48d3"
+  },
+  {
+    "id": "121-127105-0018-clean",
+    "path": "CORPUS/121-127105-0018-clean.f32",
+    "text": "CRIED THE LADIES WHOSE DEPARTURE HAD BEEN FIXED",
+    "seconds": 2.77,
+    "speaker_id": 121,
+    "condition": "clean",
+    "sha256": "6879b499f43496e3376acd7b3871e3a331f38d6f5d6bad84dcb391632e7ec0c1"
+  },
+  {
+    "id": "121-127105-0018-quiet",
+    "path": "CORPUS/121-127105-0018-quiet.f32",
+    "text": "CRIED THE LADIES WHOSE DEPARTURE HAD BEEN FIXED",
+    "seconds": 2.77,
+    "speaker_id": 121,
+    "condition": "quiet",
+    "sha256": "351b557fc5930263070b6a900319abd812c9e2d4c529f938b7b592577f56a28b"
+  },
+  {
+    "id": "121-127105-0018-noise_20db",
+    "path": "CORPUS/121-127105-0018-noise_20db.f32",
+    "text": "CRIED THE LADIES WHOSE DEPARTURE HAD BEEN FIXED",
+    "seconds": 2.77,
+    "speaker_id": 121,
+    "condition": "noise_20db",
+    "sha256": "a7260961848a0a17754ae047f436c6edcb81a4c1dea857b1738eec6f02b8b3c3"
+  },
+  {
+    "id": "121-123852-0004-clean",
+    "path": "CORPUS/121-123852-0004-clean.f32",
+    "text": "MY HEART DOTH PLEAD THAT THOU IN HIM DOST LIE A CLOSET NEVER PIERC'D WITH CRYSTAL EYES BUT THE DEFENDANT DOTH THAT PLEA DENY AND SAYS IN HIM THY FAIR APPEARANCE LIES",
+    "seconds": 16.29,
+    "speaker_id": 121,
+    "condition": "clean",
+    "sha256": "0f9c4ccd001ecf376d026a4e165ad09007805c148893ef725dbd57df286c9249"
+  },
+  {
+    "id": "121-123852-0004-quiet",
+    "path": "CORPUS/121-123852-0004-quiet.f32",
+    "text": "MY HEART DOTH PLEAD THAT THOU IN HIM DOST LIE A CLOSET NEVER PIERC'D WITH CRYSTAL EYES BUT THE DEFENDANT DOTH THAT PLEA DENY AND SAYS IN HIM THY FAIR APPEARANCE LIES",
+    "seconds": 16.29,
+    "speaker_id": 121,
+    "condition": "quiet",
+    "sha256": "a4b0e13e0891f87427592ab2b644802f7d3645ca4a44a788cf8a52f5198b3df3"
+  },
+  {
+    "id": "121-123852-0004-noise_20db",
+    "path": "CORPUS/121-123852-0004-noise_20db.f32",
+    "text": "MY HEART DOTH PLEAD THAT THOU IN HIM DOST LIE A CLOSET NEVER PIERC'D WITH CRYSTAL EYES BUT THE DEFENDANT DOTH THAT PLEA DENY AND SAYS IN HIM THY FAIR APPEARANCE LIES",
+    "seconds": 16.29,
+    "speaker_id": 121,
+    "condition": "noise_20db",
+    "sha256": "800e41885b95b7850c96ef7f156ffcdcc4a0f34840e177b2d39584aa38f8ef1c"
+  }
+]
