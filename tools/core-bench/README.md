@@ -29,7 +29,7 @@ Path(sys.argv[3]).write_text(json.dumps(clips))
 PY
 
 # Compile baseline source with the same dependency graph as the final harness.
-python3 tools/core-bench/prepare_baseline.py cfc2628
+python3 tools/core-bench/prepare_baseline.py d393dc6
 cargo build --locked --release --manifest-path desktop/src-tauri/Cargo.toml --example core_before
 rm desktop/src-tauri/examples/core_before.rs
 cargo build --locked --release --manifest-path desktop/src-tauri/Cargo.toml \
@@ -54,7 +54,7 @@ for sampling the parent/helper with `top`. It is outside the timed iterations.
 The recorded subset was selected deterministically as `manifest[::9] +
 manifest[1::9] + manifest[2::9]`; it has 40 recordings from 37 speakers.
 
-For the full-corpus baseline, build `review_bench` from `cfc2628` with its original
+For the full-corpus baseline, build `review_bench` from `d393dc6` with its original
 lockfile in a separate worktree before editing. The retained `before.jsonl` was
 captured this way. Run it and the final release `review_bench` with identical
 `MODEL` and full `CORPUS/manifest.json`, retaining stdout as `before.jsonl` and

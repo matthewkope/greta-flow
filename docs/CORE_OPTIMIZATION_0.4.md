@@ -1,6 +1,7 @@
 # Workspace 4 — core optimization
 
-PR #4, based on `cfc2628` after the Greta rename and model decision. Parakeet v2
+PR #4, measured from initial draft commit `cfc2628` (the same source tree as
+merged commit `d393dc6`) after the Greta rename and model decision. Parakeet v2
 remains the default; no challenger or streaming-default change is included.
 
 ## Result and validation boundary
