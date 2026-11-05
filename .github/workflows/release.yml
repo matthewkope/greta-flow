@@ -12,6 +12,11 @@ on:
 permissions:
   contents: write
 
+# Serialize publication and cask updates across tags.
+concurrency:
+  group: greta-flow-release
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: macos-15 # Apple Silicon; Xcode 26 supplies Swift 6.2
@@ -20,6 +25,13 @@ jobs:
         working-directory: desktop/src-tauri
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - name: Check release prerequisites
+        env:
+          RELEASE_REPO_TOKEN: ${{ secrets.RELEASE_REPO_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          test -n "$RELEASE_REPO_TOKEN" || { echo 'Set RELEASE_REPO_TOKEN for both repositories.' >&2; exit 1; }
+          python3 -c 'import json, os, re; tag = os.environ["RELEASE_TAG"]; assert re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+", tag), "Expected stable version tag"; assert json.load(open("tauri.conf.json"))["version"] == tag[1:], "Tag differs from app version"'
       - name: Select Swift 6.2 toolchain
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
@@ -38,7 +50,7 @@ jobs:
       # Accessibility, Input Monitoring) survive `brew upgrade` instead of
       # resetting on each update. The cert is self-signed (not notarized), so
       # Gatekeeper still shows the unverified-developer prompt on first install
-      # (handled by the cask's xattr caveat).
+      # (handled by the personal cask's postflight step).
       - name: Import signing certificate
         env:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
@@ -64,9 +76,60 @@ jobs:
         run: |
           cargo tauri build --config \
             "{\"bundle\":{\"macOS\":{\"signingIdentity\":\"$SIGNING_IDENTITY\"}}}"
+      - name: Prepare checksum, pinned installer, and cask
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 ../../tools/distribution/prepare_release.py \
+            --tag "$RELEASE_TAG" \
+            --dmg "target/release/bundle/dmg/Greta Flow_${RELEASE_TAG#v}_aarch64.dmg" \
+            --output "$RUNNER_TEMP/release-assets"
       - name: Publish release with DMG
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
-          files: desktop/src-tauri/target/release/bundle/dmg/Greta*Flow_*.dmg
+          files: |
+            ${{ runner.temp }}/release-assets/*.dmg
+            ${{ runner.temp }}/release-assets/SHA256SUMS
+            ${{ runner.temp }}/release-assets/install.sh
           fail_on_unmatched_files: true
           generate_release_notes: true
+
+      # A fine-grained token with Contents: write on this repo and the tap is
+      # required. The default GITHUB_TOKEN cannot write to another repository.
+      - name: Check out main for cask update
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: main
+          path: release-main
+          token: ${{ secrets.RELEASE_REPO_TOKEN }}
+      - name: Check out personal tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          repository: matthewkope/homebrew-greta-flow
+          path: release-tap
+          token: ${{ secrets.RELEASE_REPO_TOKEN }}
+      - name: Update both casks
+        working-directory: .
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          for repo in release-main release-tap; do
+            mkdir -p "$repo/Casks"
+            cp "$RUNNER_TEMP/release-assets/greta-flow.rb" "$repo/Casks/greta-flow.rb"
+            cp release-main/cask_renames.json "$repo/cask_renames.json.tmp"
+            mv "$repo/cask_renames.json.tmp" "$repo/cask_renames.json"
+            git -C "$repo" config user.name "github-actions[bot]"
+            git -C "$repo" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            # Remove the legacy token in the same commit as its replacement/map.
+            git -C "$repo" rm --ignore-unmatch Casks/gretchen-flow.rb
+            git -C "$repo" add Casks/greta-flow.rb cask_renames.json
+            if ! git -C "$repo" diff --cached --quiet; then
+              git -C "$repo" commit -m "Update Greta Flow cask to $RELEASE_TAG"
+              git -C "$repo" push origin HEAD:main
+            fi
+          done
+      - name: Remove temporary signing keychain
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/gf-signing.keychain-db" || true
+          rm -f "$RUNNER_TEMP/cert.p12"
