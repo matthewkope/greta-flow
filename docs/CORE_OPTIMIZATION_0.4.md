@@ -6,7 +6,9 @@ remains the default; no challenger or streaming-default change is included.
 
 ## Result and validation boundary
 
-The offline comparisons do not regress median or p95 latency. **The plan's live
+The full-corpus offline run is faster; the release-path proxy is approximately
+flat, with both median and p95 increasing by 0.36–0.37 ms in the final runs.
+A strict no-regression claim is therefore not established by the proxy. **The plan's live
 release-to-inserted completion gate is still unverified:** these tests do not
 capture microphone shutdown, Bluetooth behavior, or Accessibility insertion into
 another app. This report does not substitute an in-memory write for successful
@@ -14,8 +16,8 @@ real-app insertion. The installed app and its permissions were not changed.
 
 | Measurement (ms) | Before median | After median | Before p95 | After p95 |
 |---|---:|---:|---:|---:|
-| Full corpus, preparation + batch recognition/formatting | 59.77 | 58.20 | 104.31 | 95.40 |
-| Offline release-path proxy, both runs pooled | 58.63 | 58.16 | 97.96 | 97.27 |
+| Full corpus, preparation + batch recognition/formatting | 59.77 | 57.95 | 104.31 | 96.41 |
+| Offline release-path proxy, both runs pooled | 58.63 | 58.99 | 97.96 | 98.32 |
 | Live release-to-inserted | Not measured | Not measured | Not measured | Not measured |
 
 The full corpus has 120 public recordings / 40 speakers, each with clean, quiet,
@@ -77,19 +79,20 @@ Existing launch-time loading and the persistent helper are retained. FluidAudio
 backend now performs one second of silence inference before declaring readiness.
 Its output is discarded and the Swift helper creates fresh decoder state for
 every request. This also happens after a restart. It does not download anything.
-One retained final run records 67.07 ms warm-up and 279.69 ms total model load;
+One retained final run records 70.03 ms warm-up and 312.49 ms total model load;
 these are cached-machine observations, not a first-install promise or a guarantee
 that every later input shape has identical latency.
 
 The existing five-second recovery-expiry thread also signals a bounded idle-recovery worker. A slow helper restart
 cannot delay recovery-audio expiry, and the app model-slot lock is released
-before startup so model swaps can proceed. A dead helper is restarted
+before startup so idle recovery itself does not block model installation. A
+concurrent dictation can still hold that slot while awaiting helper recovery. A dead helper is restarted
 and warmed there; a crash found immediately before a request is handled as well.
 An in-flight failure returns an error and drops the process, without automatically
 retrying uncertain recognition. Startup/transcription timeouts remain 120/60 seconds.
 Recovery can still add delay after a crash. Failed background attempts back off
 for 30, 60, 120, 240, then 300 seconds from the end of each attempt. A model
-generation change resets that cooldown; explicit user dictation can retry sooner.
+generation change or a newly installed helper instance resets that cooldown; explicit user dictation can retry sooner.
 
 Tests use real child processes for protocol failure, crash and poison recovery.
 A separate real-v2 test kills only the direct child of the offline harness, then

@@ -4,6 +4,7 @@ use crate::locks::MutexExt;
 use crate::tray::{refresh_menu, set_tray_state, TrayState, ICON_APP};
 use crate::{bindings, config, engine, history, model, AppState};
 use std::sync::atomic::Ordering;
+use std::sync::Arc;
 use tauri::{AppHandle, Manager};
 
 /// The model recommended to first-time users (best accuracy/size balance).
@@ -442,15 +443,10 @@ pub(crate) fn initialize(
     let recovery_app = app.handle().clone();
     std::thread::spawn(move || {
         let mut recovery = crate::maintenance::Recovery::default();
+        let mut last_worker: Option<std::sync::Weak<crate::parakeet::Engine>> = None;
         for () in tick_rx {
             let state = recovery_app.state::<AppState>();
-            if state.recording.load(Ordering::SeqCst)
-                || state.processing.load(Ordering::SeqCst)
-                || !recovery.due(
-                    state.model_generation.load(Ordering::SeqCst),
-                    std::time::Instant::now(),
-                )
-            {
+            if state.recording.load(Ordering::SeqCst) || state.processing.load(Ordering::SeqCst) {
                 continue;
             }
             let engine = match state.engine.try_lock() {
@@ -465,6 +461,19 @@ pub(crate) fn initialize(
             let worker = engine.as_ref().and_then(engine::Engine::maintenance_worker);
             drop(engine); // Model swaps must not wait for a slow helper restart.
             if let Some(worker) = worker {
+                let current = Arc::downgrade(&worker);
+                if last_worker.as_ref().is_none_or(|old| !old.ptr_eq(&current)) {
+                    // A new instance was installed after a model load. Do not
+                    // carry a failed old helper's cooldown into the new one.
+                    recovery.succeeded();
+                    last_worker = Some(current);
+                }
+                if !recovery.due(
+                    state.model_generation.load(Ordering::SeqCst),
+                    std::time::Instant::now(),
+                ) {
+                    continue;
+                }
                 match worker.ensure_ready() {
                     Ok(()) => recovery.succeeded(),
                     Err(error) => {

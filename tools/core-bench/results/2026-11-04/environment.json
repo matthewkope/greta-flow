@@ -10,5 +10,7 @@
   "method": "Same M4 Pro, helper and local v2 models. Release builds; no model downloads, microphone, AX writes or history writes. Full corpus 360 condition variants, two warm passes. Proxy subset manifest 120 variants (40 recordings, 37 speakers), three passes in each of two processes per side. Preloaded PCM repeated to 48kHz before the release timestamp; production resampling/prepare/retain, real engine, Sessions delivery into an in-memory String. Baseline proxy rebuilt from cfc2628 source with the same final security-updated dependencies. First full-corpus baseline captured before source edits with the original lockfile. Existing CoreML/system caches were not purged. Desktop activity was not isolated; no own builds ran during timed iterations.",
   "energy_limit": "top POWER is a CPU/wakeup proxy, not joules. sudo -n powermetrics failed: a password is required.",
   "live_release_to_inserted": "Not measured; requires paired live microphones and verified destination insertion.",
-  "intermediate_results": "chunked-* files record the bounded-copy development version, not final implementation. Final results borrow little-endian PCM bytes with bytemuck."
+  "intermediate_results": "chunked-* files record the bounded-copy development version, not final implementation. Final results borrow little-endian PCM bytes with bytemuck.",
+  "measured_source_commit": "6bdbfe3",
+  "reachable_baseline_source_commit": "d393dc6"
 }
