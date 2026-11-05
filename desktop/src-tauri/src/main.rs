@@ -32,6 +32,7 @@ mod commands;
 mod dictation;
 mod hotkey;
 mod setup;
+mod setup_status;
 mod tray;
 
 struct AppState {
@@ -42,6 +43,7 @@ struct AppState {
     recording: AtomicBool,
     engine_ready: AtomicBool,
     model_generation: AtomicU64,
+    model_status: Mutex<Option<setup_status::ModelStatus>>,
     processing: AtomicBool,
     /// Active push-to-talk shortcuts (up to 3). "Fn" plus any registered
     /// accelerators. Editable from the menu/window.
@@ -86,6 +88,12 @@ fn main() {
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
+            setup_status::setup_model_status,
+            setup_status::setup_disk_space,
+            setup_status::setup_permissions,
+            setup_status::setup_saved_step,
+            setup_status::setup_save_step,
+            setup_status::setup_relaunch,
             commands::apply_custom_hotkey,
             commands::cancel_custom_hotkey,
             commands::open_models_page,
@@ -119,6 +127,7 @@ fn main() {
             recording: AtomicBool::new(false),
             engine_ready: AtomicBool::new(false),
             model_generation: AtomicU64::new(0),
+            model_status: Mutex::new(None),
             processing: AtomicBool::new(false),
             shortcuts: Mutex::new(cfg.shortcuts.clone()),
             watched_flags: AtomicU64::new(startup_plan.watched),
