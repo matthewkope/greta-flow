@@ -10,7 +10,7 @@ The current Swift harness pins FluidAudio v0.18.2 and uses local-only model load
 It accepts an optional model ID after REPEATS (`v2`, `v3`, `unified`, `lite`, `eou`),
 or `v2-boost CTC_DIRECTORY GLOSSARY_JSON` for acoustic vocabulary rescoring.
 Use `model_summary.py` for condition-specific scores and first-pass accuracy.
-[DICTATION_0.4.md](DICTATION_0.4.md) documents the pending natural-dictation gate.
+[DICTATION_0.4.md](DICTATION_0.4.md) documents the completed private-dictation comparison and local-only reproduction process.
 
 ## Reproduce the historical September smoke comparison
 

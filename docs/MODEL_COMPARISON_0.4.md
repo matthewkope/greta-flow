@@ -2,14 +2,18 @@
 
 Workspace 3 / PR #3, measured on November 4, 2026.
 
-**Current implementation: FluidAudio v0.18.2 with the existing Parakeet TDT 0.6B
-v2 default, streaming disabled and acoustic boosting off. The model-promotion
-decision remains open.** Nemotron Unified improves public-corpus WER in all three
-conditions; this incomplete evaluation does not settle whether to retain v2 or
-promote Unified. No challenger has passed the complete promotion gate.
-The natural technical-dictation and Matt-recording portion of this plan is **not completed**: no local recording/reference location was provided
-in this session. A latency budget has not been agreed either. These omissions must
-not be described as successful acceptance checks.
+**Decision after the public corpus and Matt's 14 recordings: ship FluidAudio
+v0.18.2 and keep Parakeet TDT 0.6B v2 as the default. No challenger is promoted;
+streaming and acoustic boosting stay off.** Matt agreed a warm-call budget of
+**median ≤100 ms and p95 ≤150 ms**. Unified meets that budget but regresses on
+natural clean dictation and protected names/numbers. V3, Lite and EOU also fail
+quality gates. Boosting helps the technical recordings but worsens public-corpus
+WER and exceeds the p95 budget there. The previously blocking natural-dictation
+comparison and latency-budget decision are now completed; no waiver was used.
+
+Private audio, references, annotations, hashes and raw per-clip transcripts are
+kept outside this public repository. Only aggregate private-corpus results and
+redacted sample excerpts are published below.
 
 The shipped helper now uses `AsrModels.loadLocal`, so it loads the exact existing
 model directory and cannot invoke FluidAudio's model downloader. The v2 weight
@@ -120,9 +124,138 @@ The clean WER difference between Unified and v2 is six word errors on this narro
 120-clip corpus. That is a reason to test natural dictation, not evidence that names,
 numbers or punctuation are safe. The LibriSpeech references are uppercase lexical
 transcripts without authoritative punctuation or technical-entity annotations;
-**names, numbers and punctuation scores are unmeasured for every model**. The scorer
-emits `null` for those fields, not zero errors. A model-generated transcript is not
-used as a punctuation reference.
+**names, numbers and punctuation scores are unmeasured on the public corpus**.
+Its scorer emits `null` for those fields, not zero errors. The annotated natural
+dictation below supplies those measurements, using Matt's supplied reference text
+rather than a model-generated reference.
+
+## Matt’s natural technical dictation
+
+Completed November 4 on the same M4 Pro, 24 GiB, macOS 15.7.4. The 14 supplied
+mono 16 kHz WAVs contain **79.381 seconds** of speech from one speaker (individual
+clips 4.256–9.003 seconds), with **182 normalized reference words**. Each original
+was converted to float PCM without resampling, then given the same 0.02-gain and
+20 dB white-noise variants (seed 33): 42 inputs, not 42 independent recordings.
+All seven configurations ran sequentially with network access denied, no concurrent
+builds, and the same pinned artifacts as the public experiment. Each had one
+separate first call and two complete warm passes (84 warm calls); accuracy uses
+pass 1. Ordinary desktop activity was not disabled.
+
+Before running inference, the supplied references were annotated locally with
+**16 name/jargon spans and 8 numeric spans per condition**. Name scoring requires
+exact spelling and case; it includes product/technology names, jargon and person
+names. Number scoring requires the intended reference formatting, including time,
+date, currency, decimal and phone formats. Thus spelled-out equivalents may pass
+normalized WER but fail the written-form check. These metrics do not claim semantic
+errors for every formatting mismatch. These counts cover annotated targets, not
+arbitrary new entities. No extra expected-span occurrences were observed. The glossary for the boost run is unchanged from the public experiment;
+it was not tuned to these recordings or augmented with the private person's name.
+
+Punctuation is additionally measured **at aligned normalized-word boundaries**:
+commas, sentence-ending marks, semicolons and colons are compared after deterministic
+minimum-edit word alignment. Internal decimal/name dots, numeric grouping commas,
+clock colons, currency signs, apostrophes and phone separators are excluded from
+this sentence-punctuation score. There are **37 reference marks** per condition.
+A moved mark can count as deletion plus insertion; rates can exceed 100%.
+Lexical alignment errors can influence this measure, so it is reported alongside
+WER rather than as a grammar-quality guarantee. The earlier symbol-sequence score
+(including numeric/name formatting) is retained separately in the aggregate JSON.
+Tests cover marks moved to the wrong word, normalized number formats, internal
+separators, word insertions, missing/extra marks and empty transcripts.
+
+[dictation-aggregate.json](../tools/asr-bench/results/2026-11-04/dictation-aggregate.json)
+contains only aggregates; raw evidence and annotations remain private. The sample
+excerpts below remove the entire name/phone-bearing context, including recognition
+variants, rather than relying on exact-string replacement.
+
+### WER and latency
+
+| Model/runtime | Clean WER | Quiet WER | Noisy WER | Clean median / p95 | Quiet median / p95 | Noisy median / p95 |
+|---|---:|---:|---:|---:|---:|---:|
+| v2 / b68f484 | 8.791% | 12.637% | 12.088% | 57.6 / 63.2 ms | 57.4 / 58.8 ms | 57.2 / 58.6 ms |
+| v2 / 0.18.2 | 8.791% | 12.637% | 12.088% | 43.8 / 51.9 ms | 44.4 / 49.0 ms | 43.9 / 48.7 ms |
+| v3 | 10.440% | 15.385% | 9.341% | 50.5 / 58.3 ms | 50.4 / 57.2 ms | 49.5 / 57.3 ms |
+| Unified (English fp16) | 12.088% | 10.989% | 9.890% | 53.0 / 58.3 ms | 52.2 / 57.1 ms | 52.2 / 58.6 ms |
+| Lite | 18.681% | 20.879% | 21.978% | 164.5 / 167.2 ms | 164.3 / 166.1 ms | 164.5 / 166.6 ms |
+| EOU 1280 ms | 22.527% | 57.692% | 27.473% | 54.1 / 80.7 ms | 53.5 / 79.4 ms | 54.1 / 80.2 ms |
+| v2 + CTC boost | 7.692% | 12.088% | 10.989% | 69.3 / 76.2 ms | 71.9 / 76.9 ms | 69.6 / 76.9 ms |
+
+### Names, numbers and sentence punctuation
+
+Each cell lists **clean / quiet / noisy** results. Higher preserved-span counts are better; lower punctuation edit counts are better. These are pass-1 counts, not inflated by repeats.
+
+| Model/runtime | Names/jargon preserved (of 16 each) | Numeric formats preserved (of 8 each) | Sentence punctuation edits (37 marks each) |
+|---|---:|---:|---:|
+| v2 / b68f484 | 11 / 10 / 10 | 3 / 3 / 4 | 18 / 8 / 16 |
+| v2 / 0.18.2 | 11 / 10 / 10 | 3 / 3 / 4 | 18 / 8 / 16 |
+| v3 | 10 / 9 / 11 | 0 / 1 / 5 | 14 / 12 / 14 |
+| Unified (English fp16) | 7 / 8 / 10 | 2 / 3 / 3 | 16 / 14 / 16 |
+| Lite | 7 / 6 / 5 | 0 / 0 / 0 | 13 / 11 / 12 |
+| EOU 1280 ms | 0 / 0 / 0 | 0 / 0 / 0 | 37 / 37 / 37 |
+| v2 + CTC boost | 12 / 11 / 11 | 3 / 3 / 4 | 18 / 8 / 16 |
+
+### Load and process memory
+
+Fresh processes with already-used Core ML artifacts/caches; these are **not pristine first-install times**. Memory includes the preloaded 42-file corpus and process runtime, excludes separate ANE services, and is not isolated model RAM. Artifact download sizes are unchanged from the table above.
+
+| Model/runtime | Load | First call | Max RSS (MiB) | Peak footprint (MiB) |
+|---|---:|---:|---:|---:|
+| v2 / b68f484 | 0.275 s | 100.2 ms | 118.5 | 52.0 |
+| v2 / 0.18.2 | 12.681 s | 57.7 ms | 512.8 | 61.1 |
+| v3 | 0.156 s | 93.6 ms | 112.8 | 49.0 |
+| Unified (English fp16) | 0.409 s | 121.1 ms | 91.0 | 66.5 |
+| Lite | 2.111 s | 335.1 ms | 2448.7 | 1827.2 |
+| EOU 1280 ms | 0.396 s | 209.8 ms | 446.1 | 434.9 |
+| v2 + CTC boost | 0.474 s | 118.3 ms | 130.3 | 56.3 |
+
+The 12.681 s upgraded-v2 load shows that startup can still require substantial
+preparation even with previously used artifacts. The warm-call budget excludes
+load/first-call time; these results do not establish a cold-start improvement.
+
+Old/new v2 transcripts match exactly for all **85 direct-engine results** (first call plus two warm passes). The upgrade changes timing, not recognition output, on these recordings.
+
+### Redacted side-by-side excerpts
+
+Names and phone numbers are not published, including approximate recognitions. These are selected excerpts from pass-1 clean results, not the private references or raw transcript files. The omitted context can contain recognition errors; its accuracy is included in the aggregate metrics above.
+
+| Model | Clip 03 excerpt | Clip 05 excerpt |
+|---|---|---|
+| Reference | [NAME CONTEXT REDACTED] … moved to 3:45 on Tuesday, November 18th. | [PHONE CONTEXT REDACTED] … if the server goes down after 9 PM. |
+| v2-old | [NAME CONTEXT REDACTED] … moved to 345 on Tuesday, November 18th. | [PHONE CONTEXT REDACTED] … if the server goes down after 9pm. |
+| v2-new | [NAME CONTEXT REDACTED] … moved to 345 on Tuesday, November 18th. | [PHONE CONTEXT REDACTED] … if the server goes down after 9pm. |
+| v3 | [NAME CONTEXT REDACTED] … moved to three forty five on Tuesday, november eighteenth. | [PHONE CONTEXT REDACTED] … if the server goes down after nine PM. |
+| unified | [NAME CONTEXT REDACTED] … moved to three forty five on Tuesday, november eighteenth. | [PHONE CONTEXT REDACTED] … if the server goes down after 9 p.m. |
+| lite | [NAME CONTEXT REDACTED] … moved to three forty five on Tuesday, November, eighteenth. | [PHONE CONTEXT REDACTED] … if the server goes down after nine pm. |
+| eou | [NAME CONTEXT REDACTED] … moved today november eighteenth | [PHONE CONTEXT REDACTED] … if the service go down after nine pm |
+| v2-boost | [NAME CONTEXT REDACTED] … moved to 345 on Tuesday, November 18th. | [PHONE CONTEXT REDACTED] … if the server goes down after 9pm. |
+
+### Promotion gate
+
+The agreed budget applies to warm **engine calls**, not release-to-cursor or real
+microphone latency. It is checked per condition on both English corpora; figures
+are session measurements, not a performance guarantee. No test outcome was used
+to relax the 100/150 ms thresholds.
+
+| Candidate | Latency gate across both corpora | Quality gate and decision |
+|---|---|---|
+| v2 on v0.18.2 | Pass | Same transcripts as pinned v2; clean natural median/p95 43.8/51.9 ms. Retain as default. |
+| v3 | Pass | Natural clean WER 10.440% vs 8.791%; fewer names and numeric formats preserved. Public clean WER also regresses. Do not promote. |
+| Nemotron Unified | Pass | Public WER improves in all conditions, but natural clean WER rises from 16 to 22 word errors (8.791% → 12.088%). Clean name/jargon preservation falls from 11/16 to 7/16 and numeric-format preservation from 3/8 to 2/8; quiet punctuation edits rise from 8 to 14. No-regression gate fails even though noisy/quiet natural WER improves. Do not promote. |
+| Lite | Fail | Natural median ~164 ms and p95 ~167 ms; worse WER and name/number preservation. Do not promote. |
+| EOU 120M | Fail on public p95 | Natural short-clip latency passes, but public p95 reaches ~185 ms. WER, case-sensitive names, numeric formatting and punctuation regress. Do not promote. |
+| v2 + CTC boosting | Fail on public p95 | Natural clean WER improves to 7.692%, but public clean WER worsens to 2.365% and p95 reaches ~155 ms, with false replacements. Keep boosting off. |
+
+No challenger satisfies the promotion requirements, so the plan's “if nothing
+wins, keep v2” outcome applies. There is no winning second engine to integrate;
+retained dual caches, load-failure fallback and the Workspace 5 switch are not
+introduced in this PR. Existing Parakeet availability and cache behavior are
+unchanged. This is a measured rejection for this release, not a conclusion that
+Unified can never win with a different artifact or future runtime.
+
+The small, single-speaker natural set consists entirely of short recordings. It
+supports this gate decision but does not establish long-form, other-speaker,
+Bluetooth, live-insertion, first-install or contention behavior. The synthetic
+variants are not real quiet-room/noisy-room recordings.
 
 ## Vocabulary boosting
 
@@ -144,9 +277,10 @@ applied. No network loader or production dictionary change is introduced.
 The [12-term glossary](../tools/asr-bench/technical-glossary.json) was chosen before
 the boost run, from application/developer names rather than its output errors. This
 public audiobook run is primarily an off-domain false-replacement and overhead
-check; it does not measure recall for naturally spoken technical terms. Natural
-positive examples and distractors are still needed. Do not enable boosting from
-these results alone.
+check; it does not measure recall for naturally spoken technical terms. The natural
+recordings above now provide positive technical examples: boosting
+improves their aggregate WER, but the public-corpus regressions and latency gate
+still reject enabling it by default.
 
 ## Artifacts, licensing and lower-priority screening
 
@@ -183,19 +317,17 @@ plan or experiment.
 
 ## Natural dictation and frontend handoff
 
-[DICTATION_0.4.md](../tools/asr-bench/DICTATION_0.4.md) supplies a local recording
-protocol, checked-reference annotation schema, topics covering technical names,
-numbers and punctuation, conversion command and scoring caveats. Audio, private
-references and raw private results stay local. No private audio was accessed or
-uploaded. This is a prepared evaluation path, **not completed natural-dictation data**.
+The supplied 14 recordings complete the previously missing natural-dictation
+comparison. [DICTATION_0.4.md](../tools/asr-bench/DICTATION_0.4.md) documents the
+local preparation/annotation process; all original/private derivative files remain
+outside Git. The agreed latency budget and measured promotion decision are above.
+No private audio, reference file, per-clip result file or audio hash was published.
 
-No second application engine or switch is added because no challenger has passed
-all gates. Before selecting Unified, agree a latency budget, run the same natural
-clips on v2 and Unified, manually review punctuation placement, and confirm exact
-artifact licensing. Then implement retained dual caches, offline switching back to
-v2, load-failure fallback with a reason log, and a backend switch. Workspace 5 owns
-the menu option and all wording/layout. A benchmark adapter is not that product
-integration, and this PR does not claim switching/fallback acceptance.
+No second application engine or menu option is requested for Workspace 5 because
+no challenger passes this release's quality/latency gates. Any future promotion
+must still implement retained dual caches, offline switching back to Parakeet,
+load-failure fallback with a reason log, and a backend selector before Workspace 5
+designs its menu. No frontend or default-setting change is part of this PR.
 
 ## Reproduce
 
@@ -268,32 +400,27 @@ change app settings or insert into another app.
 - `cargo fmt --manifest-path desktop/src-tauri/Cargo.toml --check`: pass.
 - `cargo clippy --locked --all-targets --manifest-path desktop/src-tauri/Cargo.toml -- -D warnings`: pass.
 - `cargo test --locked --all-targets --manifest-path desktop/src-tauri/Cargo.toml`: 63 application, 36 ASR example and 47 review example tests pass.
-- Helper and benchmark Swift release builds pass; 12 Python scoring tests pass.
+- Helper and benchmark Swift release builds pass; 18 Python scoring tests pass (including six sentence-punctuation tests).
 - Seven direct-engine configurations each complete 720 warm calls plus a separate first call; all artifacts/corpus hashes verified. The old library's 709 source files match the immutable upstream archive.
 - Both current production-path runs complete 1,440 warm result rows plus a first call, with identical old/new transcripts. The new worker runs with network denied; a missing model fails locally without a ready response or downloaded files.
-- Local dictation-preparer smoke passes using a public-audio fixture; this is not a recording of Matt or natural technical-dictation acceptance.
+- The 14 supplied natural recordings produce 42 condition variants. Seven direct-engine configurations complete 84 warm calls plus one first call each with networking denied. All 85 old/new v2 transcripts match; private evidence stays local.
+- Published private-corpus output is restricted to aggregate metrics and redacted excerpts; the staged text is checked against the private references, sensitive identifiers and raw-result files.
 - `git diff --check`: pass. No frontend, icons, bundle ID, signing material, user config or installed app was changed.
 
-The upgrade and offline comparison pass the checks above, but Workspace 3 remains
-incomplete pending the natural-dictation measurements and agreed latency budget,
-or Matt's explicit authorization to defer them. No final model-selection or
-switching acceptance claim is made in their absence. macOS 14 execution, pristine first-install preparation,
-microphones, real-app insertion and power/memory under contention remain field
-validation, not results of this PR.
-
+The upgrade, public comparison and natural-dictation promotion decision are
+complete for this PR. macOS 14 execution, pristine first-install preparation,
+live microphones, real-app insertion and power/memory under contention remain
+field validation; no such behavior is inferred from the offline runs.
 
 ## PR #3 review follow-up
 
-The review at `cf1cd03` identified a blocking evaluation gap and an incomplete
-reproduction glob. Reproduction now lists explicit commands for every candidate
-and all seven scorer inputs, including `unified.jsonl`, `lite.jsonl` and
-`eou.jsonl`. The exact documented scorer command was executed against the retained
-runs and reproduced every recorded metric for all seven configurations. The Rust
-format/Clippy/test checks, both Swift release builds and all 12 Python tests passed
-again; the ASR measurements themselves were not rerun for this documentation fix.
+The reproduction bug is fixed: explicit commands cover all candidates and the
+scorer lists all seven inputs, including Unified, Lite and EOU. The exact command
+reproduces all retained public metrics.
 
-The blocking evaluation gap is still open. The existing v2 default is an interim
-implementation state, not a completed promotion decision. Resolving the review
-requires Matt's local recordings/reference transcripts and agreed latency budget,
-or his explicit waiver to move those checks and the decision to a follow-up.
-No such waiver is inferred from the instruction to address the review.
+The blocking natural-dictation gap is now resolved with Matt's 14 recordings and
+his explicit 100 ms median / 150 ms p95 budget. All seven configurations were run
+on the private corpus; aggregate name, number, punctuation, WER and latency results
+are published above. The v2 decision is now measured rather than provisional. No
+waiver was used. Private audio, references and raw per-clip transcripts stay local;
+only aggregates and redacted excerpts are included in this public PR.

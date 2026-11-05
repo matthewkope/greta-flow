@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 from summarize import distance, normalize_english
+from punctuation import score as punctuation_score
 
 
 def protected_count(text, value, numeric=False):
@@ -43,6 +44,7 @@ def summarize(manifest, rows, repeats=2):
         word_errors = word_count = 0
         metrics = {k: {'expected': 0, 'missing': 0, 'extra': 0} for k in ['names', 'numbers']}
         punct_errors = punct_count = punct_clips = 0
+        sentence_errors = sentence_marks = sentence_exact = 0
         for row in scored:
             ref = refs[row['id']]
             a, b = normalize_english(ref['text']).split(), normalize_english(row['text']).split()
@@ -62,6 +64,10 @@ def summarize(manifest, rows, repeats=2):
                 punct_errors += distance(a, b)
                 punct_count += len(a)
                 punct_clips += 1
+                sentence = punctuation_score(ref['text'], row['text'])
+                sentence_errors += sentence['errors']
+                sentence_marks += sentence['reference_marks']
+                sentence_exact += sentence['errors'] == 0
         result['conditions'][condition] = {
             'clips': len(scored), 'warm_calls': len(timed), 'word_errors': word_errors,
             'reference_words': word_count, 'wer_percent': 100 * word_errors / word_count if word_count else None,
@@ -70,7 +76,10 @@ def summarize(manifest, rows, repeats=2):
             'names': metrics['names'] if metrics['names']['expected'] else None,
             'numbers': metrics['numbers'] if metrics['numbers']['expected'] else None,
             'punctuation': {'clips': punct_clips, 'errors': punct_errors, 'reference_marks': punct_count,
-                            'sequence_error_percent': 100 * punct_errors / punct_count if punct_count else None}
+                            'sequence_error_percent': 100 * punct_errors / punct_count if punct_count else None,
+                            'sentence_boundary_errors': sentence_errors, 'sentence_reference_marks': sentence_marks,
+                            'sentence_exact_clips': sentence_exact,
+                            'sentence_error_percent': 100 * sentence_errors / sentence_marks if sentence_marks else None}
                            if punct_clips else None,
             'transcript_variants': sum(len({r['text'] for r in timed if r['id'] == s['id']}) > 1 for s in scored),
         }
