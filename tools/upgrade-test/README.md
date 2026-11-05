@@ -27,8 +27,10 @@ Unit tests use temporary fixtures; they do **not** establish real upgrade succes
    DMGs, Downloads, backups, and other users' folders are not scanned. Unmount
    release DMGs and inspect other install locations manually. To include another
    installation root, repeat `--app-root` for **all** roots (this replaces defaults).
-   Symlinks encountered in scanned directories require manual review; they are
-   never followed. Add `--extra-model /absolute/path` for each custom model outside
+   Unrelated symlinks (such as Safari.app) are skipped after checking the target's
+   bundle ID; the scan never descends into linked directories. Links named like
+   either app or targeting the production bundle ID require manual review, as do
+   symlinks in the data being hashed. Add `--extra-model /absolute/path` for each custom model outside
    the default cache. Missing config, empty model trees, and missing/empty history
    fail rather than producing a vacuous pass. Use real existing data, not fixtures.
 3. Upgrade through the route under test using the approved **0.4.0 release**:
@@ -53,7 +55,9 @@ Unit tests use temporary fixtures; they do **not** establish real upgrade succes
    equality proves contents survived, not that a downloader never rewrote them.
    Evidence includes paths/hashes and public signing requirements, not file contents;
    keep it local because paths can still be private. Output files cannot overwrite
-   existing evidence. Errors exit nonzero; an early error may leave no after file.
+   existing evidence. Errors exit nonzero. Failure to satisfy the old signing
+   requirement is saved with codesign stderr and other collected failures; an
+   earlier capture error may leave no after file.
 4. Launch the upgraded app and perform the manual checks below. If launch was not
    part of step 3, quit and repeat `after` with a new output filename before making
    new dictation entries, to check persistence after first launch too.

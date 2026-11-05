@@ -62,6 +62,26 @@ class UpgradeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 upgrade.manifest(root)
 
+    def test_inventory_skips_unrelated_links_but_rejects_app_links(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'Applications'
+            root.mkdir()
+            target = Path(tmp) / 'target.app'
+            (target / 'Contents').mkdir(parents=True)
+            plist = target / 'Contents/Info.plist'
+            plist.write_bytes(plistlib.dumps({'CFBundleIdentifier': 'com.apple.Safari'}))
+            link = root / 'Safari.app'
+            link.symlink_to(target)
+            self.assertEqual(upgrade.inventory([root]), [])
+            plist.write_bytes(plistlib.dumps({'CFBundleIdentifier': upgrade.BUNDLE_ID}))
+            with self.assertRaisesRegex(ValueError, 'Symlink requires manual review'):
+                upgrade.inventory([root])
+            link.unlink()
+            # Even a broken link with the app's name must not be silently ignored.
+            (root / 'Greta Flow.app').symlink_to(root / 'missing')
+            with self.assertRaisesRegex(ValueError, 'Symlink requires manual review'):
+                upgrade.inventory([root])
+
     def test_signing_directory_is_rejected_without_read(self):
         with self.assertRaises(ValueError):
             upgrade.manifest(upgrade.FORBIDDEN / 'anything')
@@ -89,22 +109,34 @@ class UpgradeTests(unittest.TestCase):
                       'data': {'history': {'path': '/history', 'files': {'.': 'abc'}}}}
             baseline = root / 'before.json'
             baseline.write_text(json.dumps(before))
-            for version in ('0.3.0', '0.4.0'):
+            for version, rejected in [('0.3.0', False), ('0.4.0', False), ('0.3.0', True)]:
                 after = copy.deepcopy(before)
                 after['app'].update(version=version, path='/Applications/Greta Flow.app')
-                output = root / (version + '.json')
+                output = root / (version + str(rejected) + '.json')
                 args = ['upgrade_test.py', 'after', '--baseline', str(baseline), '--output', str(output)]
                 with patch.object(upgrade.sys, 'argv', args), patch.object(upgrade.sys, 'platform', 'darwin'), \
                         patch.object(upgrade, 'capture', return_value=after), patch.object(upgrade, 'run') as run, \
                         patch('builtins.print'):
+                    if rejected:
+                        run.side_effect = upgrade.subprocess.CalledProcessError(
+                            1, 'codesign', stderr='code failed to satisfy specified code requirement')
                     if version == '0.3.0':
                         with self.assertRaisesRegex(ValueError, 'not 0.4.0'):
                             upgrade.main()
                     else:
                         upgrade.main()
                     run.assert_called_once_with('/usr/bin/codesign', '--verify', '--strict', '-R',
-                                                before['app']['requirement'], after['app']['path'])
-                    self.assertIn('NOT TESTED', json.loads(output.read_text())['permissions'])
+                                                '=' + before['app']['requirement'], after['app']['path'])
+                    saved = json.loads(output.read_text())
+                    self.assertIn('NOT TESTED', saved['permissions'])
+                    if rejected:
+                        self.assertEqual(len(saved['failures']), 2)
+                        self.assertIn('not 0.4.0', saved['failures'][0])
+                        self.assertIn('code failed to satisfy specified code requirement', saved['failures'][1])
+
+    @unittest.skipUnless(upgrade.sys.platform == 'darwin', 'Requires macOS codesign')
+    def test_real_codesign_inline_requirement(self):
+        upgrade.run('/usr/bin/codesign', '--verify', '--strict', '-R', '=anchor apple', '/bin/ls')
 
     def test_evidence_cannot_overwrite(self):
         with tempfile.TemporaryDirectory() as tmp:

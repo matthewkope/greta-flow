@@ -91,12 +91,20 @@ def inventory(roots):
             continue
         if not root.is_dir() or root.is_symlink():
             raise ValueError(f'Invalid application root: {root}')
-        for folder, dirs, _ in os.walk(root, followlinks=False, onerror=walk_error):
-            for name in list(dirs):
+        for folder, dirs, files in os.walk(root, followlinks=False, onerror=walk_error):
+            for name in list(dirs) + files:
                 path = safe(Path(folder) / name)
                 if path.is_symlink():
-                    raise ValueError(f'Symlink requires manual review: {path}')
-                if name.endswith('.app'):
+                    if name in NAMES:
+                        raise ValueError(f'Symlink requires manual review: {path}')
+                    plist = safe(path / 'Contents/Info.plist')
+                    if plist.is_file():
+                        with plist.open('rb') as stream:
+                            bundle = plistlib.load(stream).get('CFBundleIdentifier')
+                        if bundle == BUNDLE_ID:
+                            raise ValueError(f'Symlink requires manual review: {path}')
+                    continue  # Ignore unrelated links; os.walk does not descend into them.
+                if name in dirs and name.endswith('.app'):
                     dirs.remove(name)  # Never descend into unrelated application bundles.
                     plist = safe(path / 'Contents/Info.plist')
                     if plist.exists():
@@ -185,8 +193,14 @@ def main():
         if Path(evidence['app']['path']).name != 'Greta Flow.app':
             errors.append('Expected renamed Greta Flow.app')
         # Verify the new executable actually satisfies the old requirement as well.
-        run('/usr/bin/codesign', '--verify', '--strict', '-R',
-            baseline['app']['requirement'], evidence['app']['path'])
+        try:
+            run('/usr/bin/codesign', '--verify', '--strict', '-R',
+                '=' + baseline['app']['requirement'], evidence['app']['path'])
+        except subprocess.CalledProcessError as error:
+            errors.append(f'Old signing requirement verification failed (exit {error.returncode}): '
+                          f'{(error.stderr or "").strip()}')
+        except OSError as error:
+            errors.append(f'Old signing requirement verification could not run: {error}')
         evidence['failures'] = errors
         evidence['permissions'] = 'NOT TESTED: manual confirmation required'
         save(args.output, evidence)
