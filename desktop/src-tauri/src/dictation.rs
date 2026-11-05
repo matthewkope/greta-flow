@@ -45,8 +45,9 @@ pub(crate) fn start_recording(app: &AppHandle) {
             state.recorder.start();
         }
     }
+    let capture_app = app.clone();
     std::thread::spawn(move || {
-        let target = inject::Target::capture().ok();
+        let target = inject::on_main_thread(&capture_app, inject::Target::capture).ok();
         let bundle = target
             .as_ref()
             .and_then(|t| {
@@ -191,8 +192,13 @@ pub(crate) fn deliver_result(
     timing: &mut metrics::Timing,
 ) -> &'static str {
     let insertion = std::time::Instant::now();
-    let state = app.state::<AppState>();
-    let (result, retained) = {
+    let handle = app.clone();
+    let recovery_text = text.clone();
+    // Acquire the session lock inside the dispatched task, never while waiting
+    // on the main thread. Cancellation and stale-result checks still precede
+    // every delivery, including work queued before a cancel/new recording.
+    let delivery = inject::on_main_thread(app, move || {
+        let state = handle.state::<AppState>();
         let mut sessions = state.sessions.lock_repair(|sessions| sessions.cancel());
         let result = sessions.deliver(id, text, |target, text| {
             target
@@ -204,7 +210,23 @@ pub(crate) fn deliver_result(
         } else {
             sessions.take_history(id)
         };
-        (result, retained)
+        Ok((result, retained))
+    });
+    let (result, retained) = match delivery {
+        Ok(delivery) => delivery,
+        Err(e) => {
+            // Scheduling failed before delivery. Preserve the result through
+            // the same session/history rules without attempting an off-thread write.
+            let state = app.state::<AppState>();
+            let mut sessions = state.sessions.lock_repair(|sessions| sessions.cancel());
+            let result = sessions.deliver(id, recovery_text, |_, _| Err(e));
+            let retained = if matches!(result, Ok(false)) {
+                None
+            } else {
+                sessions.take_history(id)
+            };
+            (result, retained)
+        }
     };
     timing.stage("insertion", insertion);
     if matches!(result, Ok(true)) {

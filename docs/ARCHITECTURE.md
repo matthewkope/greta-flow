@@ -59,7 +59,7 @@ presence, low latency, and an installable binary — Rust territory.
 | Recorder | `audio.rs` | cpal capture on a dedicated thread; mono downmix + 16 kHz resample |
 | Engine | `transcribe.rs` | whisper-rs (whisper.cpp), Metal-accelerated, beam search |
 | Models | `model.rs` | ggml model download to `~/.cache/gretchen-flow/models/` |
-| Injector | `inject.rs` | Synthetic keystrokes via enigo |
+| Injector | `inject.rs` | Validated Accessibility insertion; capture-time, process-bound Unicode keystroke fallback for unsupported fields |
 | Config | `config.rs` | Shared JSON config in `~/.config/gretchen-flow/` |
 
 The tray icon doubles as the recording indicator — the gap that made the

@@ -379,11 +379,12 @@ pub(crate) fn on_menu_event(app: &AppHandle, id: &str) {
         items.get(idx).cloned()
     };
     if let Some(text) = text {
+        let app = app.clone();
         std::thread::spawn(move || {
             // Give the menu a beat to close and focus to return to the app
             // the user was in.
             std::thread::sleep(std::time::Duration::from_millis(300));
-            if let Err(e) = inject::type_text(&text) {
+            if let Err(e) = inject::type_text(&app, &text) {
                 log::error!("{e}");
             }
         });

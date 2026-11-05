@@ -18,7 +18,7 @@ tauri-plugin-global-shortcut = "2"
 cpal = "0.15"
 whisper-rs = { version = "0.14", features = ["metal"] }
 enigo = "0.5"
-core-graphics = "0.24"
+core-graphics = { version = "0.24", features = ["elcapitan"] }
 core-foundation = "0.10"
 objc2 = "0.6"
 objc2-app-kit = "0.3"
