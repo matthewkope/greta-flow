@@ -1,6 +1,7 @@
 //! Startup, model lifecycle, permissions and existing window builders.
 use crate::hotkey::{install_shortcuts, register_binding, spawn_fn_listener};
 use crate::locks::MutexExt;
+use crate::setup_status;
 use crate::tray::{refresh_menu, set_tray_state, TrayState, ICON_APP};
 use crate::{bindings, config, engine, history, model, AppState};
 use std::sync::atomic::Ordering;
@@ -35,6 +36,7 @@ pub(crate) fn set_model(app: &AppHandle, name: &str) {
             state.model_generation.fetch_add(1, Ordering::SeqCst) + 1,
         )
     };
+    setup_status::phase(app, generation, name, "queued");
     let mut cfg = config::Config::load();
     cfg.model = name.to_string();
     cfg.save();
@@ -44,8 +46,7 @@ pub(crate) fn set_model(app: &AppHandle, name: &str) {
     let name = name.to_string();
     std::thread::spawn(move || {
         set_tray_state(&app, TrayState::Downloading);
-        let loaded = model::ensure_model(&name)
-            .and_then(|path| engine::Engine::load(&path.to_string_lossy(), &cfg));
+        let loaded = setup_status::load(&app, &cfg, generation);
         let state = app.state::<AppState>();
         let mut engine_slot = state.engine.lock_recover();
         let mut current = state.current_model.lock_recover();
@@ -58,9 +59,17 @@ pub(crate) fn set_model(app: &AppHandle, name: &str) {
                 *state.active_model.lock_recover() = cfg.model.clone();
                 *state.cfg.lock_recover() = cfg.clone();
                 state.engine_ready.store(true, Ordering::SeqCst);
+                setup_status::phase(&app, generation, &cfg.model, "ready");
                 log::info!("switched model to {name}");
             }
             Err(e) => {
+                setup_status::publish(
+                    &app,
+                    generation,
+                    &cfg.model,
+                    model::Progress::phase("failed"),
+                    Some(e.clone()),
+                );
                 log::error!("model switch to {name} failed, keeping {previous}: {e}");
                 *current = previous.clone();
                 let mut cfg = config::Config::load();
@@ -315,6 +324,7 @@ pub(crate) fn load_engine_async(app: AppHandle) {
             model::model_path(&cfg.model).exists()
         };
         if !available {
+            setup_status::phase(&app, generation, &cfg.model, "needs_model");
             log::info!("no model downloaded yet; opening setup");
             set_tray_state(&app, TrayState::NeedsModel);
             show_setup(&app);
@@ -322,8 +332,7 @@ pub(crate) fn load_engine_async(app: AppHandle) {
         }
 
         set_tray_state(&app, TrayState::Downloading);
-        let loaded = model::ensure_model(&cfg.model)
-            .and_then(|path| engine::Engine::load(&path.to_string_lossy(), &cfg));
+        let loaded = setup_status::load(&app, &cfg, generation);
         let mut engine_slot = state.engine.lock_recover();
         let current = state.current_model.lock_recover();
         if state.model_generation.load(Ordering::SeqCst) != generation {
@@ -335,10 +344,18 @@ pub(crate) fn load_engine_async(app: AppHandle) {
                 *state.active_model.lock_recover() = cfg.model.clone();
                 *state.cfg.lock_recover() = cfg.clone();
                 state.engine_ready.store(true, Ordering::SeqCst);
+                setup_status::phase(&app, generation, &cfg.model, "ready");
                 log::info!("engine ready (model: {})", cfg.model);
                 set_tray_state(&app, TrayState::Idle);
             }
             Err(e) => {
+                setup_status::publish(
+                    &app,
+                    generation,
+                    &cfg.model,
+                    model::Progress::phase("failed"),
+                    Some(e.clone()),
+                );
                 log::error!("engine load failed: {e}");
                 set_tray_state(&app, TrayState::Error);
             }
@@ -355,10 +372,10 @@ pub(crate) fn load_engine_async(app: AppHandle) {
 /// transcription-setting changes (language, vocabulary, punctuation, etc.).
 pub(crate) fn reload_engine(app: AppHandle, cfg: config::Config, generation: u64) {
     let model = cfg.model.clone();
+    setup_status::phase(&app, generation, &model, "queued");
     std::thread::spawn(move || {
         set_tray_state(&app, TrayState::Downloading);
-        let loaded = model::ensure_model(&model)
-            .and_then(|path| engine::Engine::load(&path.to_string_lossy(), &cfg));
+        let loaded = setup_status::load(&app, &cfg, generation);
         let state = app.state::<AppState>();
         let mut engine_slot = state.engine.lock_recover();
         let current = state.current_model.lock_recover();
@@ -371,9 +388,19 @@ pub(crate) fn reload_engine(app: AppHandle, cfg: config::Config, generation: u64
                 *state.active_model.lock_recover() = cfg.model.clone();
                 *state.cfg.lock_recover() = cfg.clone();
                 state.engine_ready.store(true, Ordering::SeqCst);
+                setup_status::phase(&app, generation, &cfg.model, "ready");
                 log::info!("engine reloaded (model: {model})");
             }
-            Err(e) => log::error!("engine reload failed, keeping current engine: {e}"),
+            Err(e) => {
+                setup_status::publish(
+                    &app,
+                    generation,
+                    &cfg.model,
+                    model::Progress::phase("failed"),
+                    Some(e.clone()),
+                );
+                log::error!("engine reload failed, keeping current engine: {e}");
+            }
         }
         drop(current);
         drop(engine_slot);
@@ -518,6 +545,9 @@ pub(crate) fn initialize(
     // appearing after first use.
     request_startup_permissions(app.handle());
 
+    if setup_status::setup_saved_step().ok().flatten().is_some() {
+        open_setup_window(app.handle());
+    }
     load_engine_async(app.handle().clone());
     Ok(())
 }

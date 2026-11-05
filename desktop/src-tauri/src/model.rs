@@ -3,7 +3,7 @@
 
 use crate::locks::MutexExt;
 use std::fs;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 
 use sha2::{Digest, Sha256};
@@ -61,8 +61,19 @@ pub fn model_path(name: &str) -> PathBuf {
 /// as-is (user-supplied model files); names are downloaded from the
 /// whisper.cpp collection if needed.
 pub fn ensure_model(name: &str) -> Result<PathBuf, String> {
+    ensure_model_with_progress(name, &mut |_| {})
+}
+
+pub fn ensure_model_with_progress(
+    name: &str,
+    report: &mut dyn FnMut(Progress),
+) -> Result<PathBuf, String> {
+    // Serialize all writers, including Whisper .part files.
+    static DOWNLOAD: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    let _guard = DOWNLOAD.lock_recover();
+    report(Progress::phase("checking"));
     if name == crate::config::DEFAULT_MODEL {
-        return ensure_parakeet();
+        return ensure_parakeet(report);
     }
     if name.starts_with('/') {
         let path = PathBuf::from(name);
@@ -90,7 +101,8 @@ pub fn ensure_model(name: &str) -> Result<PathBuf, String> {
         .map_err(|e| format!("download failed: {e}"))?;
     let tmp = path.with_extension("bin.part");
     let mut file = fs::File::create(&tmp).map_err(|e| e.to_string())?;
-    std::io::copy(&mut resp.into_reader(), &mut file).map_err(|e| e.to_string())?;
+    download(resp, &mut file, &path, name, report)?;
+    report(Progress::phase("verifying"));
     drop(file);
 
     // Verify integrity against the pinned hash before the file is ever loaded
@@ -150,9 +162,7 @@ fn hex_lower(bytes: &[u8]) -> String {
 }
 
 /// Fetch only the pinned CoreML exports used by our bundled runtime.
-fn ensure_parakeet() -> Result<PathBuf, String> {
-    static DOWNLOAD: std::sync::Mutex<()> = std::sync::Mutex::new(());
-    let _guard = DOWNLOAD.lock_recover();
+fn ensure_parakeet(report: &mut dyn FnMut(Progress)) -> Result<PathBuf, String> {
     let root = model_path(crate::config::DEFAULT_MODEL);
     let manifest: std::collections::BTreeMap<String, String> =
         serde_json::from_str(include_str!("parakeet-model.json")).map_err(|e| e.to_string())?;
@@ -171,7 +181,11 @@ fn ensure_parakeet() -> Result<PathBuf, String> {
         let response = agent.get(&url).call().map_err(|e| e.to_string())?;
         let temp = path.with_extension("download-part");
         let mut file = fs::File::create(&temp).map_err(|e| e.to_string())?;
-        std::io::copy(&mut response.into_reader(), &mut file).map_err(|e| e.to_string())?;
+        download(response, &mut file, &path, &relative, report)?;
+        report(Progress {
+            file: Some(relative.clone()),
+            ..Progress::phase("verifying")
+        });
         drop(file);
         if file_sha256(&temp)? != hash {
             let _ = fs::remove_file(&temp);
@@ -182,9 +196,164 @@ fn ensure_parakeet() -> Result<PathBuf, String> {
     Ok(root)
 }
 
+/// Byte counts are per file; totals are unknown when the server omits Content-Length.
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct Progress {
+    pub phase: String,
+    pub file: Option<String>,
+    pub downloaded_bytes: u64,
+    pub total_bytes: Option<u64>,
+}
+impl Progress {
+    pub fn phase(phase: &str) -> Self {
+        Self {
+            phase: phase.into(),
+            file: None,
+            downloaded_bytes: 0,
+            total_bytes: None,
+        }
+    }
+}
+
+#[derive(serde::Serialize)]
+pub struct DiskSpace {
+    pub available_bytes: u64,
+    pub required_bytes: u64,
+    pub sufficient: bool,
+}
+
+/// Query the actual cache volume (or its nearest existing ancestor).
+pub fn disk_space(path: &std::path::Path, required_bytes: u64) -> Result<DiskSpace, String> {
+    use std::os::unix::ffi::OsStrExt;
+    let mut ancestor = path;
+    while !ancestor.exists() {
+        ancestor = ancestor.parent().ok_or("no existing cache ancestor")?;
+    }
+    let path =
+        std::ffi::CString::new(ancestor.as_os_str().as_bytes()).map_err(|e| e.to_string())?;
+    let mut stats = std::mem::MaybeUninit::<libc::statvfs>::uninit();
+    // statvfs initializes the structure only on success; f_bavail excludes reserved blocks.
+    if unsafe { libc::statvfs(path.as_ptr(), stats.as_mut_ptr()) } != 0 {
+        return Err(format!(
+            "disk space check: {}",
+            std::io::Error::last_os_error()
+        ));
+    }
+    let stats = unsafe { stats.assume_init() };
+    let available_bytes = u64::from(stats.f_bavail).saturating_mul(stats.f_frsize);
+    Ok(DiskSpace {
+        available_bytes,
+        required_bytes,
+        sufficient: available_bytes >= required_bytes,
+    })
+}
+
+fn download(
+    response: ureq::Response,
+    file: &mut fs::File,
+    path: &std::path::Path,
+    name: &str,
+    report: &mut dyn FnMut(Progress),
+) -> Result<(), String> {
+    let total = response
+        .header("Content-Length")
+        .and_then(|s| s.parse::<u64>().ok());
+    let space = disk_space(path, total.unwrap_or(0).saturating_add(256 * 1024 * 1024))?;
+    if !space.sufficient {
+        return Err(format!(
+            "insufficient disk space: need {} bytes, available {} bytes",
+            space.required_bytes, space.available_bytes
+        ));
+    }
+    copy_download(&mut response.into_reader(), file, name, total, report)
+}
+
+fn copy_download(
+    reader: &mut dyn Read,
+    writer: &mut dyn Write,
+    name: &str,
+    total: Option<u64>,
+    report: &mut dyn FnMut(Progress),
+) -> Result<(), String> {
+    let mut progress = Progress {
+        file: Some(name.into()),
+        total_bytes: total,
+        ..Progress::phase("downloading")
+    };
+    report(progress.clone());
+    let mut last = std::time::Instant::now();
+    let mut buf = [0; 64 * 1024];
+    loop {
+        let n = reader
+            .read(&mut buf)
+            .map_err(|e| format!("download read failed: {e}"))?;
+        if n == 0 {
+            break;
+        }
+        writer
+            .write_all(&buf[..n])
+            .map_err(|e| format!("download write failed: {e}"))?;
+        progress.downloaded_bytes += n as u64;
+        if last.elapsed() >= std::time::Duration::from_millis(100) {
+            report(progress.clone());
+            last = std::time::Instant::now();
+        }
+    }
+    report(progress.clone());
+    if total.is_some_and(|total| total != progress.downloaded_bytes) {
+        return Err("download ended with an unexpected byte count".into());
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn reports_bytes_and_rejects_truncated_downloads() {
+        for total in [None, Some(150_000)] {
+            let input = vec![7; 150_000];
+            let mut output = Vec::new();
+            let mut events = Vec::new();
+            copy_download(&mut &input[..], &mut output, "weights", total, &mut |p| {
+                events.push(p)
+            })
+            .unwrap();
+            assert_eq!(output, input);
+            assert_eq!(events.first().unwrap().downloaded_bytes, 0);
+            assert_eq!(events.last().unwrap().downloaded_bytes, 150_000);
+            assert_eq!(events.last().unwrap().total_bytes, total);
+        }
+        assert!(copy_download(
+            &mut &b"short"[..],
+            &mut Vec::new(),
+            "weights",
+            Some(10),
+            &mut |_| {}
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn reports_write_failure_and_checks_cache_volume() {
+        struct Full;
+        impl Write for Full {
+            fn write(&mut self, _: &[u8]) -> std::io::Result<usize> {
+                Err(std::io::Error::other("disk full"))
+            }
+            fn flush(&mut self) -> std::io::Result<()> {
+                Ok(())
+            }
+        }
+        let error =
+            copy_download(&mut &b"data"[..], &mut Full, "weights", None, &mut |_| {}).unwrap_err();
+        assert!(error.contains("disk full"));
+        let space =
+            disk_space(&std::env::temp_dir().join("gf-nonexistent/child"), u64::MAX).unwrap();
+        assert!(!space.sufficient);
+        assert_eq!(space.required_bytes, u64::MAX);
+    }
 
     #[test]
     fn rejects_traversal_and_separators() {
