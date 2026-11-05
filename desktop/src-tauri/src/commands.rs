@@ -168,7 +168,7 @@ pub(crate) fn open_models_page() {
 
 /// Open a URL in the user's default browser.
 /// Open a specific macOS Privacy & Security pane so the user can grant a
-/// permission Gretchen Flow needs.
+/// permission Greta Flow needs.
 #[tauri::command]
 pub(crate) fn open_privacy(pane: String) {
     let anchor = match pane.as_str() {

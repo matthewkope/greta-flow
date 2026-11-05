@@ -96,7 +96,7 @@ pub(crate) fn set_model(app: &AppHandle, name: &str) {
 }
 
 /// Open (or focus) the small "press your shortcut" recorder window.
-/// On startup, ask macOS for Accessibility + Microphone so Gretchen Flow shows
+/// On startup, ask macOS for Accessibility + Microphone so Greta Flow shows
 /// up in those Privacy lists (to be toggled on) instead of only appearing after
 /// the first dictation. Input Monitoring already self-registers via the Fn tap.
 pub(crate) fn request_startup_permissions(_app: &AppHandle) {
@@ -197,7 +197,7 @@ pub(crate) fn activate_app() {
     }
 }
 
-/// Set the Dock icon to the Gretchen artwork at runtime, so it's never the
+/// Set the Dock icon to the Greta artwork at runtime, so it's never the
 /// generic executable icon (e.g. in dev builds, or before the bundle icon
 /// is associated). Main thread only.
 pub(crate) fn set_dock_icon() {

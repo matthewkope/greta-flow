@@ -1,4 +1,4 @@
-//! Gretchen Flow — menu-bar push-to-talk dictation.
+//! Greta Flow — menu-bar push-to-talk dictation.
 //!
 //! The menu bar ¿ shows the app state: quiet template glyph when idle,
 //! bold glowing red while recording, amber while transcribing, with a ↓
