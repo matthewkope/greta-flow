@@ -25,6 +25,7 @@ jobs:
         run: |
           bash -n ../../install.sh
           python3 -m unittest discover -s ../../tools/distribution -v
+          ruby -c ../../Casks/greta-flow.rb
           brew style ../../Casks/greta-flow.rb
       - name: Build Parakeet runtime
         run: ../scripts/build-parakeet.sh
@@ -34,6 +35,15 @@ jobs:
         run: cargo clippy -- -D warnings
       - name: Format
         run: cargo fmt --check
+      - name: Build DMG for installation checks (ad-hoc signed)
+        run: |
+          cargo install tauri-cli --version "^2" --locked
+          cargo tauri build --bundles dmg
+      - name: Check installer and cask against built DMG
+        run: |
+          version=$(python3 -c 'import json; print(json.load(open("tauri.conf.json"))["version"])')
+          python3 ../../tools/distribution/check_built_dmg.py \
+            --dmg "target/release/bundle/dmg/Greta Flow_${version}_aarch64.dmg"
 
   python:
     runs-on: macos-15

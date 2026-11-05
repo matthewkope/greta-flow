@@ -14,7 +14,8 @@ name = pathlib.Path(sys.argv[0]).name
 args = sys.argv[1:]
 with open(os.environ['CALLS'], 'a') as log:
     log.write(name + '\\n')
-if name == 'uname': print('Darwin' if args == ['-s'] else 'arm64')
+if name == 'uname': print(os.environ.get('OS', 'Darwin') if args == ['-s'] else os.environ.get('ARCH', 'arm64'))
+elif name == 'sysctl': print(os.environ.get('ARM64', '1'))
 elif name == 'sw_vers': print(os.environ.get('MACOS', '14.0'))
 elif name == 'pgrep': sys.exit(0 if os.environ.get('RUNNING') else 1)
 elif name == 'curl': pathlib.Path(args[args.index('-o') + 1]).write_bytes(b'dmg')
@@ -43,7 +44,7 @@ class InstallerTests(unittest.TestCase):
                 (apps / name / 'Contents/Info.plist').write_text('old')
             bins = root / 'bin'
             bins.mkdir()
-            for name in ('uname', 'sw_vers', 'pgrep', 'curl', 'hdiutil', 'PlistBuddy', 'ditto', 'xattr', 'codesign', 'open', 'mv'):
+            for name in ('uname', 'sysctl', 'sw_vers', 'pgrep', 'curl', 'hdiutil', 'PlistBuddy', 'ditto', 'xattr', 'codesign', 'open', 'mv'):
                 file = bins / name
                 file.write_text(STUB)
                 file.chmod(0o755)
@@ -68,6 +69,30 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(content, 'new')
         self.assertFalse(legacy)
         self.assertIn('open\n', calls)
+
+    def test_platform_checks_fail_before_download(self):
+        for options, message in [
+            ({'OS': 'Linux'}, 'macOS is required'),
+            ({'ARCH': 'x86_64', 'ARM64': '0'}, 'Apple Silicon is required'),
+            ({'MACOS': '13.6'}, 'macOS 14 or later is required'),
+            ({'MACOS': 'invalid'}, 'macOS 14 or later is required'),
+        ]:
+            with self.subTest(options=options):
+                result, content, legacy, calls = self.run_installer(**options)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(message, result.stderr)
+                self.assertEqual(content, 'old')
+                self.assertTrue(legacy)
+                self.assertNotIn('curl\n', calls)
+                self.assertNotIn('open\n', calls)
+
+    def test_supported_versions_and_rosetta(self):
+        for options in ({'MACOS': '14.0'}, {'MACOS': '15.0'}, {'MACOS': '26.0'},
+                        {'ARCH': 'x86_64', 'ARM64': '1'}):
+            with self.subTest(options=options):
+                result, content, _, _ = self.run_installer(**options)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(content, 'new')
 
     def test_failures_preserve_old_installation(self):
         for options in ({'bad_hash': True}, {'FAIL_COPY': '1'}, {'FAIL_REPLACE': '1'},
