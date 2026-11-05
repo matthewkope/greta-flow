@@ -12,7 +12,6 @@ import re
 import statistics
 import subprocess
 import threading
-import time
 
 
 PR4 = {
@@ -210,7 +209,9 @@ def capture(args):
             fragment = not complete
             if event:
                 with lock:
-                    if phase == "dictation":
+                    # Enter does not cancel an in-flight dictation. Keep
+                    # its eventual result while waiting to start idle sampling.
+                    if phase in ("dictation", "pause"):
                         outcome, value = event
                         if outcome == "inserted":
                             report["release_to_inserted_ms"].append(value)

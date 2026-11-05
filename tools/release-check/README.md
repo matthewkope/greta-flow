@@ -1,11 +1,19 @@
 # Bundled release field check
 
 Run with Python 3.9+ on macOS, from a terminal in a graphical login session.
-This launches the supplied bundle executable, uses its normal configuration and
-permissions, and terminates that launched app when finished. Quit other copies
-first. Use the default Parakeet engine; a single direct Parakeet helper is required.
+This launches the supplied bundle executable as a child of the terminal and
+terminates that launched app when finished. Quit other copies first. Use the
+default Parakeet engine; a single direct Parakeet helper is required.
 It does not install a build, modify permissions/configuration, or record audio.
 The app itself still follows its existing history settings; use disposable text.
+
+**Permission limitation:** this executes the binary directly, not through
+LaunchServices. macOS TCC may attribute Microphone, Accessibility, or Input
+Monitoring access to Terminal (or the terminal host) rather than the app bundle.
+Permission attribution has not been verified in a real run. Do not treat these
+measurements as evidence that a Finder-launched app has working permissions or
+that upgrade permissions survive. Keep the launch method and permission context
+consistent for both measurements; validate normal app-launch permissions separately.
 
 ```sh
 # Optional: authorize Apple's power sampler in this terminal first.
@@ -45,9 +53,11 @@ Measurements and interpretation:
 
 - Only version 1 `outcome=inserted` with finite, nonnegative
   `stages_ms.release_to_inserted` contributes to median and nearest-rank p95.
-  Failed/cancelled/offline outcomes and malformed timing rows are counted and fail
-  the run. Too few insertions are incomplete. Every accepted numeric sample is
-  retained; there is no outlier removal.
+  Failed/cancelled/offline outcomes and malformed timing rows received during
+  dictation or the pause before idle sampling are counted and fail the run. Late
+  successful insertions during that pause also contribute to the latency sample.
+  Too few insertions are incomplete. Every accepted numeric sample is retained;
+  there is no outlier removal.
 - `top` samples app and direct helper together; the first non-interval sample is
   discarded. MEM is rounded process footprint in MiB, **not RSS**. CPU and POWER
   are interval samples; POWER is an indicator, **not joules**. Missing samples,
