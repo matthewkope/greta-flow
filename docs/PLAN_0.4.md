@@ -75,6 +75,18 @@ cmux new-workspace --name "GF 🧪 · PR #<number>" --cwd "<worktree>" \
    `--command 'claude --effort medium'`.
 4. Give the session this file and its section below. It works only on that section.
 
+**When Astra finishes a PR:** open a review workspace titled `GF 🔍 · PR #<number>`
+running `claude --model claude-opus-5-5 --effort low`. The review is very fast and
+brief: correctness bugs and plan violations only, no code edits, no merging. It posts
+one short bulleted PR comment starting with APPROVED or CHANGES NEEDED. GitHub blocks
+formal approval because author and reviewer share an account, so that comment is the
+approval. Close the review workspace when done.
+
+- **APPROVED:** merge the PR automatically, with no wait for Matt.
+- **CHANGES NEEDED:** send the comment to the job's Astra workspace automatically.
+  Astra fixes the issues and pushes, then a fresh review runs. After three rounds
+  without approval, stop and ask Matt.
+
 **When a PR merges:** close its workspace, then remove its worktree. Confirm the
 merge first and check the worktree has no uncommitted work; if it does, leave both
 open and tell Matt. Closed-without-merging PRs keep their workspace.
@@ -197,11 +209,12 @@ than baseline, with before/after numbers in the PR.
 
 ## Workspace 5: design 🎨 (Claude only)
 
-Owns the Greta sprite and tray icons, menus and all window design, the mascot's
-name in the UI, and the Parakeet/challenger model switch in the menu. Start after
-Workspace 4's `main.rs` split merges if possible, to avoid conflicts.
+**No redesign.** Matt rejected the new look, so keep the existing black pixel menus,
+borders, mascot art, and app and tray icons exactly as they are. Only change the
+name to Greta in UI text and add the Parakeet/challenger model switch, in the
+current style. Start after Workspace 4's `main.rs` split merges if possible.
 
-Rebuild `desktop/ui/setup.html` as resumable steps:
+Improve `desktop/ui/setup.html` in its current style, as resumable steps:
 
 1. Welcome and privacy summary.
 2. Model download with progress, retry, and a disk-space check.
