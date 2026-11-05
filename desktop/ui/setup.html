@@ -25,7 +25,7 @@
         font-size: 12px; background: rgba(127,127,127,0.18);
         padding: 1px 5px; border-radius: 4px;
       }
-      .hint { opacity: 0.6; font-size: 12px; }
+      .hint { opacity: 0.6; font-size: 12px; overflow-wrap: anywhere; }
       .row { display: flex; gap: 10px; align-items: center; }
       .actions { margin: 14px 0; flex-wrap: wrap; }
       nav { justify-content: space-between; padding-top: 14px; }
@@ -36,7 +36,7 @@
       }
       button.primary { background: #0a84ff; border-color: #0a84ff; color: white; font-weight: 600; }
       button:disabled { opacity: 0.4; cursor: default; }
-      .status { font-size: 12px; opacity: 0.7; min-height: 18px; }
+      .status { font-size: 12px; opacity: 0.7; min-height: 18px; overflow-wrap: anywhere; }
       .status.ok { color: #30b350; opacity: 1; }
       .status.bad { color: #ff453a; opacity: 1; }
       .track {
@@ -44,7 +44,7 @@
         background: rgba(127, 127, 127, 0.18); position: relative;
       }
       .fill { height: 100%; width: 0; background: #0a84ff; border-radius: 4px; }
-      /* The backend reports no byte counts, so this shows activity, not percent. */
+      /* Activity only, for phases with no known total. Never a made-up percent. */
       .track.busy .fill {
         position: absolute; width: 30%;
         animation: slide 1.4s ease-in-out infinite alternate;
@@ -76,18 +76,18 @@
       </section>
 
       <section data-step="model" hidden>
-        <h1>Download a speech model</h1>
-        <p class="sub">Greta ships without one so you can choose.</p>
-        <p>The recommended model is <b>Parakeet v2 (English)</b>, for fast on-device
-        dictation. It needs about <b>464&nbsp;MB</b> of free disk space. You can also
-        pick any model from the menu bar icon’s <b>Model</b> submenu.</p>
+        <h1 id="model-title">Download a speech model</h1>
+        <p id="model-sub" class="sub">Greta ships without one so you can choose.</p>
+        <p id="model-intro">The recommended model is <b>Parakeet v2 (English)</b>, for fast
+        on-device dictation. The download is about <b>464&nbsp;MB</b>, and installing it
+        needs some extra room. You can also pick any model from the menu bar icon’s
+        <b>Model</b> submenu.</p>
         <div id="model-busy" hidden>
-          <div class="track busy"><div class="fill"></div></div>
-          <p id="model-elapsed" class="hint"></p>
-          <p>Downloading, then preparing the model for this Mac. Preparing can take
-          about half a minute the first time, with no visible change here. That’s
-          normal. The Greta icon shows a <code>↓</code> until it’s done.</p>
+          <div id="model-track" class="track busy"><div id="model-fill" class="fill"></div></div>
+          <p id="model-detail" class="hint"></p>
+          <p id="model-note"></p>
         </div>
+        <p id="model-disk" class="status"></p>
         <p id="model-status" class="status"></p>
         <div class="row actions">
           <button id="download" class="primary">Download Recommended Model (464&nbsp;MB)</button>
@@ -104,21 +104,25 @@
         <div class="row actions">
           <button id="mic-allow" class="primary">Allow Microphone</button>
           <button class="perm" data-pane="microphone">Open System Settings</button>
+          <button id="mic-relaunch" class="relaunch" hidden>Relaunch Greta</button>
         </div>
         <p class="hint">In <code>System&nbsp;Settings ▸ Privacy &amp; Security ▸ Microphone</code>,
-        turn on <b>Greta Flow</b>. If the status stays off afterward, quit and reopen Greta.</p>
+        turn on <b>Greta Flow</b>. If the status stays off afterward, relaunch Greta and
+        setup will return to this step.</p>
       </section>
 
       <section data-step="accessibility" hidden>
         <h1>⌨️ Allow Accessibility</h1>
         <p class="sub">Permission 2 of 3</p>
         <p>Greta needs Accessibility to type the text at your cursor.</p>
+        <p id="accessibility-status" class="status"></p>
         <div class="row actions">
-          <button class="perm primary" data-pane="accessibility">Open System Settings</button>
+          <button id="accessibility-settings" class="perm primary" data-pane="accessibility">Open System Settings</button>
+          <button id="accessibility-relaunch" class="relaunch" hidden>Relaunch Greta</button>
         </div>
         <p class="hint">In <code>System&nbsp;Settings ▸ Privacy &amp; Security ▸ Accessibility</code>,
-        turn on <b>Greta Flow</b>, then come back here. This window can’t read that
-        switch, so the practice step confirms it.</p>
+        turn on <b>Greta Flow</b>, then come back here. If the status stays off afterward,
+        relaunch Greta and setup will return to this step.</p>
       </section>
 
       <section data-step="input" hidden>
@@ -126,19 +130,17 @@
         <p class="sub">Permission 3 of 3</p>
         <p>Greta needs Input Monitoring to detect the <b>Fn</b> key and other hotkeys
         that use a modifier key on its own.</p>
+        <p id="input-status" class="status"></p>
         <div class="row actions">
-          <button class="perm primary" data-pane="input">Open System Settings</button>
+          <button id="input-settings" class="perm primary" data-pane="input">Open System Settings</button>
+          <button id="input-relaunch" class="relaunch">Relaunch Greta</button>
         </div>
         <p class="hint">In <code>System&nbsp;Settings ▸ Privacy &amp; Security ▸ Input&nbsp;Monitoring</code>,
-        turn on <b>Greta Flow</b>. This window can’t read that switch either.</p>
+        turn on <b>Greta Flow</b>.</p>
         <p class="hint">Tip: for the <b>🌐 Globe/Fn</b> key, also set
         <code>System Settings ▸ Keyboard ▸ Press 🌐 to: Do Nothing</code>.</p>
-        <p><b>Greta must relaunch after you turn this on.</b> Quit, open Greta Flow
-        again, then choose <b>Run Setup Again…</b> from the menu bar icon to continue
-        from this step.</p>
-        <div class="row actions">
-          <button id="quit">Quit Greta</button>
-        </div>
+        <p><b>Greta must relaunch after you turn this on.</b> Setup reopens at this
+        step afterward.</p>
       </section>
 
       <section data-step="level" hidden>
@@ -175,6 +177,7 @@
       </section>
     </main>
 
+    <p id="relaunch-status" class="status" hidden></p>
     <nav class="row">
       <button id="back">Back</button>
       <button id="next" class="primary">Next</button>
