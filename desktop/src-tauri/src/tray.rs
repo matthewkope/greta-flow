@@ -117,7 +117,7 @@ thread_local! {
 pub(crate) fn build_menu(app: &AppHandle) -> tauri::Result<MenuHandles> {
     let menu = Menu::new(app)?;
 
-    let status = MenuItem::with_id(app, "status", "Gretchen Flow", false, None::<&str>)?;
+    let status = MenuItem::with_id(app, "status", "Greta Flow", false, None::<&str>)?;
     menu.append(&status)?;
     menu.append(&PredefinedMenuItem::separator(app)?)?;
 
@@ -181,7 +181,7 @@ pub(crate) fn build_menu(app: &AppHandle) -> tauri::Result<MenuHandles> {
     menu.append(&MenuItem::with_id(
         app,
         "setup",
-        "Getting Started…",
+        "Run Setup Again…",
         true,
         None::<&str>,
     )?)?;
@@ -195,7 +195,7 @@ pub(crate) fn build_menu(app: &AppHandle) -> tauri::Result<MenuHandles> {
     menu.append(&MenuItem::with_id(
         app,
         "quit",
-        "Quit Gretchen Flow",
+        "Quit Greta Flow",
         true,
         None::<&str>,
     )?)?;
@@ -231,7 +231,7 @@ pub(crate) fn refresh_menu_on_main(app: &AppHandle) {
         let Some(h) = handles.as_ref() else { return };
 
         let _ = h.status.set_text(if has_engine {
-            format!("Gretchen Flow — {} ({hotkey_mode})", shortcuts.join(" / "))
+            format!("Greta Flow — {} ({hotkey_mode})", shortcuts.join(" / "))
         } else {
             "No model — open Model ▸ to download one".to_string()
         });

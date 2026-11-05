@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Gretchen Flow listens to your microphone only while you hold the dictation hotkey, to transcribe your speech into text on-device.</string>
+    <string>Greta Flow listens to your microphone only while you hold the dictation hotkey or run the setup mic check. Speech is transcribed on-device.</string>
 </dict>
 </plist>

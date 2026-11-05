@@ -161,7 +161,7 @@ pub(crate) fn open_hotkey_window(app: &AppHandle) {
         "hotkey",
         tauri::WebviewUrl::App("hotkey.html".into()),
     )
-    .title("Set Hotkey — Gretchen Flow")
+    .title("Set Hotkey — Greta Flow")
     .inner_size(380.0, 230.0)
     .resizable(false)
     .always_on_top(true)
@@ -253,7 +253,7 @@ pub(crate) fn open_main_window(app: &AppHandle) {
     // fullscreen) and native title-bar dragging.
     let result =
         tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("menu.html".into()))
-            .title("Gretchen Flow")
+            .title("Greta Flow")
             .inner_size(440.0, 620.0)
             .resizable(false)
             .title_bar_style(tauri::TitleBarStyle::Overlay)
@@ -285,7 +285,7 @@ pub(crate) fn open_setup_window(app: &AppHandle) {
     }
     let result =
         tauri::WebviewWindowBuilder::new(app, "setup", tauri::WebviewUrl::App("setup.html".into()))
-            .title("Welcome to Gretchen Flow")
+            .title("Welcome to Greta Flow")
             .inner_size(520.0, 580.0)
             .resizable(false)
             .center()
