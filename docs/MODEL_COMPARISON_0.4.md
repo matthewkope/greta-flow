@@ -2,11 +2,12 @@
 
 Workspace 3 / PR #3, measured on November 4, 2026.
 
-**Decision: upgrade FluidAudio to v0.18.2; retain Parakeet TDT 0.6B v2 as the
-application default. Keep streaming disabled and acoustic boosting off.** Nemotron
-Unified is a promising experimental challenger, but no challenger has passed the
-complete promotion gate. The natural technical-dictation and Matt-recording portion
-of this plan is **not completed**: no local recording/reference location was provided
+**Current implementation: FluidAudio v0.18.2 with the existing Parakeet TDT 0.6B
+v2 default, streaming disabled and acoustic boosting off. The model-promotion
+decision remains open.** Nemotron Unified improves public-corpus WER in all three
+conditions; this incomplete evaluation does not settle whether to retain v2 or
+promote Unified. No challenger has passed the complete promotion gate.
+The natural technical-dictation and Matt-recording portion of this plan is **not completed**: no local recording/reference location was provided
 in this session. A latency budget has not been agreed either. These omissions must
 not be described as successful acceptance checks.
 
@@ -209,18 +210,22 @@ steps, separate from recognition.
 swift build --package-path tools/asr-bench/swift -c release
 bash desktop/scripts/build-parakeet.sh
 
-# Repeat sequentially for the listed model/directory pairs, retaining stderr (/usr/bin/time -l).
+# Run sequentially, retaining stderr (/usr/bin/time -l).
 /usr/bin/time -l tools/asr-bench/swift/.build/release/ASRBench \
   "$BENCH/models/v2" "$CORPUS/manifest.json" 2 v2 > "$RESULTS/v2-new.jsonl" 2> "$RESULTS/v2-new.log"
-# v3:      $BENCH/models/v3
-# unified: $BENCH/models/unified/coreml
-# lite:    $BENCH/models/lite
-# eou:     $BENCH/models/eou/1280ms
+/usr/bin/time -l tools/asr-bench/swift/.build/release/ASRBench \
+  "$BENCH/models/v3" "$CORPUS/manifest.json" 2 v3 > "$RESULTS/v3.jsonl" 2> "$RESULTS/v3.log"
+/usr/bin/time -l tools/asr-bench/swift/.build/release/ASRBench \
+  "$BENCH/models/unified/coreml" "$CORPUS/manifest.json" 2 unified \
+  > "$RESULTS/unified.jsonl" 2> "$RESULTS/unified.log"
+/usr/bin/time -l tools/asr-bench/swift/.build/release/ASRBench \
+  "$BENCH/models/lite" "$CORPUS/manifest.json" 2 lite > "$RESULTS/lite.jsonl" 2> "$RESULTS/lite.log"
+/usr/bin/time -l tools/asr-bench/swift/.build/release/ASRBench \
+  "$BENCH/models/eou/1280ms" "$CORPUS/manifest.json" 2 eou > "$RESULTS/eou.jsonl" 2> "$RESULTS/eou.log"
 /usr/bin/time -l tools/asr-bench/swift/.build/release/ASRBench \
   "$BENCH/models/v2" "$CORPUS/manifest.json" 2 v2-boost \
   "$BENCH/models/ctc" tools/asr-bench/technical-glossary.json \
   > "$RESULTS/v2-boost.jsonl" 2> "$RESULTS/v2-boost.log"
-"$PYTHON" tools/asr-bench/model_summary.py "$CORPUS/manifest.json" "$RESULTS"/v*.jsonl
 ```
 
 For the old baseline, extract `tools/asr-bench/swift` and `desktop/parakeet` from
@@ -231,6 +236,16 @@ checkout of `b68f484789d81fda21efbf81e2ca9fcfd9dc22aa`. The old Swift harness ta
 v2 folder named `parakeet-tdt-0.6b-v2-coreml`; use the same pinned v2 files. Do not
 point the old package override at the new library or compare a historical result
 from another day as though it were a paired baseline.
+
+Save the old baseline output as `$RESULTS/v2-old.jsonl`. Once all seven runs are
+complete, score every configuration explicitly (including Unified, Lite and EOU):
+
+```sh
+"$PYTHON" tools/asr-bench/model_summary.py "$CORPUS/manifest.json" \
+  "$RESULTS/v2-old.jsonl" "$RESULTS/v2-new.jsonl" "$RESULTS/v3.jsonl" \
+  "$RESULTS/unified.jsonl" "$RESULTS/lite.jsonl" "$RESULTS/eou.jsonl" \
+  "$RESULTS/v2-boost.jsonl"
+```
 
 For production-path verification:
 
@@ -259,8 +274,26 @@ change app settings or insert into another app.
 - Local dictation-preparer smoke passes using a public-audio fixture; this is not a recording of Matt or natural technical-dictation acceptance.
 - `git diff --check`: pass. No frontend, icons, bundle ID, signing material, user config or installed app was changed.
 
-The upgrade and offline comparison are ready for review. The natural-dictation
-portion of Workspace 3 remains outstanding; no challenger/default/switching claim
-is made in its absence. macOS 14 execution, pristine first-install preparation,
+The upgrade and offline comparison pass the checks above, but Workspace 3 remains
+incomplete pending the natural-dictation measurements and agreed latency budget,
+or Matt's explicit authorization to defer them. No final model-selection or
+switching acceptance claim is made in their absence. macOS 14 execution, pristine first-install preparation,
 microphones, real-app insertion and power/memory under contention remain field
 validation, not results of this PR.
+
+
+## PR #3 review follow-up
+
+The review at `cf1cd03` identified a blocking evaluation gap and an incomplete
+reproduction glob. Reproduction now lists explicit commands for every candidate
+and all seven scorer inputs, including `unified.jsonl`, `lite.jsonl` and
+`eou.jsonl`. The exact documented scorer command was executed against the retained
+runs and reproduced every recorded metric for all seven configurations. The Rust
+format/Clippy/test checks, both Swift release builds and all 12 Python tests passed
+again; the ASR measurements themselves were not rerun for this documentation fix.
+
+The blocking evaluation gap is still open. The existing v2 default is an interim
+implementation state, not a completed promotion decision. Resolving the review
+requires Matt's local recordings/reference transcripts and agreed latency budget,
+or his explicit waiver to move those checks and the decision to a follow-up.
+No such waiver is inferred from the instruction to address the review.
