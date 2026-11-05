@@ -20,7 +20,8 @@ func readExactly(_ count: Int) throws -> Data? {
 guard CommandLine.arguments.count == 2 else {
     throw NSError(domain: "Usage: gretchen-parakeet MODEL_DIRECTORY", code: 1)
 }
-let models = try await AsrModels.load(from: URL(fileURLWithPath: CommandLine.arguments[1]), version: .v2)
+// The app owns pinned downloads and verification; the worker must never fetch weights.
+let models = try AsrModels.loadLocal(from: URL(fileURLWithPath: CommandLine.arguments[1]), version: .v2)
 let manager = AsrManager()
 try await manager.loadModels(models)
 try emit(["ready": true, "protocol": 1])

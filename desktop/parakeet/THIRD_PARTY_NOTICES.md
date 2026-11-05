@@ -1,7 +1,7 @@
 # Gretchen Flow Parakeet runtime
 
-This test build uses FluidInference FluidAudio, revision
-b68f484789d81fda21efbf81e2ca9fcfd9dc22aa, under the Apache License 2.0.
+This test build uses FluidInference FluidAudio, v0.18.2, revision
+e396cf780c4abf8e395087467c0585d3b0d17f68, under the Apache License 2.0.
 Source: https://github.com/FluidInference/FluidAudio
 See FluidAudio-LICENSE.txt for the full license.
 

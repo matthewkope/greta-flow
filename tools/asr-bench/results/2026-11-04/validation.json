@@ -1,0 +1,14 @@
+{
+  "swift_release_helper": "passed",
+  "swift_release_benchmark": "passed",
+  "cargo_fmt_check": "passed",
+  "cargo_clippy_locked_all_targets_deny_warnings": "passed",
+  "cargo_test_locked_all_targets": {
+    "application": 63,
+    "asr_bench": 36,
+    "review_bench": 47
+  },
+  "python_tests": 12,
+  "offline_production_run": "completed with network denied, all transcripts match baseline",
+  "missing_model": "fails locally with network denied, no ready response and no files created"
+}

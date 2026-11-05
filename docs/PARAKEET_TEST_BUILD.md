@@ -35,8 +35,8 @@ renewed permissions. No release has been published.
 ## Build and validate
 
 Run `desktop/scripts/test-build.sh` with Swift 6.2+, the Rust/Tauri toolchain,
-and Xcode tools installed. FluidAudio is pinned to revision
-`b68f484789d81fda21efbf81e2ca9fcfd9dc22aa`. For an existing verified source
+and Xcode tools installed. FluidAudio v0.18.2 is pinned to revision
+`e396cf780c4abf8e395087467c0585d3b0d17f68`. For an existing verified source
 checkout, `FLUID_AUDIO_PATH` can avoid fetching it again.
 
 The helper is a release-optimized Swift executable bundled inside the app.
