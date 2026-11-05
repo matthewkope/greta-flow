@@ -2,8 +2,12 @@
 #![allow(dead_code)]
 #[path = "../src/config.rs"]
 mod config;
+#[path = "../src/history.rs"]
+mod history;
 #[path = "../src/lists.rs"]
 mod lists;
+#[path = "../src/profile.rs"]
+mod profile;
 #[path = "../src/transcribe.rs"]
 mod transcribe;
 

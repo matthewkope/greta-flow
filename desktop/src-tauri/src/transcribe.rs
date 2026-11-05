@@ -10,13 +10,8 @@ use crate::config::Config;
 
 pub struct Engine {
     ctx: WhisperContext,
-    language: Option<String>,
-    pause_ms: i64,
-    remove_fillers: bool,
-    auto_lists: bool,
-    /// Personal-dictionary prompt: priming Whisper with the user's terms
-    /// biases recognition toward them (and toward punctuated output).
-    prompt: Option<String>,
+    #[allow(dead_code)]
+    cfg: Config,
 }
 
 struct Token {
@@ -30,70 +25,85 @@ impl Engine {
     pub fn load(model_path: &str, cfg: &Config) -> Result<Self, String> {
         let ctx = WhisperContext::new_with_params(model_path, WhisperContextParameters::default())
             .map_err(|e| format!("failed to load model: {e}"))?;
-        let language = match cfg.language.as_str() {
-            "auto" | "" => None,
-            l => Some(l.to_string()),
-        };
-        let prompt = if cfg.vocabulary.is_empty() {
-            None
-        } else {
-            Some(format!("Glossary: {}.", cfg.vocabulary.join(", ")))
-        };
         Ok(Self {
             ctx,
-            language,
-            pause_ms: cfg.pause_punctuation_ms as i64,
-            remove_fillers: cfg.remove_fillers,
-            auto_lists: cfg.auto_lists,
-            prompt,
+            cfg: cfg.clone(),
         })
     }
 
     /// Transcribe 16 kHz mono f32 PCM.
+    #[allow(dead_code)]
     pub fn transcribe(&self, samples: &[f32]) -> Result<String, String> {
-        recover_transcription(|| self.transcribe_inner(samples))
+        self.transcribe_config(samples, &self.cfg)
     }
 
-    fn transcribe_inner(&self, samples: &[f32]) -> Result<String, String> {
+    pub fn transcribe_config(&self, samples: &[f32], cfg: &Config) -> Result<String, String> {
+        recover_transcription(|| self.transcribe_inner(samples, cfg))
+    }
+    fn transcribe_inner(&self, samples: &[f32], cfg: &Config) -> Result<String, String> {
+        let language = match cfg.language.as_str() {
+            "auto" | "" => None,
+            l => Some(l),
+        };
+        let pause_ms = if cfg.profile.mode == crate::profile::Mode::Literal {
+            0
+        } else {
+            cfg.pause_punctuation_ms as i64
+        };
+        let prompt = (!cfg.vocabulary.is_empty())
+            .then(|| format!("Glossary: {}.", cfg.vocabulary.join(", ")));
+        let setup_start = std::time::Instant::now();
         let mut state = self.ctx.create_state().map_err(|e| e.to_string())?;
+        log::info!(
+            "asr_stage engine=whisper stage=state_setup ms={:.3}",
+            setup_start.elapsed().as_secs_f64() * 1000.
+        );
         let mut params = FullParams::new(SamplingStrategy::BeamSearch {
             beam_size: 5,
             patience: -1.0,
         });
-        params.set_language(self.language.as_deref());
+        params.set_language(language);
         params.set_print_progress(false);
         params.set_print_realtime(false);
         params.set_print_special(false);
         params.set_print_timestamps(false);
         params.set_suppress_blank(true);
-        params.set_token_timestamps(self.pause_ms > 0);
-        if let Some(prompt) = &self.prompt {
+        params.set_token_timestamps(pause_ms > 0);
+        if let Some(prompt) = &prompt {
             params.set_initial_prompt(prompt);
         }
 
+        let inference_start = std::time::Instant::now();
         state.full(params, samples).map_err(|e| e.to_string())?;
+        log::info!(
+            "asr_stage engine=whisper stage=inference_including_decoder_fallbacks ms={:.3}",
+            inference_start.elapsed().as_secs_f64() * 1000.
+        );
+        let formatting_start = std::time::Instant::now();
 
         let n = state.full_n_segments().map_err(|e| e.to_string())?;
-        let english = self.language.as_deref().or_else(|| {
+        let english = language.or_else(|| {
             state
                 .full_lang_id_from_state()
                 .ok()
                 .and_then(whisper_rs::get_lang_str)
         }) == Some("en");
 
-        if self.pause_ms == 0 {
+        if pause_ms == 0 {
             let mut text = String::new();
             for i in 0..n {
                 let seg = state.full_get_segment_text(i).map_err(|e| e.to_string())?;
                 text.push_str(seg.trim());
                 text.push(' ');
             }
-            return Ok(post_process(
-                &text,
-                english,
-                self.remove_fillers,
-                self.auto_lists,
-            ));
+            let result =
+                cfg.profile
+                    .format(text.trim(), english, cfg.remove_fillers, cfg.auto_lists);
+            log::info!(
+                "asr_stage engine=whisper stage=formatting ms={:.3}",
+                formatting_start.elapsed().as_secs_f64() * 1000.
+            );
+            return Ok(result);
         }
 
         let mut tokens = Vec::new();
@@ -118,13 +128,17 @@ impl Engine {
             }
         }
 
-        Ok(build_text(
-            &tokens,
-            self.pause_ms,
+        let result = cfg.profile.format(
+            &build_raw_text(&tokens, pause_ms),
             english,
-            self.remove_fillers,
-            self.auto_lists,
-        ))
+            cfg.remove_fillers,
+            cfg.auto_lists,
+        );
+        log::info!(
+            "asr_stage engine=whisper stage=formatting ms={:.3}",
+            formatting_start.elapsed().as_secs_f64() * 1000.
+        );
+        Ok(result)
     }
 }
 
@@ -137,6 +151,7 @@ fn recover_transcription(f: impl FnOnce() -> Result<String, String>) -> Result<S
 }
 
 /// Join tokens into text, turning speech pauses into sentence breaks.
+#[cfg(test)]
 fn build_text(
     tokens: &[Token],
     pause_ms: i64,
@@ -144,6 +159,9 @@ fn build_text(
     fillers: bool,
     lists: bool,
 ) -> String {
+    post_process(&build_raw_text(tokens, pause_ms), english, fillers, lists)
+}
+fn build_raw_text(tokens: &[Token], pause_ms: i64) -> String {
     let mut out = String::new();
     let mut last_t1: Option<i64> = None;
     let mut capitalize = true;
@@ -178,7 +196,7 @@ fn build_text(
         }
     }
 
-    post_process(&out, english, fillers, lists)
+    out
 }
 
 /// Shared cleanup: filler removal, English "i" fix, list formatting,

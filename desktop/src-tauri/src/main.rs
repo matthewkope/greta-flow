@@ -12,9 +12,13 @@ mod engine;
 mod history;
 mod inject;
 mod lists;
+mod metrics;
 mod model;
 mod parakeet;
+mod profile;
 mod self_test;
+mod session;
+mod streaming;
 mod transcribe;
 
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -45,6 +49,7 @@ enum TrayState {
 
 struct AppState {
     recorder: audio::Recorder,
+    sessions: Mutex<session::Sessions>,
     engine: Arc<Mutex<Option<engine::Engine>>>,
     recording: AtomicBool,
     engine_ready: AtomicBool,
@@ -150,18 +155,43 @@ fn start_recording(app: &AppHandle) {
         return;
     }
     state.recording.store(true, Ordering::SeqCst);
-    state.recorder.start();
+    let id = state.sessions.lock().unwrap().begin();
+    let handle = app.clone();
+    std::thread::spawn(move || {
+        let target = inject::Target::capture().ok();
+        let state = handle.state::<AppState>();
+        let mut sessions = state.sessions.lock().unwrap();
+        if let Some(job) = sessions.get(id) {
+            if state.recording.load(Ordering::SeqCst) {
+                let bundle = target.as_ref().and_then(|t| objc2_app_kit::NSRunningApplication::runningApplicationWithProcessIdentifier(t.pid)).and_then(|a| a.bundleIdentifier()).map(|s| s.to_string());
+                job.cfg = state.cfg.lock().unwrap().for_app(bundle.as_deref());
+                job.target = target;
+                if job.cfg.streaming {
+                    let (input, worker) =
+                        streaming::Worker::spawn(state.engine.clone(), job.cfg.clone());
+                    job.stream = Some(worker);
+                    state.recorder.start_stream(input);
+                } else {
+                    state.recorder.start();
+                }
+            }
+        }
+    });
     set_tray_state(app, TrayState::Recording);
 }
 
 fn stop_and_transcribe(app: &AppHandle) {
+    let release = std::time::Instant::now();
     let state = app.state::<AppState>();
     if !state.recording.swap(false, Ordering::SeqCst) {
         return;
     }
     state.processing.store(true, Ordering::SeqCst);
     // Queue stop now; waiting for the audio device must never block a hotkey callback.
-    let recording = state.recorder.stop_async();
+    let (id, recording) = {
+        let mut sessions = state.sessions.lock().unwrap();
+        (sessions.id().unwrap_or(0), state.recorder.stop_async())
+    };
     set_tray_state(app, TrayState::Transcribing);
     let app = app.clone();
     std::thread::spawn(move || {
@@ -176,6 +206,7 @@ fn stop_and_transcribe(app: &AppHandle) {
             }
         }
         let _finished = Finished(app.clone());
+        let mut timing = metrics::Timing::new(release);
         let recording = match recording.recv_timeout(std::time::Duration::from_secs(5)) {
             Ok(recording) => recording,
             Err(e) => {
@@ -183,61 +214,211 @@ fn stop_and_transcribe(app: &AppHandle) {
                 return;
             }
         };
+        timing.stage("capture_stop", release);
+        timing.speech(recording.last_speech);
+        let prep_start = std::time::Instant::now();
         let seconds = recording.samples.len() as f32 / recording.sample_rate as f32;
         if seconds < 0.3 {
             return;
         }
-        let mut samples = audio::resample_to_16k(&recording);
-        // Silence gate: a near-silent clip (hotkey tapped with nothing said)
-        // makes Whisper hallucinate stock phrases, so drop it and type nothing.
-        // Threshold is well above the noise floor of a muted/denied mic (~0)
-        // but below real speech from a low-gain built-in mic (~0.005+).
-        let rms = (samples.iter().map(|s| s * s).sum::<f32>() / samples.len().max(1) as f32).sqrt();
-        const SILENCE_RMS: f32 = 0.0015;
-        if rms < SILENCE_RMS {
-            log::info!("clip is silent (rms {rms:.4}); typing nothing");
-            set_tray_state(&app, TrayState::Idle);
+        if recording.samples.iter().any(|v| !v.is_finite()) {
+            timing.emit("capture_limit_or_invalid_audio");
             return;
         }
-        // Auto-gain: built-in mics are far quieter than a headset, and Whisper
-        // transcribes a healthy-level signal more reliably. Scale the clip up to
-        // a target RMS (capped so we don't blow up pure noise), then clamp.
-        const TARGET_RMS: f32 = 0.05;
-        const MAX_GAIN: f32 = 12.0;
-        let gain = (TARGET_RMS / rms).min(MAX_GAIN);
-        if gain > 1.0 {
-            for s in samples.iter_mut() {
-                *s = (*s * gain).clamp(-1.0, 1.0);
-            }
-            log::debug!("applied input gain x{gain:.1} (rms {rms:.4})");
+        let samples = streaming::prepare(&audio::resample_to_16k(&recording));
+        if samples.is_empty() {
+            timing.emit("silence");
+            return;
         }
-        // Whisper rejects clips under 1 s — pad short ones with silence.
-        const MIN_SAMPLES: usize = 17_600; // 1.1 s at 16 kHz
-        if samples.len() < MIN_SAMPLES {
-            samples.resize(MIN_SAMPLES, 0.0);
-        }
+        timing.stage("resample_gate_gain", prep_start);
         let state = app.state::<AppState>();
-        let result = {
-            let guard = state.engine.lock().unwrap();
-            match guard.as_ref() {
-                Some(engine) => engine.transcribe(&samples),
-                None => Err("model not loaded".into()),
+        state.sessions.lock().unwrap().retain_audio(id, &samples);
+        let cfg = match state.sessions.lock().unwrap().get(id) {
+            Some(job) => job.cfg.clone(),
+            None => return,
+        };
+        let stream = state
+            .sessions
+            .lock()
+            .unwrap()
+            .get(id)
+            .and_then(|j| j.stream.take());
+        let stream_start = std::time::Instant::now();
+        let streamed = stream.map(|worker| worker.finish());
+        timing.stage("stream_tail_wait", stream_start);
+        let result = match streamed {
+            Some(Ok(text)) => Ok(text),
+            fallback => {
+                if fallback.is_some() {
+                    timing.stages_ms.insert("whole_clip_fallback_count", 1.);
+                }
+                if state.sessions.lock().unwrap().get(id).is_none() {
+                    return;
+                }
+                let wait_start = std::time::Instant::now();
+                let guard = state.engine.lock().unwrap();
+                timing.stage("engine_wait", wait_start);
+                let inference_start = std::time::Instant::now();
+                let result = match guard.as_ref() {
+                    Some(engine) => engine.transcribe(&samples, &cfg),
+                    None => Err("model not loaded".into()),
+                };
+                timing.stage("recognition_and_format", inference_start);
+                result
             }
         };
+        timing.mark("release_to_final_text");
         match result {
             Ok(text) if !text.is_empty() => {
-                log::info!("transcribed: {text}");
-                if let Err(e) = inject::type_text(&text) {
-                    log::error!("{e}");
-                }
-                history::append(&text);
-                refresh_menu(&app);
+                let outcome = deliver_result(&app, id, text, &mut timing);
+                timing.emit(outcome);
             }
             Ok(_) => log::info!("no speech detected"),
-            Err(e) => log::error!("transcription failed: {e}"),
+            Err(e) => {
+                timing.emit("recognition_failed");
+                log::error!("transcription failed: {e}");
+            }
         }
         set_tray_state(&app, TrayState::Idle);
     });
+}
+
+fn deliver_result(
+    app: &AppHandle,
+    id: u64,
+    text: String,
+    timing: &mut metrics::Timing,
+) -> &'static str {
+    let insertion = std::time::Instant::now();
+    let state = app.state::<AppState>();
+    let result = state
+        .sessions
+        .lock()
+        .unwrap()
+        .deliver(id, text.clone(), |target, text| {
+            target
+                .ok_or("No safe destination captured; use recovery text")?
+                .insert(text)
+        });
+    timing.stage("insertion", insertion);
+    match result {
+        Ok(true) => {
+            timing.mark("release_to_inserted");
+            timing.inserted();
+            let persistence = std::time::Instant::now();
+            history::append(&text);
+            timing.stage("persistence_enqueue", persistence);
+            let handle = app.clone();
+            std::thread::spawn(move || refresh_menu(&handle));
+            "inserted"
+        }
+        Ok(false) => "cancelled_or_stale",
+        Err(e) => {
+            log::warn!("{e}");
+            "recoverable"
+        }
+    }
+}
+
+#[tauri::command]
+fn cancel_dictation(app: AppHandle) {
+    let state = app.state::<AppState>();
+    state.sessions.lock().unwrap().cancel();
+    if state.recording.swap(false, Ordering::SeqCst) {
+        let _ = state.recorder.stop_async();
+    }
+    set_tray_state(&app, TrayState::Idle);
+}
+
+#[tauri::command]
+fn recover_dictation(app: AppHandle) -> Option<String> {
+    app.state::<AppState>().sessions.lock().unwrap().recovery()
+}
+
+#[tauri::command]
+fn retry_dictation(app: AppHandle) -> Result<(), String> {
+    let state = app.state::<AppState>();
+    if state.recording.load(Ordering::SeqCst) || state.processing.swap(true, Ordering::SeqCst) {
+        return Err("Dictation is busy".into());
+    }
+    let retry = state.sessions.lock().unwrap().retry_audio();
+    let Some((id, samples)) = retry else {
+        state.processing.store(false, Ordering::SeqCst);
+        return Err("No unexpired, unattempted recording to retry".into());
+    };
+    std::thread::spawn(move || {
+        let state = app.state::<AppState>();
+        let cfg = state
+            .sessions
+            .lock()
+            .unwrap()
+            .get(id)
+            .map(|j| j.cfg.clone())
+            .unwrap_or_default();
+        let result = state
+            .engine
+            .lock()
+            .unwrap()
+            .as_ref()
+            .ok_or("No engine".into())
+            .and_then(|e| e.transcribe(&samples, &cfg));
+        if let Ok(text) = result {
+            deliver_result(
+                &app,
+                id,
+                text,
+                &mut metrics::Timing::new(std::time::Instant::now()),
+            );
+        }
+        state.processing.store(false, Ordering::SeqCst);
+        set_tray_state(&app, TrayState::Idle);
+    });
+    Ok(())
+}
+
+fn register_recovery_shortcuts(app: &AppHandle, cfg: &config::Config) -> Result<(), String> {
+    for (kind, key) in [
+        (0, &cfg.cancel_shortcut),
+        (1, &cfg.retry_shortcut),
+        (2, &cfg.recovery_shortcut),
+    ] {
+        let Some(key) = key else {
+            continue;
+        };
+        let shortcut = key.parse::<Shortcut>().map_err(|e| e.to_string())?;
+        app.global_shortcut()
+            .on_shortcut(shortcut, move |app, _, event| {
+                if event.state() != ShortcutState::Pressed {
+                    return;
+                }
+                match kind {
+                    0 => cancel_dictation(app.clone()),
+                    1 => {
+                        if let Err(e) = retry_dictation(app.clone()) {
+                            log::warn!("{e}");
+                        }
+                    }
+                    _ => {
+                        if let Some(text) = recover_dictation(app.clone()) {
+                            let _ = app.run_on_main_thread(move || {
+                                use objc2_app_kit::{NSPasteboard, NSPasteboardTypeString};
+                                use objc2_foundation::NSString;
+                                let pb = NSPasteboard::generalPasteboard();
+                                pb.clearContents();
+                                unsafe {
+                                    pb.setString_forType(
+                                        &NSString::from_str(&text),
+                                        NSPasteboardTypeString,
+                                    );
+                                }
+                            });
+                        }
+                    }
+                }
+            })
+            .map_err(|e| e.to_string())?;
+    }
+    Ok(())
 }
 
 /// Register exactly the given set of push-to-talk shortcuts, persist them, and
@@ -246,6 +427,27 @@ fn stop_and_transcribe(app: &AppHandle) {
 /// validated before anything is unregistered, so a bad entry leaves the
 /// previous set intact.
 fn apply_shortcuts(app: &AppHandle, list: Vec<String>) -> Result<(), String> {
+    // Validate recovery bindings and collisions before replacing live shortcuts.
+    let cfg = config::Config::load();
+    let mut seen = Vec::new();
+    for key in list.iter().chain(
+        [
+            &cfg.cancel_shortcut,
+            &cfg.retry_shortcut,
+            &cfg.recovery_shortcut,
+        ]
+        .into_iter()
+        .filter_map(|s| s.as_ref()),
+    ) {
+        if bare_modifier_flag(key).is_some() {
+            continue;
+        }
+        let parsed = key.parse::<Shortcut>().map_err(|e| e.to_string())?;
+        if seen.contains(&parsed) {
+            return Err("Shortcut bindings must be distinct".into());
+        }
+        seen.push(parsed);
+    }
     // Validate every accelerator up front.
     for accel in &list {
         if bare_modifier_flag(accel).is_none() {
@@ -270,6 +472,7 @@ fn apply_shortcuts(app: &AppHandle, list: Vec<String>) -> Result<(), String> {
         }
     }
 
+    register_recovery_shortcuts(app, &config::Config::load())?;
     let state = app.state::<AppState>();
     state.watched_flags.store(watched, Ordering::SeqCst);
     *state.shortcuts.lock().unwrap() = list.clone();
@@ -1354,17 +1557,24 @@ fn reload_engine(app: AppHandle, cfg: config::Config, generation: u64) {
 /// icon theme, model, and transcription settings — without restarting.
 fn reload_config(app: &AppHandle) {
     let fresh = config::Config::load();
+    history::configure(fresh.history.clone());
     let state = app.state::<AppState>();
 
     // Re-register the shortcuts if they changed.
     let current = state.shortcuts.lock().unwrap().clone();
-    if fresh.shortcuts != current {
+    let old = state.cfg.lock().unwrap().clone();
+    if fresh.shortcuts != current
+        || fresh.cancel_shortcut != old.cancel_shortcut
+        || fresh.retry_shortcut != old.retry_shortcut
+        || fresh.recovery_shortcut != old.recovery_shortcut
+    {
         if let Err(e) = apply_shortcuts(app, fresh.shortcuts.clone()) {
             log::error!("reload config: {e}");
         }
     }
 
     // Swap in the new config (covers hotkey_mode and any future fields).
+    let model_changed = fresh.model != *state.active_model.lock().unwrap();
     let model = fresh.model.clone();
     *state.cfg.lock().unwrap() = fresh.clone();
     let generation = {
@@ -1378,7 +1588,9 @@ fn reload_config(app: &AppHandle) {
 
     // Always reload the engine so language/vocabulary/punctuation edits apply
     // even when the model name is unchanged.
-    reload_engine(app.clone(), fresh, generation);
+    if model_changed {
+        reload_engine(app.clone(), fresh, generation);
+    }
 }
 
 fn main() {
@@ -1387,6 +1599,7 @@ fn main() {
     }
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
     let cfg = config::Config::load();
+    history::configure(cfg.history.clone());
     log::info!(
         "Gretchen Flow starting (model: {}, shortcuts: {}, mode: {})",
         cfg.model,
@@ -1438,6 +1651,9 @@ fn main() {
             menu_change_hotkey,
             hotkey_replace_target,
             remove_pending_hotkey,
+            cancel_dictation,
+            recover_dictation,
+            retry_dictation,
             menu_reload_config,
             menu_open_setup,
             menu_copy_recent,
@@ -1447,6 +1663,7 @@ fn main() {
         ])
         .manage(AppState {
             recorder: audio::Recorder::spawn(),
+            sessions: Mutex::new(session::Sessions::default()),
             engine: Arc::new(Mutex::new(None)),
             recording: AtomicBool::new(false),
             engine_ready: AtomicBool::new(false),
@@ -1469,6 +1686,16 @@ fn main() {
                 set_dock_icon();
             }
 
+            let expiry_app = app.handle().clone();
+            std::thread::spawn(move || loop {
+                std::thread::sleep(std::time::Duration::from_secs(5));
+                expiry_app
+                    .state::<AppState>()
+                    .sessions
+                    .lock()
+                    .unwrap()
+                    .expire();
+            });
             let handles = build_menu(app.handle())?;
             TrayIconBuilder::with_id(TRAY_ID)
                 .icon(Image::from_bytes(ICON_IDLE)?)
@@ -1483,6 +1710,10 @@ fn main() {
                 app.global_shortcut()
                     .on_shortcut(*shortcut, |app, _sc, event| on_shortcut(app, event.state()))?;
             }
+            register_recovery_shortcuts(
+                app.handle(),
+                &app.state::<AppState>().cfg.lock().unwrap(),
+            )?;
             spawn_fn_listener(app.handle().clone());
 
             // Proactively ask for Accessibility + Microphone so the app shows up

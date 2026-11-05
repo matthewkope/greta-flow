@@ -100,8 +100,6 @@ pub struct Engine {
     session: Mutex<Option<Session>>,
     helper: PathBuf,
     model: PathBuf,
-    fillers: bool,
-    lists: bool,
 }
 impl Engine {
     pub fn load(path: &str, cfg: &crate::config::Config) -> Result<Self, String> {
@@ -115,8 +113,6 @@ impl Engine {
             session: Mutex::new(Some(session)),
             helper,
             model,
-            fillers: cfg.remove_fillers,
-            lists: cfg.auto_lists,
         })
     }
     pub fn transcribe(&self, samples: &[f32]) -> Result<String, String> {
@@ -131,6 +127,7 @@ impl Engine {
             .lock()
             .map_err(|_| "Parakeet session lock failed")?;
         if session.is_none() {
+            log::info!("asr_stage engine=parakeet worker_restart=1");
             *session = Some(Session::start(
                 &self.helper,
                 &self.model,
@@ -145,7 +142,7 @@ impl Engine {
         if result.is_err() {
             session.take();
         }
-        result.map(|text| crate::transcribe::post_process(&text, true, self.fillers, self.lists))
+        result
     }
 }
 fn helper_path() -> Result<PathBuf, String> {
