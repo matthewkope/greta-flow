@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-04",
+  "machine": "Apple M4 Pro",
+  "memory_bytes": 25769803776,
+  "os": "macOS 15.7.4 (24G517)",
+  "base_commit": "32b9e75ace28ecf1ba890c07cb8dab8559b31e1c",
+  "fluid_audio_old": "b68f484789d81fda21efbf81e2ca9fcfd9dc22aa",
+  "fluid_audio_new": "e396cf780c4abf8e395087467c0585d3b0d17f68",
+  "method": "120 unique public recordings, 40 speakers, clean/quiet/noise variants. Two warm passes, accuracy from pass 1. Same Mac; sequential engine runs. Local desktop activity and model downloads were not disabled. No deliberate CPU contention. No app installation or microphone recording.",
+  "first_load_caveat": "Fresh process with existing system Core ML caches; candidate artifacts first used here. Not a cache-cleared first-install measurement.",
+  "latency": "Swift engine call on preloaded raw PCM; EOU complete-buffer processing plus flush; production separately includes preparation/gating and formatting/IPC.",
+  "swift": "Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)\nTarget: arm64-apple-macosx15.0",
+  "baseline_source_verification": {
+    "url": "https://codeload.github.com/FluidInference/FluidAudio/tar.gz/b68f484789d81fda21efbf81e2ca9fcfd9dc22aa",
+    "files_matched": 709,
+    "archive_sha256": "983584c790153f5080d2a2662acbdfeee5d36e0d16d3f1c99eca767db8cdb265"
+  }
+}

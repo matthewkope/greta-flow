@@ -2,8 +2,19 @@
 
 Tests the downloaded Parakeet TDT v2 Core ML model, Moonshine Medium Streaming model, and Gretchen Flow's Whisper Turbo engine. It does not capture microphone audio, inject text, or change app settings.
 
-## Reproduce
+## Model comparison for 0.4
 
+See [MODEL_COMPARISON_0.4.md](../../docs/MODEL_COMPARISON_0.4.md) for the new
+same-machine comparison, pinned candidate artifacts, exact commands and limitations.
+The current Swift harness pins FluidAudio v0.18.2 and uses local-only model loaders.
+It accepts an optional model ID after REPEATS (`v2`, `v3`, `unified`, `lite`, `eou`),
+or `v2-boost CTC_DIRECTORY GLOSSARY_JSON` for acoustic vocabulary rescoring.
+Use `model_summary.py` for condition-specific scores and first-pass accuracy.
+[DICTATION_0.4.md](DICTATION_0.4.md) documents the completed private-dictation comparison and local-only reproduction process.
+
+## Reproduce the historical September smoke comparison
+
+Check out the September benchmark revision for the original Swift API and raw baseline.
 Use Python 3.12 and the pinned dependencies in `requirements.txt`. Download the following artifacts outside the repository:
 
 - FluidAudio source revision `b68f484789d81fda21efbf81e2ca9fcfd9dc22aa` from `FluidInference/FluidAudio`.

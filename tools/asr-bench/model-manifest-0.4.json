@@ -1,0 +1,590 @@
+[
+  {
+    "id": "v2",
+    "repo": "FluidInference/parakeet-tdt-0.6b-v2-coreml",
+    "revision": "ee09c569f73759e6d44c9bd16766f477b2b36d39",
+    "license": "cc-by-4.0",
+    "files": [
+      {
+        "path": "Encoder.mlmodelc/metadata.json",
+        "bytes": 2926,
+        "sha256": "58222fbc48c13c49d9715567803cd50cb9c23e4360462e0f8ffcea59a2c73c63"
+      },
+      {
+        "path": "Encoder.mlmodelc/model.mil",
+        "bytes": 959769,
+        "sha256": "ed7b19156ca29fa7dfd6891deb9fda4b0e8893f68597c985d135736546a43808"
+      },
+      {
+        "path": "Encoder.mlmodelc/coremldata.bin",
+        "bytes": 485,
+        "sha256": "4def7aa848599ad0e17a8b9a982edcdbf33cf92e1f4b798de32e2ca0bc74b030"
+      },
+      {
+        "path": "Encoder.mlmodelc/weights/weight.bin",
+        "bytes": 445187200,
+        "sha256": "4adc7ad44f9d05e1bffeb2b06d3bb02861a5c7602dff63a6b494aed3bf8a6c3e"
+      },
+      {
+        "path": "Encoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "42e638870d73f26b332918a3496ce36793fbb413a81cbd3d16ba01328637a105"
+      },
+      {
+        "path": "Decoder.mlmodelc/metadata.json",
+        "bytes": 3427,
+        "sha256": "90a279b822496316458febc0ce761ab05954fadd9d66aa97bea077a35fc8f2b2"
+      },
+      {
+        "path": "Decoder.mlmodelc/model.mil",
+        "bytes": 13106,
+        "sha256": "7b95a5a6b672c652000348a67b6d4d92bb8e176b978c6666fe73c28a4d7ec579"
+      },
+      {
+        "path": "Decoder.mlmodelc/coremldata.bin",
+        "bytes": 554,
+        "sha256": "d200ca07694a347f6d02a3886a062ae839831e094e443222f2e48a14945966a8"
+      },
+      {
+        "path": "Decoder.mlmodelc/weights/weight.bin",
+        "bytes": 14429952,
+        "sha256": "27d26890221d82322c1092fd99d7b40578e435d5cf4b83c887c42603caf97aba"
+      },
+      {
+        "path": "Decoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "46de1a6fe2e49d19a2125bc91acf020df7f2aea84ba821532aade8427a440b05"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/metadata.json",
+        "bytes": 2974,
+        "sha256": "fb16c581ff5e1b962e7cb2181ed892cd32f9f84c12b6e80ff3e089f28e35bcbb"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/model.mil",
+        "bytes": 27166,
+        "sha256": "3e06d16fd061294c8a75be68c43a3b1ed1f593d4a9c35249e9cdbccadc59721e"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/coremldata.bin",
+        "bytes": 494,
+        "sha256": "d88ea1fc349459c9e100d6a96688c5b29a1f0d865f544be103001724b986b6d6"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/weights/weight.bin",
+        "bytes": 298880,
+        "sha256": "a5f7df6c7f47147ae9486fe18cc7792f9a44d093ec3c6a11e91ef2dc363c48dc"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "03ab3c1327a054c54c07a40325db967ec574f2c91dcc8192bfa44aa561bcf2d8"
+      },
+      {
+        "path": "JointDecision.mlmodelc/metadata.json",
+        "bytes": 2936,
+        "sha256": "ba8d309417b9acd4a175fdb15687de6a941db2f5b06666a60e7cf3cc8e2d3c3c"
+      },
+      {
+        "path": "JointDecision.mlmodelc/model.mil",
+        "bytes": 9722,
+        "sha256": "93bf82042235127cb81ab537dcae47a1c2e7e242ce4ffdaf772981b45eedc4f0"
+      },
+      {
+        "path": "JointDecision.mlmodelc/coremldata.bin",
+        "bytes": 534,
+        "sha256": "e2c6752f1c8cf2d3f6f26ec93195c9bfa759ad59edf9f806696a138154f96f11"
+      },
+      {
+        "path": "JointDecision.mlmodelc/weights/weight.bin",
+        "bytes": 3453388,
+        "sha256": "ca22a65903a05e64137677da608077578a8606090a598abf4875fa6199aaa19d"
+      },
+      {
+        "path": "JointDecision.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "f1183ba213bb94a918c8d2cad19ab045320618f97f6ca662245b3936d7b090f7"
+      },
+      {
+        "path": "parakeet_vocab.json",
+        "bytes": 18762,
+        "sha256": "57019fe3c745772ca83a1b048a4bb951cd51329504ea33d4d83316b96e279a97"
+      },
+      {
+        "path": "README.md",
+        "bytes": 1665,
+        "sha256": "491eac9a160dc7b0f7ce1210dea4fff6df0222124e93ea83ae2cd72827b4ce02"
+      }
+    ]
+  },
+  {
+    "id": "v3",
+    "repo": "FluidInference/parakeet-tdt-0.6b-v3-coreml",
+    "revision": "7dd20fe6b1797d35f5e3307e8b1732d9a178edfe",
+    "license": "cc-by-4.0",
+    "files": [
+      {
+        "path": "Decoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "4238c4e81ecd0dc94bd7dfbb60f7e2cc824107c1ffe0387b8607b72833dba350"
+      },
+      {
+        "path": "Decoder.mlmodelc/coremldata.bin",
+        "bytes": 554,
+        "sha256": "18647af085d87bd8f3121c8a9b4d4564c1ede038dab63d295b4e745cf2d7fb99"
+      },
+      {
+        "path": "Decoder.mlmodelc/metadata.json",
+        "bytes": 3427,
+        "sha256": "a39e93cd8371b8ded92635c7804fcd0590f0d1dd9415c6d19a0484be073077d9"
+      },
+      {
+        "path": "Decoder.mlmodelc/model.mil",
+        "bytes": 13110,
+        "sha256": "ef2a0a281695398a62fde86ac269c68f73d5b578d7ed3b31f2ba91a2d1ea1f35"
+      },
+      {
+        "path": "Decoder.mlmodelc/weights/weight.bin",
+        "bytes": 23604992,
+        "sha256": "48adf0f0d47c406c8253d4f7fef967436a39da14f5a65e66d5a4b407be355d41"
+      },
+      {
+        "path": "Encoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "42e638870d73f26b332918a3496ce36793fbb413a81cbd3d16ba01328637a105"
+      },
+      {
+        "path": "Encoder.mlmodelc/coremldata.bin",
+        "bytes": 485,
+        "sha256": "d48034a167a82e88fc3df64f60af963ab3983538271175b8319e7d5720a0fb86"
+      },
+      {
+        "path": "Encoder.mlmodelc/metadata.json",
+        "bytes": 2921,
+        "sha256": "da24da9cca943fb29d7fa8e376d57fca7cb3aa08ca51b956b0b0e56813f087e9"
+      },
+      {
+        "path": "Encoder.mlmodelc/model.mil",
+        "bytes": 959769,
+        "sha256": "ed7b19156ca29fa7dfd6891deb9fda4b0e8893f68597c985d135736546a43808"
+      },
+      {
+        "path": "Encoder.mlmodelc/weights/weight.bin",
+        "bytes": 445187200,
+        "sha256": "e2020f323703477a5b21d7c2d282c403e371afb5962e79877e3033e73ba6f421"
+      },
+      {
+        "path": "JointDecisionv3.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "26def4bf73dd56d29dee21c8ef97cb8969e62f6120ed1adc91e46828e2737b6c"
+      },
+      {
+        "path": "JointDecisionv3.mlmodelc/coremldata.bin",
+        "bytes": 521,
+        "sha256": "f5fc08b741400f0088492c9e839418b1e18522f19cba28d361dd030c5f398342"
+      },
+      {
+        "path": "JointDecisionv3.mlmodelc/metadata.json",
+        "bytes": 3453,
+        "sha256": "d9307211b9a37e0f0ac260c7660b1571a3de25841035cfdf9b58fd40425f890f"
+      },
+      {
+        "path": "JointDecisionv3.mlmodelc/model.mil",
+        "bytes": 11775,
+        "sha256": "be60732943389a047175111a83f8839f3eb39d4803adafa828a0871b2f39818d"
+      },
+      {
+        "path": "JointDecisionv3.mlmodelc/weights/weight.bin",
+        "bytes": 12642764,
+        "sha256": "4e0e63d840032f7f07ddb1d64446051166281e5491bf22da8a945c41f6eedb3e"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "c9beeb989c8d66f8be11df59bc6df277ec76cee404f6865b46243835ef562f6d"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/coremldata.bin",
+        "bytes": 486,
+        "sha256": "dbde3f2300842c1fd51ef3ff948a0bcffe65ffd2dca10707f2509f32c1d65b1d"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/metadata.json",
+        "bytes": 2841,
+        "sha256": "2a98699e22d279dd37fa1d238aeb1c6db1df0d6fad687775324157689d8f3acf"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/model.mil",
+        "bytes": 28181,
+        "sha256": "4b8518a956450fec57f06c2a21bdffc26973f7f1fa6842fb38fe917f896b6b93"
+      },
+      {
+        "path": "Preprocessor.mlmodelc/weights/weight.bin",
+        "bytes": 491072,
+        "sha256": "129b76e3aeafa8afa3ea76d995b964b145fe83700d579f6ff42c4c38fa0968ea"
+      },
+      {
+        "path": "README.md",
+        "bytes": 4285,
+        "sha256": "4155baa7d7d6f0ada748e1db3c1b91d18c9f7eb7155efc1abfbbe9d4a6507712"
+      },
+      {
+        "path": "parakeet_vocab.json",
+        "bytes": 151122,
+        "sha256": "7ec60e05f1b24480736ec0eed40900f4626bce1fa9a60fd700ec7e2a59198735"
+      }
+    ]
+  },
+  {
+    "id": "unified",
+    "repo": "FluidInference/nemotron-labs-unified-asr-0.6b-coreml",
+    "revision": "bd13ddde81d3134719c520845346b3252daf3175",
+    "license": "openmdw-1.1",
+    "files": [
+      {
+        "path": "LICENSE.md",
+        "bytes": 2845,
+        "sha256": "222d7f77ca2f2c26bf45156776b6d70207a9f963b3d9ff43e659684c1ddd4895"
+      },
+      {
+        "path": "README.md",
+        "bytes": 5076,
+        "sha256": "7a8fd175e6921f1d786f6ae966dd625cd96a5b4846d7419407386147018776b8"
+      },
+      {
+        "path": "coreml/nemotron_unified_decoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "93b62b4a28bf99a52f496dff2b25022d907ded1918936490ed83f0493edbd01b"
+      },
+      {
+        "path": "coreml/nemotron_unified_decoder.mlmodelc/coremldata.bin",
+        "bytes": 564,
+        "sha256": "9f5ae02afe1022a82c0cddbf3a48ceca947e9e34c33b28b3ce216dbe0b8297ad"
+      },
+      {
+        "path": "coreml/nemotron_unified_decoder.mlmodelc/metadata.json",
+        "bytes": 3445,
+        "sha256": "70664a31626b36eda11becaa4b3b378efb7d368405b3eedb075cc4b5fa46f11e"
+      },
+      {
+        "path": "coreml/nemotron_unified_decoder.mlmodelc/model.mil",
+        "bytes": 13106,
+        "sha256": "9c89bbd4cc33f55e3a04526e8f17e1dd6952fe2720c65bd61692dd4dec8a0349"
+      },
+      {
+        "path": "coreml/nemotron_unified_decoder.mlmodelc/weights/weight.bin",
+        "bytes": 18360832,
+        "sha256": "ba1e400896aa4ba2e6fa989322401c38948a0c82cbc94d54bc7d2324d4a1acab"
+      },
+      {
+        "path": "coreml/nemotron_unified_encoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "7b0aa759a1d681e34db4939bdf930b847ee4d5d59fa923c2a4e3509dfc5dde2f"
+      },
+      {
+        "path": "coreml/nemotron_unified_encoder.mlmodelc/coremldata.bin",
+        "bytes": 538,
+        "sha256": "58c14deacfdd9b6ca6049450c06b6c2f47a0ff1c1627434839e8c41ab837488f"
+      },
+      {
+        "path": "coreml/nemotron_unified_encoder.mlmodelc/metadata.json",
+        "bytes": 3293,
+        "sha256": "26e769ef6beea9272ebc2abad4ca81b35d71287556abdc6904891dcfb35a92a1"
+      },
+      {
+        "path": "coreml/nemotron_unified_encoder.mlmodelc/model.mil",
+        "bytes": 976715,
+        "sha256": "54152e98e4fb33240243b9aa38eeae46b13052cab20c3a21ff8ef401b16c3cd0"
+      },
+      {
+        "path": "coreml/nemotron_unified_encoder.mlmodelc/weights/weight.bin",
+        "bytes": 1195652736,
+        "sha256": "c8a477dd6a8e817c66740c5c5b9230be8680e321ddd120239f6ccf965bab31a5"
+      },
+      {
+        "path": "coreml/nemotron_unified_joint_decision_single_step.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "07dc3bb72c56aa7aa0e43173a4f89bf8474f28b110395a4123b266ace6526794"
+      },
+      {
+        "path": "coreml/nemotron_unified_joint_decision_single_step.mlmodelc/coremldata.bin",
+        "bytes": 560,
+        "sha256": "8148c3f4980957565f5bbe05cff27f20c38f9e79b23c3bac19c0c218901c92ec"
+      },
+      {
+        "path": "coreml/nemotron_unified_joint_decision_single_step.mlmodelc/metadata.json",
+        "bytes": 3262,
+        "sha256": "7cfe900ed38b8e564809b0972801741af1e93a267d491cf8a6b0e246b28c38c2"
+      },
+      {
+        "path": "coreml/nemotron_unified_joint_decision_single_step.mlmodelc/model.mil",
+        "bytes": 9613,
+        "sha256": "6885efe2bffe960ac1220d89d6dca61e4eb5c09e454fcc8250d8cace3ab13fa5"
+      },
+      {
+        "path": "coreml/nemotron_unified_joint_decision_single_step.mlmodelc/weights/weight.bin",
+        "bytes": 7384000,
+        "sha256": "2b69d8d77dbd0b57f949a2ca705ff49c179a65c241241a98bb16fa5a4e6e6acc"
+      },
+      {
+        "path": "coreml/vocab.json",
+        "bytes": 67489,
+        "sha256": "09ae4e49089dd601216ec052dd8bbd474a3709db6e332478ce6a54e47da2ad22"
+      }
+    ]
+  },
+  {
+    "id": "lite",
+    "repo": "FluidInference/nemotron-3.5-transcribe-lite-coreml",
+    "revision": "31ecb73ab8a541001c0952802b478384cf9f0691",
+    "license": "openmdw-1.1",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 2694,
+        "sha256": "18c3a96fd1ee779263aa9210e3d962d5899511890254f3f3efd70ece81d89866"
+      },
+      {
+        "path": "README.md",
+        "bytes": 12766,
+        "sha256": "b3696625c6e51c7ce0f6baecd765d0ba9c3ddf07027f7a0b102d7f62ec13ee55"
+      },
+      {
+        "path": "assets/mel_filterbank.bin",
+        "bytes": 131584,
+        "sha256": "eb5cf9eb93b8038062ebc849b14ec85098abe1c915bc22262be8ad336bcf563a"
+      },
+      {
+        "path": "assets/mel_window.bin",
+        "bytes": 1600,
+        "sha256": "6a66c2c694505b41b8987c4885a618e1a32612b43a4935a208a3c9c956b22d02"
+      },
+      {
+        "path": "assets/vocab.json",
+        "bytes": 223876,
+        "sha256": "58990a54bbc4b786bda94fa20aa491b1d8f0f58b14f1343d42d510117b3c0d0c"
+      },
+      {
+        "path": "coreml/lite_ctc_head_w48.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "b8172135814c2f00e2d0f5725aaafc6b6c4d9fa4778a1f464abeefda8a172fe4"
+      },
+      {
+        "path": "coreml/lite_ctc_head_w48.mlmodelc/coremldata.bin",
+        "bytes": 428,
+        "sha256": "702f8bb15d6136b5ef5f41a6b9ed839c003dae5fa7a310fc1b8e19f17c03f42a"
+      },
+      {
+        "path": "coreml/lite_ctc_head_w48.mlmodelc/metadata.json",
+        "bytes": 2744,
+        "sha256": "264f0e658fa1e9ce31f8b88fe515e169905f288230b9e8c8c174fe6fd138d049"
+      },
+      {
+        "path": "coreml/lite_ctc_head_w48.mlmodelc/model.mil",
+        "bytes": 48617,
+        "sha256": "49bb9175e22cce21b8c787f1653c9efe2e6bf5925e987a9ad291fd372284e43e"
+      },
+      {
+        "path": "coreml/lite_ctc_head_w48.mlmodelc/weights/weight.bin",
+        "bytes": 100713454,
+        "sha256": "3fe21f74da60c730b124ada958f57f5198a16022918ffcbfd6292e9c71f5a337"
+      },
+      {
+        "path": "coreml/lite_encoder_w48.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "09a3bf64f7975f99480b75fd2bcfea696e3107685991e8606a1b3c5eec764e33"
+      },
+      {
+        "path": "coreml/lite_encoder_w48.mlmodelc/coremldata.bin",
+        "bytes": 394,
+        "sha256": "4f08ba22d928d4066d8be2ec6bc1da972d371635232d6df8170039f935ddd2fc"
+      },
+      {
+        "path": "coreml/lite_encoder_w48.mlmodelc/metadata.json",
+        "bytes": 2316,
+        "sha256": "6dae4420c76ed00ea7f95b26facaf223a19b7260898566a8d2194df1beb74435"
+      },
+      {
+        "path": "coreml/lite_encoder_w48.mlmodelc/model.mil",
+        "bytes": 610259,
+        "sha256": "15fc9f580e3d9e175fed8b8546f658005aec09730bd555fc2fd1cd18e1eacdf7"
+      },
+      {
+        "path": "coreml/lite_encoder_w48.mlmodelc/weights/weight.bin",
+        "bytes": 1261972544,
+        "sha256": "fb39757f9abe623bd26a5cdf0d8e38e1a05de9dacc2351e78cc95ae91ce93680"
+      }
+    ]
+  },
+  {
+    "id": "eou",
+    "repo": "FluidInference/parakeet-realtime-eou-120m-coreml",
+    "revision": "40a23f4c0b333aa17ad8c0f2ea47ec2347f2f355",
+    "license": "other",
+    "files": [
+      {
+        "path": "1280ms/decoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "3996975a8cbc1949159c55605b3132b39b2484f51acbd55d796d93c70de02b49"
+      },
+      {
+        "path": "1280ms/decoder.mlmodelc/coremldata.bin",
+        "bytes": 497,
+        "sha256": "c3ccbff963d8cf07e2be2bd56ea3384a89ea49628922c6bd95ff62e2ae57dc34"
+      },
+      {
+        "path": "1280ms/decoder.mlmodelc/metadata.json",
+        "bytes": 3283,
+        "sha256": "0977480649f2756894b0acfe2fdf4231a991f25e3fe02562bfb71b65ca944575"
+      },
+      {
+        "path": "1280ms/decoder.mlmodelc/model.mil",
+        "bytes": 7409,
+        "sha256": "b7c084a35bdbc887d69d6226cd533e2c11b2792c37d7352cf878f9f6f3c13555"
+      },
+      {
+        "path": "1280ms/decoder.mlmodelc/weights/weight.bin",
+        "bytes": 7873600,
+        "sha256": "0b4cacecdcd9df79ab1e56de67230baf5a8664d2afe0bb8f3408eefa972cb2f4"
+      },
+      {
+        "path": "1280ms/joint_decision.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "5bca32ad130dcad6605cc00044c752aa5b45ef57d14c17f2d1a2fa49d6cf55b5"
+      },
+      {
+        "path": "1280ms/joint_decision.mlmodelc/coremldata.bin",
+        "bytes": 493,
+        "sha256": "22d4abc4625b935ee035b5f8ce7cb28d1041b9b01c12173e287bf4b5f5d99625"
+      },
+      {
+        "path": "1280ms/joint_decision.mlmodelc/metadata.json",
+        "bytes": 3181,
+        "sha256": "e970ae87137730020690d24d971813db3633bbdfed602d43b6a9c84deced6dc8"
+      },
+      {
+        "path": "1280ms/joint_decision.mlmodelc/model.mil",
+        "bytes": 9608,
+        "sha256": "45e8590bc87e34c162b547e43a4f60e64db15b017f48395d7835a6867884804f"
+      },
+      {
+        "path": "1280ms/joint_decision.mlmodelc/weights/weight.bin",
+        "bytes": 2794182,
+        "sha256": "7039b2010a269153f5a96edf28637f921a86ef8822f248f2d6712f7a6bce84b4"
+      },
+      {
+        "path": "1280ms/streaming_encoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "d0a3c84022a9d2dc769d38cf8f45e93423e20734d092e3c16db11fbf6dca4004"
+      },
+      {
+        "path": "1280ms/streaming_encoder.mlmodelc/coremldata.bin",
+        "bytes": 671,
+        "sha256": "41ce3f96c3d6b3333796fc4ed82cb0c9b4ea99396b88f8eec3ba24394ba2bb78"
+      },
+      {
+        "path": "1280ms/streaming_encoder.mlmodelc/metadata.json",
+        "bytes": 5331,
+        "sha256": "32d0833f71105be72cb95d60861ce6fc133cb7cb674554954a70b9cb85ea1413"
+      },
+      {
+        "path": "1280ms/streaming_encoder.mlmodelc/model.mil",
+        "bytes": 630085,
+        "sha256": "f22bdb1cade3771ed80b125d1e941fe836366c1c3390e0bed8f00cdcd3fb4976"
+      },
+      {
+        "path": "1280ms/streaming_encoder.mlmodelc/weights/weight.bin",
+        "bytes": 213179200,
+        "sha256": "6c71acb590ceb2af449de5c7e3516e76057eaf4589d1f16edba774831db74b17"
+      },
+      {
+        "path": "1280ms/vocab.json",
+        "bytes": 17437,
+        "sha256": "83fd42ad33dae1bd3ceee6c0bb6c625f314cf0b2dc8430be441ac1e2643d5c36"
+      },
+      {
+        "path": "README.md",
+        "bytes": 4410,
+        "sha256": "aa118bc396f4bf5a0e5801761c1b2eafa584683492605b4f945cf57427b1fb49"
+      }
+    ]
+  },
+  {
+    "id": "ctc",
+    "repo": "FluidInference/parakeet-ctc-110m-coreml",
+    "revision": "accdafd8cf8a2ff1cabe3c11e54416b405d409aa",
+    "license": "cc-by-4.0",
+    "files": [
+      {
+        "path": "AudioEncoder.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "8906c823e9bb3bf6b16d9f0308f98cd70573526333ad85dd767dc3f9ae6b25fa"
+      },
+      {
+        "path": "AudioEncoder.mlmodelc/coremldata.bin",
+        "bytes": 505,
+        "sha256": "a88b002b58193b4c31211754cdfdf220a85f9651dc61caf336ab84400cbc191a"
+      },
+      {
+        "path": "AudioEncoder.mlmodelc/metadata.json",
+        "bytes": 3456,
+        "sha256": "4f288bfe5cbe867ef1e592cdae33578b2fe59ada69182fc12209879558f985c2"
+      },
+      {
+        "path": "AudioEncoder.mlmodelc/model.mil",
+        "bytes": 1060924,
+        "sha256": "2f84ef93a69115e55f3b5d8ce695b3c937de1833d4d229620634fae967cd587e"
+      },
+      {
+        "path": "AudioEncoder.mlmodelc/weights/weight.bin",
+        "bytes": 100778304,
+        "sha256": "af0734b4a5d7465ad9e8bb170f0c53c5e6b91ebb75a9bdf88d3f59ae4ad6aebd"
+      },
+      {
+        "path": "MelSpectrogram.mlmodelc/analytics/coremldata.bin",
+        "bytes": 243,
+        "sha256": "22f2a8cba1de25c984050566b534a1d8caf22a82f9fe6c1c6f3149a0dd7e8ae3"
+      },
+      {
+        "path": "MelSpectrogram.mlmodelc/coremldata.bin",
+        "bytes": 330,
+        "sha256": "3a32ec67c76aa0aa2faef518413c311493e89aeb7fa11289fa4b8653ab8a160c"
+      },
+      {
+        "path": "MelSpectrogram.mlmodelc/metadata.json",
+        "bytes": 1962,
+        "sha256": "5e11d21a65c02bcfc37db43e941978e5d60d59e0efeadfda08e41f33b4f835d3"
+      },
+      {
+        "path": "MelSpectrogram.mlmodelc/model.mil",
+        "bytes": 12584,
+        "sha256": "0a7cb5693b39667295218bac5c7c09053f6bcd4b32699a83d06ac35d14ac6b79"
+      },
+      {
+        "path": "MelSpectrogram.mlmodelc/weights/weight.bin",
+        "bytes": 567712,
+        "sha256": "0a89c055bfde9022029d3cc59a23e949385e063974460d8eaec3a7614c3eaaa8"
+      },
+      {
+        "path": "README.md",
+        "bytes": 7419,
+        "sha256": "1aa99e33e37d4d36f01f15b7d81f878a43a85210c184aebebf1f27d5a4c3b189"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 360106,
+        "sha256": "9f7c517c0bf644b1b690ab037bab4d4c53aecd38e047e7154d011013ab9160db"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 632,
+        "sha256": "7a29ed0fec88768d8666d65be8dc00ae41a60c4b7758c4df99a912108e62a23a"
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 16086,
+        "sha256": "319d386eead79aadc80df9c3ecc8340d1a727efb7c02a8847eb940380dd61e1f"
+      }
+    ]
+  }
+]

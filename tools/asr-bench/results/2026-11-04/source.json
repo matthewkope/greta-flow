@@ -1,0 +1,9 @@
+{
+  "dataset": "openslr/librispeech_asr",
+  "revision": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+  "file": "clean/test/0000.parquet",
+  "sha256": "7113aa4c3cf963fb54697145719a7725f984c8836d1c494a554cbb9f1a017df0",
+  "license": "CC-BY-4.0",
+  "selection": "120 evenly spaced rows; seed 33; quiet=0.02 gain; noise=20dB white noise",
+  "speakers": 40
+}

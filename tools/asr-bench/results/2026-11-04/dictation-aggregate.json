@@ -1,0 +1,742 @@
+{
+  "experiment": "Matt natural technical dictation, 2026-11-04",
+  "privacy": "Aggregate-only export. Audio, references, annotations, hashes and raw per-clip results are retained privately outside Git.",
+  "unique_recordings": 14,
+  "speakers": 1,
+  "audio_seconds": 79.381375,
+  "minimum_clip_seconds": 4.256,
+  "maximum_clip_seconds": 9.0026875,
+  "normalized_reference_words_per_condition": 182,
+  "conditions": [
+    "clean",
+    "quiet",
+    "noise_20db"
+  ],
+  "warm_passes": 2,
+  "accuracy_pass": 1,
+  "name_jargon_spans_per_condition": 16,
+  "numeric_spans_per_condition": 8,
+  "latency_budget_ms": {
+    "median_max": 100,
+    "p95_max": 150
+  },
+  "preparation": "Original mono 16 kHz WAV converted losslessly to float PCM; quiet=0.02 gain; noise=20dB white noise, seed 33.",
+  "machine": {
+    "cpu": "Apple M4 Pro",
+    "ram_bytes": 25769803776,
+    "macos": "15.7.4"
+  },
+  "runtime": {
+    "baseline": "b68f484789d81fda21efbf81e2ca9fcfd9dc22aa",
+    "upgraded": "e396cf780c4abf8e395087467c0585d3b0d17f68"
+  },
+  "runs": {
+    "v2-old": {
+      "load_seconds": 0.275189084,
+      "first_call_ms": 100.174542,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 16,
+          "reference_words": 182,
+          "wer_percent": 8.791208791208792,
+          "p50_ms": 57.560104,
+          "p95_ms": 63.23230184999999,
+          "names": {
+            "expected": 16,
+            "missing": 5,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 18,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 48.648648648648646
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 22,
+          "reference_words": 182,
+          "wer_percent": 12.087912087912088,
+          "p50_ms": 57.169687499999995,
+          "p95_ms": 58.63882115,
+          "names": {
+            "expected": 16,
+            "missing": 6,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 4,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 16,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 43.24324324324324
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 23,
+          "reference_words": 182,
+          "wer_percent": 12.637362637362637,
+          "p50_ms": 57.441458,
+          "p95_ms": 58.8419477,
+          "names": {
+            "expected": 16,
+            "missing": 6,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 10,
+            "reference_marks": 45,
+            "sequence_error_percent": 22.22222222222222,
+            "sentence_boundary_errors": 8,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 9,
+            "sentence_error_percent": 21.62162162162162
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 124289024,
+      "peak_footprint_bytes": 54510384
+    },
+    "v2-new": {
+      "load_seconds": 12.681436625,
+      "first_call_ms": 57.701625,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 16,
+          "reference_words": 182,
+          "wer_percent": 8.791208791208792,
+          "p50_ms": 43.7868125,
+          "p95_ms": 51.920275,
+          "names": {
+            "expected": 16,
+            "missing": 5,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 18,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 48.648648648648646
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 22,
+          "reference_words": 182,
+          "wer_percent": 12.087912087912088,
+          "p50_ms": 43.889354499999996,
+          "p95_ms": 48.68134355,
+          "names": {
+            "expected": 16,
+            "missing": 6,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 4,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 16,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 43.24324324324324
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 23,
+          "reference_words": 182,
+          "wer_percent": 12.637362637362637,
+          "p50_ms": 44.431167,
+          "p95_ms": 48.95364154999999,
+          "names": {
+            "expected": 16,
+            "missing": 6,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 10,
+            "reference_marks": 45,
+            "sequence_error_percent": 22.22222222222222,
+            "sentence_boundary_errors": 8,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 9,
+            "sentence_error_percent": 21.62162162162162
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 537690112,
+      "peak_footprint_bytes": 64062424
+    },
+    "v3": {
+      "load_seconds": 0.156065166,
+      "first_call_ms": 93.62825,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 19,
+          "reference_words": 182,
+          "wer_percent": 10.43956043956044,
+          "p50_ms": 50.482083499999995,
+          "p95_ms": 58.2884978,
+          "names": {
+            "expected": 16,
+            "missing": 6,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 19,
+            "reference_marks": 45,
+            "sequence_error_percent": 42.22222222222222,
+            "sentence_boundary_errors": 14,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 8,
+            "sentence_error_percent": 37.83783783783784
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 17,
+          "reference_words": 182,
+          "wer_percent": 9.340659340659341,
+          "p50_ms": 49.506166500000006,
+          "p95_ms": 57.26454559999999,
+          "names": {
+            "expected": 16,
+            "missing": 5,
+            "extra": 1
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 3,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 15,
+            "reference_marks": 45,
+            "sequence_error_percent": 33.333333333333336,
+            "sentence_boundary_errors": 14,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 8,
+            "sentence_error_percent": 37.83783783783784
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 28,
+          "reference_words": 182,
+          "wer_percent": 15.384615384615385,
+          "p50_ms": 50.3808125,
+          "p95_ms": 57.183316649999995,
+          "names": {
+            "expected": 16,
+            "missing": 7,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 7,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 15,
+            "reference_marks": 45,
+            "sequence_error_percent": 33.333333333333336,
+            "sentence_boundary_errors": 12,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 9,
+            "sentence_error_percent": 32.432432432432435
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 118243328,
+      "peak_footprint_bytes": 51430240
+    },
+    "unified": {
+      "load_seconds": 0.409369042,
+      "first_call_ms": 121.14783399999999,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 22,
+          "reference_words": 182,
+          "wer_percent": 12.087912087912088,
+          "p50_ms": 53.0484585,
+          "p95_ms": 58.339518299999995,
+          "names": {
+            "expected": 16,
+            "missing": 9,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 6,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 16,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 7,
+            "sentence_error_percent": 43.24324324324324
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 18,
+          "reference_words": 182,
+          "wer_percent": 9.89010989010989,
+          "p50_ms": 52.155292,
+          "p95_ms": 58.62982105,
+          "names": {
+            "expected": 16,
+            "missing": 6,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 16,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 43.24324324324324
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 20,
+          "reference_words": 182,
+          "wer_percent": 10.989010989010989,
+          "p50_ms": 52.176458000000004,
+          "p95_ms": 57.14434979999999,
+          "names": {
+            "expected": 16,
+            "missing": 8,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 16,
+            "reference_marks": 45,
+            "sequence_error_percent": 35.55555555555556,
+            "sentence_boundary_errors": 14,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 8,
+            "sentence_error_percent": 37.83783783783784
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 95387648,
+      "peak_footprint_bytes": 69698256
+    },
+    "lite": {
+      "load_seconds": 2.111482625,
+      "first_call_ms": 335.136834,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 34,
+          "reference_words": 182,
+          "wer_percent": 18.681318681318682,
+          "p50_ms": 164.50691700000002,
+          "p95_ms": 167.1668,
+          "names": {
+            "expected": 16,
+            "missing": 9,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 17,
+            "reference_marks": 45,
+            "sequence_error_percent": 37.77777777777778,
+            "sentence_boundary_errors": 13,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 7,
+            "sentence_error_percent": 35.13513513513514
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 40,
+          "reference_words": 182,
+          "wer_percent": 21.978021978021978,
+          "p50_ms": 164.48502100000002,
+          "p95_ms": 166.57328135,
+          "names": {
+            "expected": 16,
+            "missing": 11,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 17,
+            "reference_marks": 45,
+            "sequence_error_percent": 37.77777777777778,
+            "sentence_boundary_errors": 12,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 8,
+            "sentence_error_percent": 32.432432432432435
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 38,
+          "reference_words": 182,
+          "wer_percent": 20.87912087912088,
+          "p50_ms": 164.270646,
+          "p95_ms": 166.11157500000002,
+          "names": {
+            "expected": 16,
+            "missing": 10,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 18,
+            "reference_marks": 45,
+            "sequence_error_percent": 40.0,
+            "sentence_boundary_errors": 11,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 8,
+            "sentence_error_percent": 29.72972972972973
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 2567684096,
+      "peak_footprint_bytes": 1915946832
+    },
+    "eou": {
+      "load_seconds": 0.395589083,
+      "first_call_ms": 209.76904199999998,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 41,
+          "reference_words": 182,
+          "wer_percent": 22.52747252747253,
+          "p50_ms": 54.085292,
+          "p95_ms": 80.71690019999997,
+          "names": {
+            "expected": 16,
+            "missing": 16,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 45,
+            "reference_marks": 45,
+            "sequence_error_percent": 100.0,
+            "sentence_boundary_errors": 37,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 0,
+            "sentence_error_percent": 100.0
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 50,
+          "reference_words": 182,
+          "wer_percent": 27.47252747252747,
+          "p50_ms": 54.058916499999995,
+          "p95_ms": 80.18418509999997,
+          "names": {
+            "expected": 16,
+            "missing": 16,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 45,
+            "reference_marks": 45,
+            "sequence_error_percent": 100.0,
+            "sentence_boundary_errors": 37,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 0,
+            "sentence_error_percent": 100.0
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 105,
+          "reference_words": 182,
+          "wer_percent": 57.69230769230769,
+          "p50_ms": 53.5106665,
+          "p95_ms": 79.41315614999996,
+          "names": {
+            "expected": 16,
+            "missing": 16,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 8,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 45,
+            "reference_marks": 45,
+            "sequence_error_percent": 100.0,
+            "sentence_boundary_errors": 37,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 0,
+            "sentence_error_percent": 100.0
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 467730432,
+      "peak_footprint_bytes": 456033048
+    },
+    "v2-boost": {
+      "load_seconds": 0.473775833,
+      "first_call_ms": 118.342833,
+      "conditions": {
+        "clean": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 14,
+          "reference_words": 182,
+          "wer_percent": 7.6923076923076925,
+          "p50_ms": 69.318479,
+          "p95_ms": 76.21074614999999,
+          "names": {
+            "expected": 16,
+            "missing": 4,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 18,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 48.648648648648646
+          },
+          "transcript_variants": 0
+        },
+        "noise_20db": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 20,
+          "reference_words": 182,
+          "wer_percent": 10.989010989010989,
+          "p50_ms": 69.56631250000001,
+          "p95_ms": 76.89480439999998,
+          "names": {
+            "expected": 16,
+            "missing": 5,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 4,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 20,
+            "reference_marks": 45,
+            "sequence_error_percent": 44.44444444444444,
+            "sentence_boundary_errors": 16,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 6,
+            "sentence_error_percent": 43.24324324324324
+          },
+          "transcript_variants": 0
+        },
+        "quiet": {
+          "clips": 14,
+          "warm_calls": 28,
+          "word_errors": 22,
+          "reference_words": 182,
+          "wer_percent": 12.087912087912088,
+          "p50_ms": 71.92393750000001,
+          "p95_ms": 76.863142,
+          "names": {
+            "expected": 16,
+            "missing": 5,
+            "extra": 0
+          },
+          "numbers": {
+            "expected": 8,
+            "missing": 5,
+            "extra": 0
+          },
+          "punctuation": {
+            "clips": 14,
+            "errors": 10,
+            "reference_marks": 45,
+            "sequence_error_percent": 22.22222222222222,
+            "sentence_boundary_errors": 8,
+            "sentence_reference_marks": 37,
+            "sentence_exact_clips": 9,
+            "sentence_error_percent": 21.62162162162162
+          },
+          "transcript_variants": 0
+        }
+      },
+      "max_rss_bytes": 136675328,
+      "peak_footprint_bytes": 59081520
+    }
+  },
+  "decision": {
+    "default": "parakeet-v2",
+    "fluid_audio": "v0.18.2",
+    "promoted_challenger": null,
+    "boosting_enabled": false,
+    "streaming_enabled": false,
+    "baseline_upgrade_identical_results": 85,
+    "reason": "No challenger passes the combined public/natural quality and latency gates. Unified fails natural name/number preservation despite passing warm latency."
+  },
+  "validation": {
+    "cargo_fmt": "passed",
+    "cargo_clippy_locked_all_targets_deny_warnings": "passed",
+    "cargo_tests": {
+      "application": 63,
+      "asr_example": 36,
+      "review_example": 47
+    },
+    "swift_release_builds": "passed",
+    "python_tests": 18,
+    "network_access_during_inference": "denied"
+  }
+}
