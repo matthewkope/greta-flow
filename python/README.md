@@ -3,7 +3,7 @@
 Press a hotkey, speak, and your words appear wherever your cursor is —
 open-source, local-first voice dictation powered by Whisper.
 
-This package is the **Python prototype** of [Gretchen Flow](https://github.com/matthewkope/greta-flow).
+This package is the **Python prototype** of [Greta Flow](https://github.com/matthewkope/greta-flow).
 It validates the full pipeline (global hotkey → record → transcribe → type) and
 is handy for experimenting with models and engines. The shipping desktop app is
 a Tauri 2 + Rust menu-bar application; see the project README for that.
@@ -30,7 +30,7 @@ language, injection mode). Run `gf --help` for command-line overrides.
 ## macOS permissions
 
 Grant **Microphone** (to hear you) and **Accessibility** (to type the text) to
-the terminal/app running Gretchen Flow, under
+the terminal/app running Greta Flow, under
 System Settings → Privacy & Security.
 
 ## License

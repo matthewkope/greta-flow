@@ -25,8 +25,8 @@ Example additional configuration:
 {
   "profile": {
     "mode": "prose",
-    "vocabulary": ["ER", "Gretchen Flow"],
-    "spellings": {"gretchen flo": "Gretchen Flow"},
+    "vocabulary": ["ER", "Greta Flow"],
+    "spellings": {"greta flo": "Greta Flow"},
     "spoken_commands": true
   },
   "profiles": {

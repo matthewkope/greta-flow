@@ -1,6 +1,6 @@
 # Local ASR benchmark
 
-Tests the downloaded Parakeet TDT v2 Core ML model, Moonshine Medium Streaming model, and Gretchen Flow's Whisper Turbo engine. It does not capture microphone audio, inject text, or change app settings.
+Tests the downloaded Parakeet TDT v2 Core ML model, Moonshine Medium Streaming model, and Greta Flow's Whisper Turbo engine. It does not capture microphone audio, inject text, or change app settings.
 
 ## Model comparison for 0.4
 

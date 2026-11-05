@@ -1,4 +1,4 @@
-"""Gretchen Flow entry point: hotkey -> record -> transcribe -> type."""
+"""Greta Flow entry point: hotkey -> record -> transcribe -> type."""
 
 from __future__ import annotations
 

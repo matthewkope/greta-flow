@@ -41,7 +41,7 @@ pub struct Config {
     /// as numbered lines.
     pub auto_lists: bool,
     /// Personal dictionary: names and jargon to bias recognition toward,
-    /// e.g. ["Gretchen Flow", "Tauri", "Kope"].
+    /// e.g. ["Greta Flow", "Tauri", "Kope"].
     pub vocabulary: Vec<String>,
     pub history: crate::history::Policy,
     pub streaming: bool,
