@@ -33,10 +33,16 @@ editor, browser, chat, anywhere.
 
 Requires **Apple Silicon and macOS 14 or later**. Greta Flow is free and open
 source. Releases use a stable self-signed certificate and are **not notarized**.
-Choose one route and use that same route for updates. The cask and installer
-clear the app's quarantine attribute; use them only if you trust this project.
+**For the published 0.3.0 release, use the [manual DMG route](#manual-dmg-download).**
+The renamed Homebrew cask, rename map, and release installer will be available
+from the next release after its distribution workflow finishes successfully.
+The commands below for those two routes are for that release, not 0.3.0.
 
-### Homebrew (recommended)
+Choose one route and use that same route for updates. The upcoming cask and
+installer clear the app's quarantine attribute; use them only if you trust this
+project.
+
+### Homebrew (available from the next release)
 
 ```bash
 brew update
@@ -44,7 +50,7 @@ brew install --cask matthewkope/greta-flow/greta-flow
 open "/Applications/Greta Flow.app"
 ```
 
-The personal tap clears quarantine automatically on install and upgrade. Update
+After publication, the personal tap will clear quarantine on install and upgrade. Update
 Homebrew first so it supports the cask's `postflight_steps` stanza.
 
 To update, quit Greta Flow, then:
@@ -55,11 +61,12 @@ brew upgrade --cask greta-flow
 open "/Applications/Greta Flow.app"
 ```
 
-For an old `gretchen-flow` installation, keep your existing tap (its URL redirects),
+After the next release publishes the rename map, for an old `gretchen-flow`
+installation, keep your existing tap (its URL redirects),
 quit the app, and run `brew update` followed by
 `brew reinstall --cask matthewkope/gretchen-flow/greta-flow`. The tap's
 `cask_renames.json` migrates the token, and Homebrew removes the old app artifact.
-Reinstall is needed when moving between names at the same 0.3.0 version.
+The migration command cannot resolve until the new cask and rename map are published.
 
 ### Release installer (no Homebrew)
 
@@ -82,8 +89,8 @@ The checksum detects damaged or mismatched downloads; it is not independent
 verification of the GitHub release publisher.
 
 The source-tree `install.sh` is a template and intentionally refuses to install.
-The existing 0.3.0 release does not have this installer; use Homebrew or the
-manual route until the next release is published.
+The existing 0.3.0 release does not have this installer; use the manual route
+until the next release is published.
 
 ### Manual DMG download
 
@@ -293,7 +300,7 @@ Model weights download separately and remain local. Parakeet controls its own
 punctuation; thinking pauses can still produce unwanted periods. This update
 does not claim to fix that behavior. See [benchmark results](docs/ASR_BENCHMARK_2026-09-18.md).
 
-The Homebrew cask downloads the signed v0.3.0 release DMG and verifies its
+The upcoming Homebrew cask will download the signed release DMG and verify its
 SHA-256 checksum. Existing explicit model choices are kept; select Parakeet v2
 from the Model menu to change an older Whisper configuration.
 

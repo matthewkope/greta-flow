@@ -8,7 +8,7 @@ signing certificate, model selection, or storage paths change here.
 The [Homebrew Cask Cookbook](https://docs.brew.sh/Cask-Cookbook#stanza-flight_steps)
 documents `postflight_steps` and its `run` operation. Legacy Ruby flight blocks
 are temporarily supported for third-party taps but rejected in official taps.
-This personal tap uses the structured hook, targeting `{{appdir}}/Greta Flow.app`
+The cask prepared for the personal tap uses the structured hook, targeting `{{appdir}}/Greta Flow.app`
 so custom app directories are honored. This is not a submission to the official
 Homebrew cask repository. Quarantine removal is disclosed in the README/caveat;
 a failure fails installation rather than silently claiming it succeeded.
@@ -25,7 +25,8 @@ a failure fails installation rather than silently claiming it succeeded.
    Existing signing secrets are reused without changing the certificate.
 3. Push a stable `vMAJOR.MINOR.PATCH` tag. The workflow builds the signed bundle,
    publishes the DMG, SHA256SUMS, and a version/hash-pinned install.sh, then
-   commits the same generated cask and rename map to main and the tap.
+   commits the same generated cask and rename map to main and the tap, removing
+   the legacy `Casks/gretchen-flow.rb` in the same commit.
 4. Check both update commits after the job. A cross-repository update cannot be
    atomic: a failure may leave one cask updated. Fix access/protection problems
    and rerun; identical cask content produces no additional commit. Do not rerun
@@ -81,3 +82,13 @@ in [RENAME_0.4.md](RENAME_0.4.md).
 - Release publishing and two-repository pushes were not executed; they require
   the next release tag and configured release token. Clean-account checks remain
   pending as listed above.
+
+### PR #5 review follow-up
+
+The review found that the live tap still contains only `Casks/gretchen-flow.rb`.
+The README now explicitly marks both the renamed Homebrew route (including
+migration) and the installer as available from the next release, and directs
+0.3.0 users to the manual DMG route. This PR does not publish the tap early.
+Release automation removes the stale cask in the same commit that adds the new
+cask and rename map; `--ignore-unmatch` makes this safe on reruns and in the main
+repository where the old cask is already absent.

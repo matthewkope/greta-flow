@@ -120,6 +120,8 @@ jobs:
             mv "$repo/cask_renames.json.tmp" "$repo/cask_renames.json"
             git -C "$repo" config user.name "github-actions[bot]"
             git -C "$repo" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            # Remove the legacy token in the same commit as its replacement/map.
+            git -C "$repo" rm --ignore-unmatch Casks/gretchen-flow.rb
             git -C "$repo" add Casks/greta-flow.rb cask_renames.json
             if ! git -C "$repo" diff --cached --quiet; then
               git -C "$repo" commit -m "Update Greta Flow cask to $RELEASE_TAG"
