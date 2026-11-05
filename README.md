@@ -29,65 +29,98 @@ editor, browser, chat, anywhere.
 | [`python/`](python/) | The original Python prototype (still works; great for experimenting with models) |
 | [`docs/`](docs/) | Architecture and design decisions |
 
-## Install with Homebrew
+## Install
 
-Apple Silicon Mac, macOS 14+ — one command (it taps and installs):
+Requires **Apple Silicon and macOS 14 or later**. Greta Flow is free and open
+source. Releases use a stable self-signed certificate and are **not notarized**.
+Choose one route and use that same route for updates. The cask and installer
+clear the app's quarantine attribute; use them only if you trust this project.
+
+### Homebrew (recommended)
 
 ```bash
+brew update
 brew install --cask matthewkope/greta-flow/greta-flow
-```
-
-This copies **Greta Flow.app** into `/Applications`. Because the build isn't
-notarized, macOS quarantines it — so after installing, clear the quarantine flag
-and launch it:
-
-```bash
-brew list --cask greta-flow      # confirm it installed
-xattr -dr com.apple.quarantine "/Applications/Greta Flow.app"
 open "/Applications/Greta Flow.app"
 ```
 
-On first launch, download a model in the setup window and grant **Microphone**,
-**Accessibility**, and **Input Monitoring** in System Settings — see
-[macOS permissions](#macos-permissions) below.
+The personal tap clears quarantine automatically on install and upgrade. Update
+Homebrew first so it supports the cask's `postflight_steps` stanza.
 
-### Updating
+To update, quit Greta Flow, then:
 
 ```bash
 brew update
 brew upgrade --cask greta-flow
-xattr -dr com.apple.quarantine "/Applications/Greta Flow.app"
 open "/Applications/Greta Flow.app"
 ```
 
-Releases retain the existing signing certificate and bundle ID. Permission
-preservation across the rename still needs a real upgrade check; see
-[rename validation](docs/RENAME_0.4.md).
+For an old `gretchen-flow` installation, keep your existing tap (its URL redirects),
+quit the app, and run `brew update` followed by
+`brew reinstall --cask matthewkope/gretchen-flow/greta-flow`. The tap's
+`cask_renames.json` migrates the token, and Homebrew removes the old app artifact.
+Reinstall is needed when moving between names at the same 0.3.0 version.
 
-If you installed under the old name, quit the app and run this once after the
-renamed cask has been published to the tap:
+### Release installer (no Homebrew)
+
+Starting with the next release, each release includes `install.sh`, pinned to
+that release's DMG and SHA-256. Download it, inspect it if desired, and run it:
 
 ```bash
-brew update
-brew reinstall --cask matthewkope/gretchen-flow/greta-flow
-xattr -dr com.apple.quarantine "/Applications/Greta Flow.app"
-open "/Applications/Greta Flow.app"
+curl -fL --proto '=https' --proto-redir '=https' \
+  https://github.com/matthewkope/greta-flow/releases/latest/download/install.sh \
+  -o /tmp/greta-flow-install.sh
+bash /tmp/greta-flow-install.sh
 ```
 
-The old tap URL redirects to the renamed repository. Keep that existing tap for
-this migration: `cask_renames.json` maps the old token to the new one. Reinstall
-also changes the installed app path when the release version is still 0.3.0;
-`brew upgrade` alone skips a same-version install. Homebrew removes the previous
-app using its saved installation record. Config, history, and model paths retain
-`gretchen-flow`; do not delete them or download the model again.
+Quit the app and repeat these commands to update. The script checks the platform,
+verifies the DMG checksum before mounting it, verifies the bundle signature,
+installs into `/Applications`, clears quarantine, and opens Greta Flow. It asks
+for your administrator password only if `/Applications` is not writable. It
+removes the legacy `Gretchen Flow.app` only after installing the replacement.
+The checksum detects damaged or mismatched downloads; it is not independent
+verification of the GitHub release publisher.
 
-The 0.3.0 archive and its internal display name still say Gretchen. The cask
-installs that original signed bundle as `Greta Flow.app`; the next release uses
-the new product name. Window and menu wording is being updated separately.
+The source-tree `install.sh` is a template and intentionally refuses to install.
+The existing 0.3.0 release does not have this installer; use Homebrew or the
+manual route until the next release is published.
 
-> The cask installs from the latest [GitHub Release](https://github.com/matthewkope/greta-flow/releases).
-> Builds are not notarized, which is why the one-time `xattr` command above is
-> needed if macOS blocks the app on launch.
+### Manual DMG download
+
+Download the Apple Silicon DMG from [Releases](https://github.com/matthewkope/greta-flow/releases).
+For new releases, download `SHA256SUMS` beside the DMG and run
+`shasum -a 256 -c SHA256SUMS` in that download directory before opening it.
+Open the DMG, drag **Greta Flow.app** to **Applications**, eject the DMG, then
+open the installed app. If macOS blocks it, open **System Settings → Privacy &
+Security → Open Anyway**, authenticate, and confirm Open. Try opening the app
+once first so the Open Anyway option appears. Do not rely on Control-click on
+macOS 15 or later. On an update, quit first and replace the existing app.
+The 0.3.0 DMG still contains **Gretchen Flow.app**; the next release uses Greta.
+If upgrading manually from that name, remove the old app after copying the new
+one, leaving your settings and model cache in place.
+
+### First launch and update validation
+
+Download the recommended **Parakeet v2** model (~464 MB) in setup and grant
+**Microphone**, **Accessibility**, and **Input Monitoring**; see
+[macOS permissions](#macos-permissions). There is no in-app updater.
+Settings, history, and model paths retain `gretchen-flow`, so updates do not need
+a model re-download. The bundle ID and signing certificate remain unchanged.
+Permission preservation and launch behavior on clean macOS 14, 15, and current
+release accounts still require [field validation](docs/DISTRIBUTION_0.4.md).
+
+### Uninstall
+
+Quit the app. For Homebrew, run `brew uninstall --cask greta-flow`. For the other
+routes, move `/Applications/Greta Flow.app` (and any old `Gretchen Flow.app`) to
+Trash. This keeps your data for a later reinstall.
+
+To **permanently delete settings, downloaded models, and dictation history** too:
+
+```bash
+rm -rf "$HOME/.config/gretchen-flow" "$HOME/.cache/gretchen-flow" \
+  "$HOME/Library/Application Support/gretchen-flow"
+```
 
 ## Build from source
 
