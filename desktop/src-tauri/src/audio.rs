@@ -4,6 +4,7 @@
 //! the app talks to it over a channel. The stream only exists while recording,
 //! so the macOS mic indicator is accurate.
 
+use crate::locks::MutexExt;
 use std::sync::mpsc::{self, Sender};
 use std::sync::{Arc, Mutex};
 
@@ -21,6 +22,13 @@ pub struct Recording {
 struct Capture {
     samples: Vec<f32>,
     last_speech: Option<std::time::Instant>,
+}
+impl Capture {
+    fn invalidate(&mut self) {
+        self.samples.clear();
+        self.samples.push(f32::NAN);
+        self.last_speech = None;
+    }
 }
 enum Cmd {
     Start(Option<crate::streaming::Input>),
@@ -45,7 +53,7 @@ impl Recorder {
                         if stream.is_some() {
                             continue;
                         }
-                        *buffer.lock().unwrap() = Capture::default();
+                        *buffer.lock_recover() = Capture::default();
                         match build_stream(Arc::clone(&buffer), sink) {
                             Ok((s, r)) => {
                                 rate = r;
@@ -56,7 +64,7 @@ impl Recorder {
                     }
                     Cmd::Stop(reply) => {
                         stream = None; // drop closes the input stream
-                        let capture = std::mem::take(&mut *buffer.lock().unwrap());
+                        let capture = std::mem::take(&mut *buffer.lock_repair(Capture::invalidate));
                         let samples = capture.samples;
                         let last_speech = capture.last_speech;
                         let _ = reply.send(Recording {
@@ -150,7 +158,7 @@ where
     device.build_input_stream(
         config,
         move |data: &[T], _| {
-            let mut buf = buffer.lock().unwrap();
+            let mut buf = buffer.lock_repair(Capture::invalidate);
             let mono: Vec<f32> = data
                 .chunks(channels)
                 .map(|frame| {
@@ -200,4 +208,25 @@ pub fn resample_to_16k(rec: &Recording) -> Vec<f32> {
             a + (b - a) * frac
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn poisoned_capture_is_rejected_and_the_next_capture_is_usable() {
+        let buffer = Mutex::new(Capture::default());
+        let _ = std::panic::catch_unwind(|| {
+            let mut capture = buffer.lock().unwrap();
+            capture.samples.extend([0.1, 0.2]);
+            panic!("interrupted audio callback");
+        });
+        let stopped = std::mem::take(&mut *buffer.lock_repair(Capture::invalidate));
+        assert!(stopped.samples.iter().any(|sample| !sample.is_finite()));
+        assert!(!buffer.is_poisoned());
+        *buffer.lock_recover() = Capture::default();
+        buffer.lock_recover().samples.push(0.3);
+        assert_eq!(buffer.lock_recover().samples, vec![0.3]);
+    }
 }

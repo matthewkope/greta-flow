@@ -1,0 +1,6 @@
+{
+  "parent_pid": 66531,
+  "killed_helper_pid": 66542,
+  "signal": "SIGKILL",
+  "method": "killed the verified direct child during the offline harness idle window; next recognition must restart and warm it"
+}

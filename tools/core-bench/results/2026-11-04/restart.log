@@ -1,0 +1,10 @@
+[2026-11-05T03:38:20Z INFO  core_bench::parakeet] asr_stage engine=parakeet stage=warmup ms=64.310
+[2026-11-05T03:38:20Z INFO  core_bench::engine] asr_stage stage=model_load ms=271.341
+[2026-11-05T03:38:50Z INFO  core_bench::parakeet] asr_stage engine=parakeet worker_restart=1
+[2026-11-05T03:38:50Z INFO  core_bench::parakeet] asr_stage engine=parakeet stage=warmup ms=69.450
+[2026-11-05T03:38:50Z INFO  core_bench::engine] asr_stage engine=parakeet stage=inference_ipc ms=380.130
+[2026-11-05T03:38:50Z INFO  core_bench::engine] asr_stage engine=parakeet stage=formatting ms=0.029
+[2026-11-05T03:38:50Z INFO  core_bench::metrics] pipeline_timing {"outcome":"offline_sink","speech_end_estimator":"energy_threshold","speech_end_to_completion_ms":null,"stages_ms":{"engine_wait":0.006167000000000001,"offline_delivery":0.00041600000000000003,"offline_release_to_sink":380.781125,"recognition_and_format":380.215041,"release_to_final_text":380.780583,"resample_gate_gain_retain":0.52825},"version":1}
+[2026-11-05T03:38:50Z INFO  core_bench::engine] asr_stage engine=parakeet stage=inference_ipc ms=60.193
+[2026-11-05T03:38:50Z INFO  core_bench::engine] asr_stage engine=parakeet stage=formatting ms=0.006
+[2026-11-05T03:38:50Z INFO  core_bench::metrics] pipeline_timing {"outcome":"offline_sink","speech_end_estimator":"energy_threshold","speech_end_to_completion_ms":null,"stages_ms":{"engine_wait":0.000083,"offline_delivery":0.00033299999999999996,"offline_release_to_sink":60.369125000000004,"recognition_and_format":60.237917,"release_to_final_text":60.368625,"resample_gate_gain_retain":0.130083},"version":1}

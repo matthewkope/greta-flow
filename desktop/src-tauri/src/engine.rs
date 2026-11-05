@@ -1,14 +1,24 @@
 use crate::{config::Config, parakeet, transcribe};
+use std::sync::Arc;
 
 pub enum Engine {
     Whisper(Box<transcribe::Engine>, String),
-    Parakeet(parakeet::Engine),
+    Parakeet(Arc<parakeet::Engine>),
 }
 impl Engine {
+    /// Let idle recovery release the app's model slot before potentially slow
+    /// startup. A model swap must not wait for a broken old helper to recover.
+    pub fn maintenance_worker(&self) -> Option<Arc<parakeet::Engine>> {
+        match self {
+            Self::Parakeet(engine) => Some(Arc::clone(engine)),
+            Self::Whisper(_, _) => None,
+        }
+    }
+
     pub fn load(path: &str, cfg: &Config) -> Result<Self, String> {
         let start = std::time::Instant::now();
         let result = if cfg.model == crate::config::DEFAULT_MODEL {
-            parakeet::Engine::load(path, cfg).map(Self::Parakeet)
+            parakeet::Engine::load(path, cfg).map(|engine| Self::Parakeet(Arc::new(engine)))
         } else {
             transcribe::Engine::load(path, cfg)
                 .map(|engine| Self::Whisper(Box::new(engine), cfg.model.clone()))

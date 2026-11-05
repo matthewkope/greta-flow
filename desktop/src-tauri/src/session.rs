@@ -168,6 +168,26 @@ impl Sessions {
 mod tests {
     use super::*;
     #[test]
+    fn poison_discards_uncertain_delivery_without_reusing_session_ids() {
+        use crate::locks::MutexExt;
+        let sessions = std::sync::Mutex::new(Sessions::default());
+        let old = sessions.lock().unwrap().begin();
+        let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let _guard = sessions.lock().unwrap();
+            panic!("interrupted delivery");
+        }));
+        let mut sessions = sessions.lock_repair(Sessions::cancel);
+        assert!(!sessions
+            .deliver(old, "stale".into(), |_, _| panic!())
+            .unwrap());
+        let next = sessions.begin();
+        assert_ne!(old, next);
+        assert!(sessions
+            .deliver(next, "next".into(), |_, _| Ok(()))
+            .unwrap());
+    }
+
+    #[test]
     fn default_config_keeps_failed_transcripts_in_history_without_duplicates() {
         let cfg = crate::config::Config::default();
         assert!(cfg.history.enabled);

@@ -1,5 +1,6 @@
 //! Conservative silence-boundary recognition while capture continues.
 //! Continuous speech over 30s or a full queue falls back to one whole-clip decode.
+use crate::locks::MutexExt;
 use crate::{config::Config, engine::Engine};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -70,7 +71,7 @@ impl Worker {
                 if samples.is_empty() {
                     return Ok(());
                 }
-                let lock = engine.lock().map_err(|_| "engine lock failed")?;
+                let lock = engine.lock_recover();
                 let text = lock
                     .as_ref()
                     .ok_or("no engine")?
@@ -223,7 +224,9 @@ impl Resampler {
         let length = (self.base + self.samples.len()) as u64 * 16_000 / self.rate as u64;
         let mut out = vec![];
         while (self.next as u64) < length {
-            out.push(*self.samples.last().unwrap());
+            if let Some(last) = self.samples.last() {
+                out.push(*last);
+            }
             self.next += 1;
         }
         out
