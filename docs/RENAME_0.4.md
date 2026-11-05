@@ -3,7 +3,10 @@
 ## Scope and identity
 
 The production Tauri product name is `Greta Flow`, producing `Greta Flow.app`
-and `Greta.Flow_<version>_aarch64.dmg`. Release uploads select that DMG name.
+and the local file `Greta Flow_<version>_aarch64.dmg` (with a space).
+Release uploads select it using `Greta*Flow_*.dmg`. GitHub sanitizes the uploaded
+asset name to `Greta.Flow_<version>_aarch64.dmg` (with a dot); download URLs use
+that published name, not the local build filename.
 The cask token is `greta-flow`, with `cask_renames.json` mapping the old token.
 
 Keep all of these unchanged:
