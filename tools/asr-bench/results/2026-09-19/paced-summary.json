@@ -1,0 +1,42 @@
+{
+  "batch:constructed_pauses": {
+    "clips": 4,
+    "calls": 8,
+    "errors": 13,
+    "words": 257,
+    "wer_percent": 5.058365758754864,
+    "p50_ms": 122.2089375,
+    "p95_ms": 191.5766921,
+    "fallbacks": 0
+  },
+  "batch:short_smoke": {
+    "clips": 1,
+    "calls": 2,
+    "errors": 0,
+    "words": 2,
+    "wer_percent": 0.0,
+    "p50_ms": 68.566812,
+    "p95_ms": 74.2190181,
+    "fallbacks": 0
+  },
+  "paced:constructed_pauses": {
+    "clips": 4,
+    "calls": 8,
+    "errors": 13,
+    "words": 257,
+    "wer_percent": 5.058365758754864,
+    "p50_ms": 0.19756249999999997,
+    "p95_ms": 0.4220353999999999,
+    "fallbacks": 0
+  },
+  "paced:short_smoke": {
+    "clips": 1,
+    "calls": 2,
+    "errors": 0,
+    "words": 2,
+    "wer_percent": 0.0,
+    "p50_ms": 88.23527049999998,
+    "p95_ms": 88.85636455,
+    "fallbacks": 0
+  }
+}
