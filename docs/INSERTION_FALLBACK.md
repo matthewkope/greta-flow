@@ -1,9 +1,14 @@
-# Insertion fallback (PR #14)
+# Insertion fallback (PRs #14 and #15)
 
 A recording captures one delivery route before release. A focused `AXTextField`
 or `AXTextArea` with an `AXSelectedTextRange` keeps the native `AXSelectedText`
-route, including element, process, selection, and setter checks. An unwritable
-setter, stale target, or uncertain write never triggers typing as a second route.
+route when `AXUIElementIsAttributeSettable` successfully reports that attribute
+as settable at capture. A successful query reporting it as not settable instead
+selects the existing guarded keystroke route (as with Terminal.app). Any setter
+query error, including an AX timeout, fails closed without selecting typing.
+Native delivery retains its element, process, selection, and setter checks. An
+unwritable setter at delivery, stale target, or uncertain write never triggers
+typing as a second route.
 
 If the focused element instead has no usable text target, capture records the
 frontmost external application's process ID. Herdr (`dev.herdr.app`) reporting
@@ -31,6 +36,9 @@ cancel, stale-result, and one-attempt rules without waiting on the main thread
 while holding the lock. Existing Recent insertion also uses this dispatch.
 
 The fallback binds an app, not a window, terminal pane, or caret within that app.
+A Terminal password prompt without Secure Keyboard Entry is not detectable as
+secure: dictation can type into it. The AX secure-field and macOS secure-input
+checks do not provide password protection at that prompt.
 It cannot atomically freeze focus or secure-input state between a check and event
 consumption. macOS provides no consumption acknowledgement. An interrupted or
 partially accepted typing attempt is therefore uncertain and must not be replayed
@@ -49,9 +57,10 @@ the normal app build populates it with the Swift helper. An empty directory is
 sufficient for these Rust checks, but does not constitute a runnable app bundle.
 
 Validation on this branch: `cargo fmt --check`, locked all-target Clippy with
-`-D warnings`, and locked all-target tests pass. The application has 90 passing
-tests; the three example targets have 36, 72, and 51 (including shared-module
-tests). Eleven added insertion tests run offline. No installed app, microphone,
+`-D warnings`, and locked all-target tests pass. The application has 92 passing
+tests; the three example targets have 36, 74, and 51 (including shared-module
+tests). PR #15 adds two offline tests for non-settable text targets and setter-query
+errors through the backend seam. No installed app, microphone,
 or real destination application was exercised.
 
 ## Live checks for Matt
@@ -64,8 +73,12 @@ Use disposable content; the installed app has not been replaced by these checks.
   that moving its native caret/selection before delivery rejects the result.
 - TextEdit: confirm native insertion preserves paragraphs and selected-text
   replacement, with no typing fallback when the captured target becomes stale.
-- Herdr password prompt: start normal dictation, enter a password prompt before
-  delivery, and confirm no transcript is typed. Also try starting at that prompt.
+- Terminal.app: check a plain shell and `herdr` running inside it; dictate a
+  multiline list and confirm line breaks become spaces without executing commands.
+- Terminal `sudo` prompt: use disposable text with Secure Keyboard Entry on and
+  off, both starting at the prompt and entering it before delivery. With Secure
+  Keyboard Entry on, typing must be blocked. With it off, the password prompt is
+  not detectable as secure and dictation can type into it.
 - Switch applications mid-dictation: confirm nothing is typed into either app
   and the original transcript is available through recovery/history policy.
 - Cancel during recognition, and after a delivery failure attempt recovery;
