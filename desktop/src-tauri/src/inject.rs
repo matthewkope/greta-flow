@@ -91,6 +91,24 @@ struct Focus<N> {
     native: Option<N>,
 }
 
+// Share the capture decision with the offline backend. Only a successful query
+// reporting a non-settable attribute permits the existing typing route.
+fn native_if_settable<N>(
+    candidate: Option<N>,
+    query: impl FnOnce(&N) -> (i32, u8),
+) -> Result<Option<N>, String> {
+    let Some(native) = candidate else {
+        return Ok(None);
+    };
+    let (status, writable) = query(&native);
+    if status != 0 {
+        return Err(format!(
+            "Accessibility setter query failed (AXSelectedText, {status})"
+        ));
+    }
+    Ok((writable != 0).then_some(native))
+}
+
 #[derive(Clone, Debug)]
 enum Destination<N> {
     Accessibility(N),
@@ -331,6 +349,17 @@ impl Backend for Mac {
         } else {
             None
         };
+        let native = native_if_settable(native, |target| {
+            let mut writable = 0;
+            let status = unsafe {
+                AXUIElementIsAttributeSettable(
+                    target.element.0,
+                    CFString::new("AXSelectedText").as_concrete_TypeRef(),
+                    &mut writable,
+                )
+            };
+            (status, writable)
+        })?;
         Ok(Focus {
             pid,
             secure,
@@ -425,6 +454,7 @@ mod tests {
         frontmost: Cell<Option<i32>>,
         focus_pid: Cell<i32>,
         native: Cell<Option<u8>>,
+        setter_query: Cell<(i32, u8)>,
         secure: Cell<bool>,
         secure_input: Cell<bool>,
         focus_error: Cell<bool>,
@@ -439,6 +469,7 @@ mod tests {
                 frontmost: Cell::new(Some(42)),
                 focus_pid: Cell::new(42),
                 native: Cell::new(None),
+                setter_query: Cell::new((0, 1)),
                 secure: Cell::new(false),
                 secure_input: Cell::new(false),
                 focus_error: Cell::new(false),
@@ -467,7 +498,7 @@ mod tests {
             Ok(Focus {
                 pid: self.focus_pid.get(),
                 secure: self.secure.get(),
-                native: self.native.get(),
+                native: native_if_settable(self.native.get(), |_| self.setter_query.get())?,
             })
         }
         fn validate_native(&self, _: &u8) -> Result<(), String> {
@@ -522,6 +553,42 @@ mod tests {
             assert!(target.insert(&backend, "text").is_err());
             assert_eq!(backend.writes.borrow().len(), usize::from(!stale));
             assert!(backend.typed.borrow().is_empty());
+        }
+    }
+
+    #[test]
+    fn non_settable_text_target_uses_guarded_typing() {
+        let backend = Fake::default();
+        backend.native.set(Some(1)); // Text area with a selection, like Terminal.
+        backend.setter_query.set((0, 0));
+        let (target, pid) = Destination::capture(&backend).unwrap();
+        assert_eq!(pid, 42);
+        assert!(matches!(target, Destination::Keystrokes(42)));
+        target.insert(&backend, "one\r\ntwo").unwrap();
+        assert_eq!(*backend.typed.borrow(), ["one two"]);
+        assert!(backend.writes.borrow().is_empty());
+        backend.secure_input.set(true);
+        assert!(Destination::capture(&backend).is_err());
+        assert!(target.insert(&backend, "blocked").is_err());
+        assert_eq!(*backend.typed.borrow(), ["one two"]);
+    }
+
+    #[test]
+    fn setter_query_errors_fail_closed_at_capture_and_delivery() {
+        // CannotComplete (including timeout), permission failure, unsupported,
+        // and other errors must never be interpreted as definitively unwritable.
+        for status in [-25204, -25211, -25205, -25200] {
+            for writable in [0, 1] {
+                let backend = Fake::default();
+                backend.native.set(Some(1));
+                backend.setter_query.set((0, 0));
+                let (target, _) = Destination::capture(&backend).unwrap();
+                backend.setter_query.set((status, writable));
+                assert!(Destination::capture(&backend).is_err());
+                assert!(target.insert(&backend, "text").is_err());
+                assert!(backend.typed.borrow().is_empty());
+                assert!(backend.writes.borrow().is_empty());
+            }
         }
     }
 
