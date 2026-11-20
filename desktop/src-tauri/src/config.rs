@@ -40,9 +40,14 @@ pub struct Config {
     /// Format spoken lists ("one, ... two, ..." / "first, ... second, ...")
     /// as numbered lines.
     pub auto_lists: bool,
-    /// Personal dictionary: names and jargon to bias recognition toward,
+    /// Glossary: names and jargon whose casing is protected in output,
     /// e.g. ["Greta Flow", "Tauri", "Kope"].
     pub vocabulary: Vec<String>,
+    /// Global corrections applied after recognition: explicit misheard
+    /// variants -> one canonical spelling.
+    pub dictionary: Vec<crate::dictionary::DictionaryEntry>,
+    /// Global whole-phrase expansions, e.g. "my email" -> an address.
+    pub spoken_shortcuts: Vec<crate::dictionary::SpokenShortcut>,
     pub history: crate::history::Policy,
     pub streaming: bool,
     pub profile: crate::profile::Profile,
@@ -73,6 +78,8 @@ impl Default for Config {
             remove_fillers: true,
             auto_lists: true,
             vocabulary: vec!["Gretchen Flow".into()],
+            dictionary: Vec::new(),
+            spoken_shortcuts: Vec::new(),
             history: Default::default(),
             streaming: false,
             profile: Default::default(),
@@ -104,6 +111,10 @@ impl Config {
         }
         cfg.profile.vocabulary.extend(self.vocabulary.clone());
         cfg.vocabulary = cfg.profile.vocabulary.clone();
+        cfg.profile.personal = crate::dictionary::Personal {
+            dictionary: self.dictionary.clone(),
+            shortcuts: self.spoken_shortcuts.clone(),
+        };
         cfg
     }
     pub fn load() -> Self {
@@ -118,6 +129,18 @@ impl Config {
                 cfg
             })
             .unwrap_or_default()
+    }
+
+    /// Write the file atomically and report failures.
+    pub fn try_save(&self) -> std::io::Result<()> {
+        let path = config_path();
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
+        let json = serde_json::to_string_pretty(self).map_err(std::io::Error::other)?;
+        let tmp = path.with_extension("json.tmp");
+        std::fs::write(&tmp, json + "\n")?;
+        std::fs::rename(&tmp, &path)
     }
 
     pub fn save(&self) {

@@ -2,6 +2,8 @@
 #![allow(dead_code)]
 #[path = "../src/config.rs"]
 mod config;
+#[path = "../src/dictionary.rs"]
+mod dictionary;
 #[path = "../src/engine.rs"]
 mod engine;
 #[path = "../src/history.rs"]
