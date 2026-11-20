@@ -15,18 +15,28 @@ func log(_ message: String) {
 }
 
 let stdoutLock = NSLock()
+nonisolated(unsafe) var headerSent = false
 
-func writeFrame(_ payload: Data) {
+/// Header frames are always written; sample frames only after the header, so
+/// the first frame the parent reads is always the JSON header.
+func writeFrame(_ payload: Data, header: Bool = false) {
     var length = UInt32(payload.count).littleEndian
     var frame = Data(bytes: &length, count: 4)
     frame.append(payload)
     stdoutLock.lock()
     defer { stdoutLock.unlock() }
-    FileHandle.standardOutput.write(frame)
+    guard header || headerSent else { return }
+    do {
+        try FileHandle.standardOutput.write(contentsOf: frame)
+    } catch {
+        log("stdout closed: \(error)")
+        exit(0)
+    }
+    if header { headerSent = true }
 }
 
 func writeJSON(_ object: [String: Any]) {
-    if let data = try? JSONSerialization.data(withJSONObject: object) { writeFrame(data) }
+    if let data = try? JSONSerialization.data(withJSONObject: object) { writeFrame(data, header: true) }
 }
 
 func fail(_ message: String, code: Int32 = 1) -> Never {
