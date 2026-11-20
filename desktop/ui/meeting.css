@@ -1,0 +1,82 @@
+/* Meeting notes panel. Scoped under .gm so a window shell can mount it. */
+.gm {
+  --gm-fg: #fff;
+  --gm-bg: #000;
+  --gm-muted: #9a9a9a;
+  --gm-rec: #ff3b30;
+  --gm-ok: #9bff9b;
+  --gm-warn: #ffd23f;
+  --gm-head: #8be9ff;
+  color: var(--gm-fg);
+  background: var(--gm-bg);
+  font-family: "PixelOperator", monospace;
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: none;
+  display: flex; flex-direction: column;
+  min-height: 0; height: 100%;
+}
+.gm * { box-sizing: border-box; }
+.gm h2 { font-size: 13px; font-weight: bold; margin: 16px 0 6px; color: var(--gm-head); letter-spacing: 1px; }
+.gm .gm-scroll { flex: 1; overflow-y: auto; padding: 14px 16px 12px; min-height: 0; }
+.gm .gm-scroll::-webkit-scrollbar { width: 8px; }
+.gm .gm-scroll::-webkit-scrollbar-thumb { background: var(--gm-fg); border-radius: 4px; }
+
+.gm .gm-status { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.gm .gm-dot { width: 12px; height: 12px; border-radius: 50%; background: #444; flex: 0 0 auto; }
+.gm .gm-status.rec .gm-dot { background: var(--gm-rec); box-shadow: 0 0 8px var(--gm-rec); animation: gm-blink 1s steps(2) infinite; }
+.gm .gm-status.busy .gm-dot { background: var(--gm-warn); }
+.gm .gm-state { font-weight: bold; letter-spacing: 2px; }
+.gm .gm-status.rec .gm-state { color: var(--gm-rec); }
+.gm .gm-clock { font-variant-numeric: tabular-nums; color: var(--gm-muted); }
+@keyframes gm-blink { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .gm .gm-status.rec .gm-dot { animation: none; } }
+
+.gm .gm-note { font-size: 16px; color: var(--gm-muted); margin: 8px 0 0; }
+.gm .gm-note.warn { color: var(--gm-warn); }
+.gm .gm-error { font-size: 16px; color: #ff8a8a; margin: 8px 0 0; word-break: break-word; }
+
+.gm .gm-actions { display: flex; gap: 8px; margin: 12px 0 0; flex-wrap: wrap; }
+.gm .gm-btn {
+  cursor: pointer; padding: 8px 12px; font: inherit; font-size: 13px; font-weight: bold;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--gm-fg); background: var(--gm-bg);
+  border: 2px solid var(--gm-fg); border-radius: 4px;
+}
+.gm .gm-btn:hover:not(:disabled) { background: var(--gm-fg); color: var(--gm-bg); }
+.gm .gm-btn:disabled { opacity: 0.4; cursor: default; }
+.gm .gm-btn:focus-visible { outline: 2px solid var(--gm-head); outline-offset: 2px; }
+.gm .gm-btn.rec { color: #ff8a8a; border-color: #ff8a8a; }
+.gm .gm-btn.rec:hover:not(:disabled) { background: var(--gm-rec); border-color: var(--gm-rec); color: #fff; }
+.gm .gm-btn.small { padding: 4px 8px; font-size: 16px; }
+
+.gm .gm-lines { margin: 0; padding: 0; list-style: none; }
+.gm .gm-line { display: flex; gap: 10px; padding: 3px 0; }
+.gm .gm-ts { flex: 0 0 auto; color: var(--gm-head); font-variant-numeric: tabular-nums; }
+.gm .gm-text { flex: 1; min-width: 0; word-break: break-word; user-select: text; -webkit-user-select: text; }
+.gm .gm-line.gap .gm-text { color: var(--gm-warn); font-style: italic; }
+.gm .gm-empty { color: var(--gm-muted); padding: 4px 0; }
+
+.gm .gm-card { border: 2px solid #555; border-radius: 6px; padding: 8px 10px; margin: 6px 0; }
+.gm .gm-card .gm-label { font-size: 16px; color: var(--gm-muted); }
+
+.gm .gm-item {
+  display: block; width: 100%; text-align: left; cursor: pointer; font: inherit; color: inherit;
+  background: none; border: 0; border-radius: 4px; padding: 6px; margin: 2px 0;
+}
+.gm .gm-item:hover, .gm .gm-item:focus-visible { background: var(--gm-fg); color: var(--gm-bg); outline: none; }
+.gm .gm-item:hover .gm-sub, .gm .gm-item:focus-visible .gm-sub { color: var(--gm-bg); }
+.gm .gm-item .gm-title { font-weight: bold; }
+.gm .gm-item .gm-sub { display: block; font-size: 16px; color: var(--gm-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm .gm-badge { font-size: 16px; color: var(--gm-warn); margin-left: 6px; }
+.gm .gm-back { margin-bottom: 8px; }
+.gm .gm-quote { display: block; color: var(--gm-muted); font-style: italic; }
+.gm .gm-input {
+  flex: 1; min-width: 160px; font: inherit; font-size: 14px; padding: 4px 6px;
+  color: var(--gm-fg); background: var(--gm-bg); border: 2px solid #555; border-radius: 4px;
+}
+.gm .gm-sources { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 12px 0 0; }
+.gm .gm-sources .gm-label { margin-right: 4px; }
+.gm .gm-btn.on { background: var(--gm-fg); color: var(--gm-bg); }
+.gm .gm-src { flex: 0 0 auto; min-width: 52px; color: var(--gm-head); opacity: 0.7; }
+.gm .gm-src.system { opacity: 1; }

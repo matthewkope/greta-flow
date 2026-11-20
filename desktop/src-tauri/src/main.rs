@@ -17,6 +17,8 @@ mod inject;
 mod lists;
 mod locks;
 mod maintenance;
+mod meeting;
+mod meeting_notes;
 mod metrics;
 mod model;
 mod parakeet;
@@ -24,6 +26,8 @@ mod profile;
 mod self_test;
 mod session;
 mod streaming;
+mod summary;
+mod system_audio;
 mod transcribe;
 
 use std::sync::atomic::{AtomicBool, AtomicU64};
@@ -33,6 +37,7 @@ mod commands;
 mod dictation;
 mod dictionary_commands;
 mod hotkey;
+mod meeting_cmds;
 mod setup;
 mod setup_status;
 mod tray;
@@ -63,6 +68,8 @@ struct AppState {
     cfg: Mutex<config::Config>,
     /// Full texts behind the tray's "Recent" items, newest first.
     history_items: Mutex<Vec<String>>,
+    /// The single meeting slot; dictation is refused while it is active.
+    meeting: meeting::Controller,
 }
 
 fn main() {
@@ -121,7 +128,20 @@ fn main() {
             commands::menu_quit,
             commands::menu_close,
             dictionary_commands::dictionary_state,
-            dictionary_commands::dictionary_save
+            dictionary_commands::dictionary_save,
+            meeting_cmds::meeting_state,
+            meeting_cmds::meeting_start,
+            meeting_cmds::meeting_stop,
+            meeting_cmds::meeting_list,
+            meeting_cmds::meeting_get,
+            meeting_cmds::meeting_delete,
+            meeting_cmds::meeting_copy,
+            meeting_cmds::meeting_open_window,
+            meeting_cmds::meeting_summarize,
+            meeting_cmds::summary_status,
+            meeting_cmds::summary_model_set_path,
+            meeting_cmds::summary_model_download,
+            meeting_cmds::summary_model_download_state
         ])
         .manage(AppState {
             recorder: audio::Recorder::spawn(),
@@ -140,6 +160,7 @@ fn main() {
             active_model: Mutex::new(cfg.model.clone()),
             cfg: Mutex::new(cfg),
             history_items: Mutex::new(Vec::new()),
+            meeting: meeting::Controller::default(),
         })
         .setup(move |app| setup::initialize(app, startup_plan))
         .build(tauri::generate_context!());
@@ -161,7 +182,10 @@ fn main() {
         // Clicking the app icon (Finder/Dock/Launchpad) while it's already
         // running re-opens the standalone window.
         tauri::RunEvent::Reopen { .. } => setup::open_main_window(app),
-        tauri::RunEvent::Exit => log::info!("exiting"),
+        tauri::RunEvent::Exit => {
+            meeting_cmds::finish_on_exit(app);
+            log::info!("exiting");
+        }
         _ => {}
     });
 }

@@ -22,7 +22,9 @@ pub(crate) fn cancel_dictation(app: AppHandle) {
             let _ = state.recorder.stop_async();
         }
     }
-    set_tray_state(&app, TrayState::Idle);
+    if !state.meeting.is_active() {
+        set_tray_state(&app, TrayState::Idle);
+    }
 }
 
 #[tauri::command]
@@ -36,6 +38,9 @@ pub(crate) fn recover_dictation(app: AppHandle) -> Option<String> {
 #[tauri::command]
 pub(crate) fn retry_dictation(app: AppHandle) -> Result<(), String> {
     let state = app.state::<AppState>();
+    if state.meeting.is_active() {
+        return Err("Dictation is unavailable while a meeting is recording".into());
+    }
     if state.recording.load(Ordering::SeqCst) || state.processing.swap(true, Ordering::SeqCst) {
         return Err("Dictation is busy".into());
     }
@@ -188,6 +193,10 @@ pub(crate) fn open_privacy(pane: String) {
 pub(crate) fn prime_microphone(app: AppHandle) {
     std::thread::spawn(move || {
         let state = app.state::<AppState>();
+        // Never interrupt a meeting or dictation that owns the microphone.
+        if state.meeting.is_active() || state.recording.load(Ordering::SeqCst) {
+            return;
+        }
         state.recorder.start();
         std::thread::sleep(std::time::Duration::from_millis(250));
         let _ = state.recorder.stop();

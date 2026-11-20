@@ -18,6 +18,11 @@ editor, browser, chat, anywhere.
 - 🔤 **Spoken shortcuts** — say a phrase like "my email" and its saved text is
   typed instead; also edited from **Words**
 - 🕘 **History** — recent dictations live in the tray menu; click one to type it again
+- 📝 **Meeting notes** — open **Meeting Notes…** from the menu bar, press Start
+  before a Zoom, Teams, or any other call, and get a timestamped transcript of
+  your microphone and the call's system audio. An optional local Qwen3 model
+  (~2.3 GB download) writes summaries and action items. Meetings are saved privately in
+  `~/Library/Application Support/gretchen-flow/meetings/` and listed in that window.
 - 🔒 **Local-first** — audio never leaves your machine
 - 🎯 **Accurate and lightweight** — Parakeet TDT v2 (~464 MB), with optional Whisper models
   with Metal acceleration on Apple Silicon
@@ -238,6 +243,8 @@ System Settings → Privacy & Security — the app (or your terminal, when using
 1. **Microphone** — to hear you
 2. **Accessibility** — to type the transcribed text into other apps
 3. **Input Monitoring** — to detect the Fn / 🌐 Globe key
+4. **System audio recording** (only for meeting notes) — requested when you
+   start a meeting, so the remote side of a call is transcribed too
 
 Released builds retain a stable signing certificate and bundle ID. The app-path
 rename still needs the real upgrade validation described above.
@@ -304,8 +311,8 @@ cd python && uv sync && uv run pytest # the prototype
 
 ### Building the Parakeet version
 
-Version 0.3.0 requires Apple Silicon, macOS 14+, and Swift
-6.2+ (Xcode 26.2 works). `cargo tauri build` / `cargo tauri dev` builds and
+Building requires Apple Silicon, macOS 14+, and Swift 6.3+ (the meeting
+summarizer's mlx-swift dependency needs it). `cargo tauri build` / `cargo tauri dev` builds and
 bundles the pinned native Parakeet helper automatically. For raw `cargo run`,
 first run `desktop/scripts/build-parakeet.sh` from the repository root.
 Model weights download separately and remain local. Parakeet controls its own

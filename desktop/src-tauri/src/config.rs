@@ -58,6 +58,10 @@ pub struct Config {
     /// Idle tray badge: "dark" (white art on black) or "light" (black on
     /// white). Clicking the tray icon toggles and saves this.
     pub icon_theme: String,
+    /// Local MLX folder used for meeting summaries; unset until the user
+    /// downloads or chooses one.
+    #[serde(default)]
+    pub summary_model: Option<String>,
     /// Keep unknown keys (e.g. the Python app's settings) intact on save.
     #[serde(flatten)]
     pub extra: serde_json::Map<String, serde_json::Value>,
@@ -87,6 +91,7 @@ impl Default for Config {
             active_profile: None,
             app_profiles: Default::default(),
             icon_theme: "dark".into(),
+            summary_model: None,
             extra: serde_json::Map::new(),
         }
     }

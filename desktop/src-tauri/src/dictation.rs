@@ -12,6 +12,10 @@ pub(crate) fn start_recording(app: &AppHandle) {
     if state.processing.load(Ordering::SeqCst) || state.recording.load(Ordering::SeqCst) {
         return;
     }
+    if state.meeting.is_active() {
+        log::info!("dictation is unavailable while a meeting is recording");
+        return;
+    }
     if !state.engine_ready.load(Ordering::SeqCst) {
         log::warn!("no model loaded; opening setup");
         show_setup(app);
@@ -22,7 +26,11 @@ pub(crate) fn start_recording(app: &AppHandle) {
     let (config_tx, config_rx) = std::sync::mpsc::channel();
     {
         let mut sessions = state.sessions.lock_repair(|sessions| sessions.cancel());
-        if state.processing.load(Ordering::SeqCst) || state.recording.swap(true, Ordering::SeqCst) {
+        // Meetings reserve their slot under this same lock.
+        if state.meeting.is_active()
+            || state.processing.load(Ordering::SeqCst)
+            || state.recording.swap(true, Ordering::SeqCst)
+        {
             return;
         }
         let id = sessions.begin();

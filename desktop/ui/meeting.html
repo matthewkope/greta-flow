@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Meeting Notes — Greta Flow</title>
+    <link rel="stylesheet" href="meeting.css" />
+    <style>
+      @font-face {
+        font-family: "PixelOperator";
+        src: url("fonts/PixelOperator.ttf") format("truetype");
+        font-weight: normal;
+      }
+      @font-face {
+        font-family: "PixelOperator";
+        src: url("fonts/PixelOperator-Bold.ttf") format("truetype");
+        font-weight: bold;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; width: 100%; background: #000; overflow: hidden; }
+      /* black strip holding the native traffic lights; also the drag region */
+      .titlebar { position: fixed; top: 0; left: 0; right: 0; height: 40px; background: #000; }
+      .frame {
+        position: fixed; top: 40px; left: 0; right: 0; bottom: 0;
+        display: flex; flex-direction: column; overflow: hidden;
+        border: 4px solid #fff; border-radius: 8px;
+        box-shadow: inset 0 0 0 2px #000, inset 0 0 0 3px #fff;
+      }
+      .frame > header {
+        padding: 10px 16px; border-bottom: 3px solid #fff;
+        color: #fff; font-family: "PixelOperator", monospace; font-weight: bold;
+        letter-spacing: 2px; -webkit-font-smoothing: none;
+      }
+      #meeting-root { flex: 1; min-height: 0; }
+    </style>
+  </head>
+  <body>
+    <div class="titlebar" data-tauri-drag-region></div>
+    <div class="frame">
+      <header>MEETING NOTES</header>
+      <div id="meeting-root"></div>
+    </div>
+    <script src="meeting.js"></script>
+    <script src="meeting-window.js"></script>
+  </body>
+</html>
