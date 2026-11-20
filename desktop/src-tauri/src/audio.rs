@@ -30,8 +30,28 @@ impl Capture {
         self.last_speech = None;
     }
 }
+/// Where captured mono blocks go besides the whole-recording buffer.
+pub enum Sink {
+    /// Dictation streaming: the full recording is still retained for fallback.
+    Stream(crate::streaming::Input),
+    /// Meeting capture: blocks are forwarded only, so memory stays bounded for
+    /// long meetings (the 10-minute whole-recording cap does not apply).
+    Meeting(crate::meeting::Input),
+}
+impl Sink {
+    fn retains_recording(&self) -> bool {
+        matches!(self, Self::Stream(_))
+    }
+    fn send(&self, samples: Vec<f32>, rate: u32) {
+        match self {
+            Self::Stream(input) => input.send(samples, rate),
+            Self::Meeting(input) => input.send(samples, rate),
+        }
+    }
+}
+type Started = Sender<Result<u32, String>>;
 enum Cmd {
-    Start(Option<crate::streaming::Input>),
+    Start(Option<Sink>, Option<Started>),
     Stop(Sender<Recording>),
 }
 
@@ -49,17 +69,28 @@ impl Recorder {
 
             while let Ok(cmd) = rx.recv() {
                 match cmd {
-                    Cmd::Start(sink) => {
+                    Cmd::Start(sink, started) => {
                         if stream.is_some() {
+                            if let Some(started) = started {
+                                let _ = started.send(Err("microphone is already in use".into()));
+                            }
                             continue;
                         }
                         *buffer.lock_recover() = Capture::default();
-                        match build_stream(Arc::clone(&buffer), sink) {
+                        let result = build_stream(Arc::clone(&buffer), sink);
+                        let reply = match result {
                             Ok((s, r)) => {
                                 rate = r;
                                 stream = Some(s);
+                                Ok(r)
                             }
-                            Err(e) => log::error!("failed to open microphone: {e}"),
+                            Err(e) => {
+                                log::error!("failed to open microphone: {e}");
+                                Err(format!("couldn't open the microphone: {e}"))
+                            }
+                        };
+                        if let Some(started) = started {
+                            let _ = started.send(reply);
                         }
                     }
                     Cmd::Stop(reply) => {
@@ -80,11 +111,23 @@ impl Recorder {
     }
 
     pub fn start(&self) {
-        let _ = self.tx.send(Cmd::Start(None));
+        let _ = self.tx.send(Cmd::Start(None, None));
     }
 
     pub fn start_stream(&self, sink: crate::streaming::Input) {
-        let _ = self.tx.send(Cmd::Start(Some(sink)));
+        let _ = self.tx.send(Cmd::Start(Some(Sink::Stream(sink)), None));
+    }
+
+    /// Open the microphone for a meeting and report whether it opened, with
+    /// the device sample rate. Captured audio is forwarded to `sink` only.
+    pub fn start_meeting(&self, sink: crate::meeting::Input) -> Result<u32, String> {
+        let (started, reply) = mpsc::channel();
+        self.tx
+            .send(Cmd::Start(Some(Sink::Meeting(sink)), Some(started)))
+            .map_err(|_| "audio thread unavailable".to_string())?;
+        reply
+            .recv_timeout(std::time::Duration::from_secs(5))
+            .map_err(|_| "microphone did not respond".to_string())?
     }
     pub fn stop_async(&self) -> mpsc::Receiver<Recording> {
         let (reply_tx, reply_rx) = mpsc::channel();
@@ -105,7 +148,7 @@ impl Recorder {
 
 fn build_stream(
     buffer: Arc<Mutex<Capture>>,
-    sink: Option<crate::streaming::Input>,
+    sink: Option<Sink>,
 ) -> Result<(cpal::Stream, u32), Box<dyn std::error::Error>> {
     let host = cpal::default_host();
     let device = host
@@ -147,7 +190,7 @@ fn build_typed<T>(
     config: &cpal::StreamConfig,
     channels: usize,
     buffer: Arc<Mutex<Capture>>,
-    sink: Option<crate::streaming::Input>,
+    sink: Option<Sink>,
 ) -> Result<cpal::Stream, cpal::BuildStreamError>
 where
     T: SizedSample,
@@ -155,16 +198,23 @@ where
 {
     let rate = config.sample_rate.0;
     let max_samples = rate as usize * 600;
+    let retain = sink.as_ref().is_none_or(Sink::retains_recording);
     device.build_input_stream(
         config,
         move |data: &[T], _| {
-            let mut buf = buffer.lock_repair(Capture::invalidate);
             let mono: Vec<f32> = data
                 .chunks(channels)
                 .map(|frame| {
                     frame.iter().map(|s| f32::from_sample(*s)).sum::<f32>() / channels as f32
                 })
                 .collect();
+            if !retain {
+                if let Some(sink) = &sink {
+                    sink.send(mono, rate);
+                }
+                return;
+            }
+            let mut buf = buffer.lock_repair(Capture::invalidate);
             if mono.iter().map(|s| s * s).sum::<f32>() / mono.len().max(1) as f32
                 > 0.0001f32.powi(2)
             {

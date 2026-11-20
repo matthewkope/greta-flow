@@ -180,6 +180,13 @@ pub(crate) fn build_menu(app: &AppHandle) -> tauri::Result<MenuHandles> {
 
     menu.append(&MenuItem::with_id(
         app,
+        "meetings",
+        "Meeting Notes…",
+        true,
+        None::<&str>,
+    )?)?;
+    menu.append(&MenuItem::with_id(
+        app,
         "setup",
         "Run Setup Again…",
         true,
@@ -330,6 +337,10 @@ pub(crate) fn on_menu_event(app: &AppHandle, id: &str) {
     }
     if id == "setup" {
         show_setup(app);
+        return;
+    }
+    if id == "meetings" {
+        crate::meeting_cmds::open_window(app);
         return;
     }
     if id == "add-hotkey" {

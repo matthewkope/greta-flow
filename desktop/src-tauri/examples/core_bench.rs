@@ -17,6 +17,10 @@ mod inject;
 mod lists;
 #[path = "../src/locks.rs"]
 mod locks;
+#[path = "../src/meeting.rs"]
+mod meeting;
+#[path = "../src/meeting_notes.rs"]
+mod meeting_notes;
 #[path = "../src/metrics.rs"]
 mod metrics;
 #[path = "../src/parakeet.rs"]
