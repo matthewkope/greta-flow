@@ -85,10 +85,18 @@ def check(dmg):
         token = f'{tap}/greta-flow'
         brew_env = {**os.environ, 'HOMEBREW_NO_AUTO_UPDATE': '1',
                     'HOMEBREW_NO_INSTALL_CLEANUP': '1'}
+        # tap-new fails if the tap already exists, so a success means this run owns it.
         run('brew', 'tap-new', '--no-git', tap, env=brew_env)
         install_attempted = False
+        # Newer Homebrew refuses to load casks from untrusted taps; trust only
+        # the tap this run just created, and only when `brew trust` exists.
+        trust = 'trust' in run('brew', 'commands', '--quiet', capture_output=True, env=brew_env).stdout.split()
+        trusted = False
         try:
             tap_dir = Path(run('brew', '--repository', tap, capture_output=True, env=brew_env).stdout.strip())
+            if trust:
+                run('brew', 'trust', '--tap', tap, env=brew_env)
+                trusted = True
             cask = tap_dir / 'Casks/greta-flow.rb'
             cask.parent.mkdir(exist_ok=True)
             release_cask = (assets / 'greta-flow.rb').read_text()
@@ -117,6 +125,8 @@ def check(dmg):
             # No --zap: never touch user settings or model caches.
             if install_attempted:
                 subprocess.run(['brew', 'uninstall', '--cask', token], env=brew_env, check=False)
+            if trusted:
+                subprocess.run(['brew', 'untrust', '--tap', tap], env=brew_env, check=False)
             run('brew', 'untap', tap, env=brew_env)
     print('Built-DMG installer and cask checks passed (no app launch or Gatekeeper validation).')
 
