@@ -1,6 +1,40 @@
 const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
 
+const GF = (window.GF = window.GF || {});
+GF.views = GF.views || {};
+GF.el = GF.el || ((tag, attrs, ...kids) => {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === undefined || v === null) continue;
+    if (k === "text") node.textContent = v;
+    else if (k === "class") node.className = v;
+    else if (k.startsWith("on") && typeof v === "function") node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid !== null && kid !== undefined) node.append(kid);
+  return node;
+});
+GF.call = GF.call || ((cmd, args) => invoke(cmd, args));
+GF.isMissing = GF.isMissing || ((e) => /not (found|allowed)|unknown command/i.test(String(e)));
+GF.unavailable = GF.unavailable || ((root, text) => root.replaceChildren(GF.el("div", { class: "empty", text })));
+GF.say = GF.say || ((node, text, bad) => {
+  node.textContent = text;
+  node.classList.toggle("error", !!bad);
+});
+
+let currentView = "main";
+function showView(name) {
+  const prev = GF.views[currentView];
+  if (prev && prev.hide) prev.hide();
+  currentView = GF.views[name] ? name : "main";
+  for (const section of document.querySelectorAll("section[id^='view-']")) {
+    section.hidden = section.id !== "view-" + currentView;
+  }
+  const view = GF.views[currentView];
+  if (view) view.show();
+}
+
 function row(opts) {
   const el = document.createElement("div");
   el.className = "item" + (opts.active ? " active" : "");
@@ -107,6 +141,14 @@ document.getElementById("setup").onclick = () => invoke("menu_open_setup");
 document.getElementById("reload").onclick = () => invoke("menu_reload_config");
 document.getElementById("recent-clear").onclick = () => invoke("menu_clear_history");
 document.getElementById("quit").onclick = () => invoke("menu_quit");
+for (const el of document.querySelectorAll("[data-view]")) {
+  el.onclick = () => showView(el.dataset.view);
+}
+for (const el of document.querySelectorAll(".back")) el.onclick = () => showView("main");
 
-listen("menu-updated", render);
+listen("menu-updated", () => {
+  render();
+  const view = GF.views[currentView];
+  if (view) view.refresh();
+});
 render();

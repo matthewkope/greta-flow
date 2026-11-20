@@ -1,7 +1,7 @@
 // Spoken Shortcuts panel. Uses GF.personal from dictionary.js (loaded first).
 (() => {
   const GF = window.GF;
-  if (!GF.personal) return; // boot.js shows the "not available" fallback.
+  if (!GF.personal) return;
 
   // Common phrases offered with empty text; the user fills in their own.
   const STARTERS = [

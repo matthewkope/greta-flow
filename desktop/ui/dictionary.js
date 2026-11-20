@@ -1,6 +1,6 @@
 // Personal Dictionary and Spoken Shortcuts panels for the main window.
 //
-// Loaded by menu.html after menu.js (which provides GF.el / GF.call /
+// Loaded by menu.html after menu.js (which provides or reuses GF.el / GF.call /
 // GF.isMissing / GF.unavailable / GF.say). Registers GF.views.dictionary;
 // spoken.js registers GF.views.spoken using GF.personal from this file.
 //
