@@ -673,9 +673,7 @@ impl Controller {
                 Ok(())
             }
             Err(e) => {
-                // `input` was consumed by `open`; once dropped the threads exit.
-                let _ = running.prep.join();
-                let _ = running.decoder.join();
+                drop(running);
                 self.release(Some(e.clone()));
                 Err(e)
             }
@@ -1092,5 +1090,122 @@ mod tests {
         store.delete("m2000").unwrap();
         assert_eq!(store.list().len(), 2);
         let _ = std::fs::remove_dir_all(dir);
+    }
+
+    struct LateStream {
+        _sink: Option<crate::audio::Sink>,
+        dropped: Arc<std::sync::atomic::AtomicBool>,
+    }
+    impl Drop for LateStream {
+        fn drop(&mut self) {
+            self.dropped.store(true, Ordering::SeqCst);
+        }
+    }
+
+    fn slow_recorder(
+        delay: Duration,
+        succeed: bool,
+    ) -> (crate::audio::Recorder, Arc<std::sync::atomic::AtomicBool>) {
+        let dropped = Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let flag = Arc::clone(&dropped);
+        let recorder = crate::audio::Recorder::spawn_with(
+            move |_, sink| {
+                std::thread::sleep(delay);
+                if !succeed {
+                    return Err("device vanished".to_string());
+                }
+                Ok((
+                    LateStream {
+                        _sink: sink,
+                        dropped: Arc::clone(&flag),
+                    },
+                    16_000,
+                ))
+            },
+            Duration::from_millis(50),
+        );
+        (recorder, dropped)
+    }
+
+    fn wait_until(cond: impl Fn() -> bool) -> bool {
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while Instant::now() < deadline {
+            if cond() {
+                return true;
+            }
+            std::thread::sleep(Duration::from_millis(10));
+        }
+        cond()
+    }
+
+    #[test]
+    fn late_microphone_open_after_timeout_is_dropped_and_releases_the_slot() {
+        let (store, dir) = temp_store();
+        let (recorder, dropped) = slow_recorder(Duration::from_millis(300), true);
+        let c = Controller::default();
+        c.reserve().unwrap();
+        let began = Instant::now();
+        let err = c
+            .begin(|input| recorder.start_meeting(input), echo_len(), store)
+            .unwrap_err();
+        assert_eq!(err, "microphone did not respond");
+        assert!(
+            began.elapsed() < Duration::from_millis(250),
+            "begin must not wait for the late open"
+        );
+        assert!(!c.is_active());
+        assert!(
+            wait_until(|| dropped.load(Ordering::SeqCst)),
+            "late stream and sink must be dropped"
+        );
+        c.reserve().unwrap();
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn late_microphone_failure_releases_the_slot() {
+        let (store, dir) = temp_store();
+        let (recorder, _) = slow_recorder(Duration::from_millis(200), false);
+        let c = Controller::default();
+        c.reserve().unwrap();
+        assert!(c
+            .begin(|input| recorder.start_meeting(input), echo_len(), store)
+            .is_err());
+        assert!(!c.is_active());
+        let (store, dir2) = temp_store();
+        let (fast, _) = slow_recorder(Duration::ZERO, true);
+        std::thread::sleep(Duration::from_millis(250));
+        c.reserve().unwrap();
+        c.begin(
+            |input| fast.start_meeting(input),
+            echo_len(),
+            Arc::clone(&store),
+        )
+        .unwrap();
+        let _ = std::fs::remove_dir_all(dir);
+        let _ = std::fs::remove_dir_all(dir2);
+    }
+
+    #[test]
+    fn stop_queued_during_a_slow_start_closes_the_stream() {
+        let (recorder, dropped) = slow_recorder(Duration::from_millis(100), true);
+        let (_running, input) = spawn_pipeline(
+            Arc::new(Meta::new(now_ms())),
+            Arc::new(Mutex::new(Live::default())),
+            echo_len(),
+            temp_store().0,
+            MAX_MEETING_MS,
+        );
+        let handle = std::thread::scope(|s| {
+            let started = s.spawn(|| recorder.start_meeting(input));
+            std::thread::sleep(Duration::from_millis(20));
+            let _ = recorder.stop();
+            started.join().unwrap()
+        });
+        assert!(handle.is_err());
+        assert!(
+            dropped.load(Ordering::SeqCst),
+            "stop after a late open closes the stream"
+        );
     }
 }

@@ -19,7 +19,7 @@ pub struct Recording {
 }
 
 #[derive(Default)]
-struct Capture {
+pub(crate) struct Capture {
     samples: Vec<f32>,
     last_speech: Option<std::time::Instant>,
 }
@@ -57,13 +57,26 @@ enum Cmd {
 
 pub struct Recorder {
     tx: Sender<Cmd>,
+    start_timeout: std::time::Duration,
 }
 
 impl Recorder {
     pub fn spawn() -> Self {
+        Self::spawn_with(
+            |buffer, sink| build_stream(buffer, sink).map_err(|e| e.to_string()),
+            std::time::Duration::from_secs(5),
+        )
+    }
+
+    pub(crate) fn spawn_with<S: 'static>(
+        mut open: impl FnMut(Arc<Mutex<Capture>>, Option<Sink>) -> Result<(S, u32), String>
+            + Send
+            + 'static,
+        start_timeout: std::time::Duration,
+    ) -> Self {
         let (tx, rx) = mpsc::channel::<Cmd>();
         std::thread::spawn(move || {
-            let mut stream: Option<cpal::Stream> = None;
+            let mut stream: Option<S> = None;
             let buffer: Arc<Mutex<Capture>> = Arc::new(Mutex::new(Capture::default()));
             let mut rate = 16_000u32;
 
@@ -77,7 +90,7 @@ impl Recorder {
                             continue;
                         }
                         *buffer.lock_recover() = Capture::default();
-                        let result = build_stream(Arc::clone(&buffer), sink);
+                        let result = open(Arc::clone(&buffer), sink);
                         let reply = match result {
                             Ok((s, r)) => {
                                 rate = r;
@@ -90,7 +103,10 @@ impl Recorder {
                             }
                         };
                         if let Some(started) = started {
-                            let _ = started.send(reply);
+                            if started.send(reply).is_err() && stream.take().is_some() {
+                                log::warn!("microphone opened after the requester gave up");
+                                *buffer.lock_recover() = Capture::default();
+                            }
                         }
                     }
                     Cmd::Stop(reply) => {
@@ -107,7 +123,7 @@ impl Recorder {
                 }
             }
         });
-        Self { tx }
+        Self { tx, start_timeout }
     }
 
     pub fn start(&self) {
@@ -126,7 +142,7 @@ impl Recorder {
             .send(Cmd::Start(Some(Sink::Meeting(sink)), Some(started)))
             .map_err(|_| "audio thread unavailable".to_string())?;
         reply
-            .recv_timeout(std::time::Duration::from_secs(5))
+            .recv_timeout(self.start_timeout)
             .map_err(|_| "microphone did not respond".to_string())?
     }
     pub fn stop_async(&self) -> mpsc::Receiver<Recording> {
