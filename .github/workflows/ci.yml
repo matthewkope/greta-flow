@@ -32,7 +32,6 @@ jobs:
           installer -target CurrentUserHomeDirectory -pkg "$pkg"
           toolchain="$HOME/Library/Developer/Toolchains/swift-6.4.2-RELEASE.xctoolchain"
           toolchains_id=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$toolchain/Info.plist")
-          echo "TOOLCHAINS=$toolchains_id" >> "$GITHUB_ENV"
           TOOLCHAINS="$toolchains_id" swift --version
       - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
         with:
