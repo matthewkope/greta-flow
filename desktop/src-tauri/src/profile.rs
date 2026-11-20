@@ -1,4 +1,5 @@
 //! Per-session formatting. No model reloads, fuzzy substitutions, or external services.
+use crate::dictionary::{Kind, Personal, Rule};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
@@ -16,40 +17,49 @@ pub struct Profile {
     /// Explicit whole-term corrections, shared by both engines.
     pub spellings: BTreeMap<String, String>,
     pub spoken_commands: bool,
+    /// Global personal dictionary and spoken shortcuts, attached per dictation
+    /// by `Config::for_app`; stored at the top level of the config file.
+    #[serde(skip)]
+    pub personal: Personal,
 }
 impl Profile {
     pub fn format(&self, raw: &str, english: bool, fillers: bool, lists: bool) -> String {
         if self.mode == Mode::Literal {
             return raw.to_string();
         }
-        let mut terms: Vec<(String, String)> = self
-            .vocabulary
-            .iter()
-            .filter(|s| !s.is_empty())
-            .map(|s| (s.clone(), s.clone()))
-            .collect();
+        // Precedence for equal-length triggers follows this order (the sort
+        // below is stable): shortcuts, dictionary, spellings, vocabulary.
+        let mut terms = self.personal.rules();
         terms.extend(
             self.spellings
                 .iter()
+                .chain(self.vocabulary.iter().map(|s| (s, s)))
                 .filter(|(k, _)| !k.is_empty())
-                .map(|(a, b)| (a.clone(), b.clone())),
+                .map(|(a, b)| Rule {
+                    trigger: a.clone(),
+                    value: b.clone(),
+                    kind: Kind::Profile,
+                }),
         );
-        terms.sort_by_key(|(key, _)| std::cmp::Reverse(key.len()));
-        let mut protected = vec![];
+        terms.sort_by_key(|rule| std::cmp::Reverse(rule.trigger.len()));
+        let mut protected: Vec<(String, &Rule)> = vec![];
         let mut text = String::new();
         let mut i = 0;
-        // Unique marker avoids changing any marker-like text already in the transcript.
+        // Unique marker avoids changing marker-like text in the transcript or
+        // in any replacement value.
         let mut marker = "GFPROTECTED".to_string();
-        while raw.contains(&marker) {
+        while raw.contains(&marker) || terms.iter().any(|t| t.value.contains(&marker)) {
             marker.push('X');
         }
         while i < raw.len() {
-            let found = terms.iter().find(|(key, _)| matches_term(raw, i, key));
-            if let Some((key, value)) = found {
+            let found = terms
+                .iter()
+                .find(|rule| matches_term(raw, i, &rule.trigger));
+            if let Some(rule) = found {
                 let token = format!("{marker}{}Z", protected.len());
                 text.push_str(&token);
-                protected.push((token, value));
-                i += key.len();
+                protected.push((token, rule));
+                i += rule.trigger.len();
             } else {
                 let Some(c) = raw[i..].chars().next() else {
                     break;
@@ -59,11 +69,21 @@ impl Profile {
             }
         }
         let mut out = crate::transcribe::post_process(&text, english, fillers, lists);
-        for (token, value) in protected {
-            out = out.replace(&token, value);
-        }
+        // Commands run before protected values are restored, so command words
+        // inside corrections or shortcut text are never executed.
         if self.spoken_commands {
             out = commands(&out);
+        }
+        // An utterance that is only a spoken shortcut inserts exactly its text,
+        // without sentence punctuation.
+        if let [(token, rule)] = protected.as_slice() {
+            let bare = out.trim().trim_end_matches(['.', '!', '?', ',']).trim_end();
+            if rule.kind == Kind::Shortcut && bare == token {
+                return rule.value.clone();
+            }
+        }
+        for (token, rule) in &protected {
+            out = out.replace(token, &rule.value);
         }
         out
     }

@@ -13,8 +13,10 @@ editor, browser, chat, anywhere.
   words ("um", "uh") are removed automatically
 - 📋 **Spoken lists** — "one, buy milk… two, walk the dog" becomes a real
   numbered list, typed line by line
-- 📖 **Personal dictionary** — add names and jargon so they're recognized and
-  spelled right
+- 📖 **Personal dictionary** — map misheard forms ("Matthew Cope") to the
+  spelling you want ("Matthew Kope"); edit it from the menu's **Words** section
+- 🔤 **Spoken shortcuts** — say a phrase like "my email" and its saved text is
+  typed instead; also edited from **Words**
 - 🕘 **History** — recent dictations live in the tray menu; click one to type it again
 - 🔒 **Local-first** — audio never leaves your machine
 - 🎯 **Accurate and lightweight** — Parakeet TDT v2 (~464 MB), with optional Whisper models
@@ -184,7 +186,13 @@ hidden.
   "pause_punctuation_ms": 700,
   "remove_fillers": true,
   "auto_lists": true,
-  "vocabulary": ["Greta Flow"]
+  "vocabulary": ["Greta Flow"],
+  "dictionary": [
+    { "canonical": "Matthew Kope", "variants": ["Matthew Cope"], "enabled": true }
+  ],
+  "spoken_shortcuts": [
+    { "phrase": "my email", "text": "me@example.com", "enabled": true }
+  ]
 }
 ```
 
@@ -210,6 +218,10 @@ hidden.
   "One day I went out" are left alone
 - `vocabulary` (Whisper only): words and phrases (names, jargon, brands) that recognition is
   biased toward, so they come out spelled the way you wrote them
+- `dictionary`: corrections applied after recognition — each listed misheard
+  `variant` is replaced with its `canonical` spelling (any engine)
+- `spoken_shortcuts`: when a whole `phrase` is spoken, its literal `text` is
+  inserted instead; an empty `text` leaves the phrase as spoken
 
 Most settings can also be changed from the window/tray menu (model, shortcuts).
 After hand-editing `config.json`, choose **Reload Config** from the menu to

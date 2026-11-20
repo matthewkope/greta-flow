@@ -105,6 +105,18 @@
       .btn:active { background: #ddd; }
       .btn.danger { color: #ff8a8a; border-color: #ff8a8a; }
       .btn.danger:hover { background: #ff3b30; border-color: #ff3b30; color: #fff; }
+      [hidden] { display: none !important; }
+      .row { display: flex; gap: 8px; margin: 6px 0; }
+      .row .btn { flex: 1; }
+      .small { font-size: 15px; color: #aaa; }
+      .msg { font-size: 13px; color: #9bff9b; margin: 6px 0; min-height: 1em; }
+      .msg.error { color: #ff8a8a; }
+      .item .problem { font-size: 12px; color: #ffd23f; }
+      .field {
+        background: #000; color: #fff; border: 2px solid #fff; border-radius: 4px;
+        padding: 4px 6px; font-family: "PixelOperator", monospace; font-size: 15px;
+        user-select: text; -webkit-user-select: text;
+      }
     </style>
   </head>
   <body>
@@ -115,6 +127,7 @@
           <div class="portrait"><img class="mascot" src="gretchen.png" alt="Greta" /></div>
           <span class="name">GRETA FLOW</span>
         </div>
+        <section id="view-main">
         <div id="status" class="status">…</div>
 
         <h2>MODEL</h2>
@@ -129,6 +142,23 @@
         <h2>RECENT</h2>
         <div id="recent"></div>
         <div class="item" id="recent-clear" style="display:none"><span class="bullet">✕</span><span class="label">clear history</span></div>
+
+        <h2>WORDS</h2>
+        <div class="item" id="open-dictionary" data-view="dictionary"><span class="bullet">•</span><span class="label">personal dictionary…</span></div>
+        <div class="item" id="open-spoken" data-view="spoken"><span class="bullet">•</span><span class="label">spoken shortcuts…</span></div>
+        </section>
+
+        <section id="view-dictionary" hidden>
+          <div class="item back"><span class="bullet">◂</span><span class="label">back</span></div>
+          <h2>PERSONAL DICTIONARY</h2>
+          <div id="dictionary-panel"></div>
+        </section>
+
+        <section id="view-spoken" hidden>
+          <div class="item back"><span class="bullet">◂</span><span class="label">back</span></div>
+          <h2>SPOKEN SHORTCUTS</h2>
+          <div id="spoken-panel"></div>
+        </section>
       </div>
       <div class="footer">
         <span class="btn" id="setup">setup</span>
@@ -138,5 +168,7 @@
     </div>
 
     <script src="menu.js"></script>
+    <script src="dictionary.js"></script>
+    <script src="spoken.js"></script>
   </body>
 </html>

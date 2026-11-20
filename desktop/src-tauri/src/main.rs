@@ -10,6 +10,7 @@
 mod audio;
 mod bindings;
 mod config;
+mod dictionary;
 mod engine;
 mod history;
 mod inject;
@@ -30,6 +31,7 @@ use std::sync::{Arc, Mutex};
 
 mod commands;
 mod dictation;
+mod dictionary_commands;
 mod hotkey;
 mod setup;
 mod setup_status;
@@ -117,7 +119,9 @@ fn main() {
             commands::menu_copy_recent,
             commands::menu_clear_history,
             commands::menu_quit,
-            commands::menu_close
+            commands::menu_close,
+            dictionary_commands::dictionary_state,
+            dictionary_commands::dictionary_save
         ])
         .manage(AppState {
             recorder: audio::Recorder::spawn(),
