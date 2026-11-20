@@ -23,6 +23,9 @@ mod meeting;
 mod meeting_notes;
 #[path = "../src/metrics.rs"]
 mod metrics;
+#[path = "../src/model.rs"]
+#[allow(dead_code)]
+mod model;
 #[path = "../src/parakeet.rs"]
 mod parakeet;
 #[path = "../src/profile.rs"]
@@ -31,6 +34,9 @@ mod profile;
 mod session;
 #[path = "../src/streaming.rs"]
 mod streaming;
+#[path = "../src/summary.rs"]
+#[allow(dead_code)]
+mod summary;
 #[path = "../src/system_audio.rs"]
 #[allow(dead_code)]
 mod system_audio;

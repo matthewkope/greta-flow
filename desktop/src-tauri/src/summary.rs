@@ -333,8 +333,43 @@ pub fn validate_model_dir(path: &Path) -> Result<SummaryModelInfo, String> {
 /// Last helper run outcome, reflected in `runtime_status`.
 static RUN: Mutex<Option<(SummaryState, String)>> = Mutex::new(None);
 
+static ACTIVE_RUN: Mutex<Option<String>> = Mutex::new(None);
+
 pub fn set_run_state(state: Option<(SummaryState, String)>) {
     *RUN.lock_recover() = state;
+}
+
+/// Exclusive claim on the summary helper for one meeting. Dropping it clears
+/// a still-`Loading` run state, so every exit path frees the slot.
+pub struct RunClaim(());
+
+pub fn claim_run(id: &str) -> Result<RunClaim, String> {
+    let mut active = ACTIVE_RUN.lock_recover();
+    if active.is_some() {
+        return Err("A summary is already being generated.".into());
+    }
+    *active = Some(id.to_string());
+    set_run_state(Some((
+        SummaryState::Loading,
+        "Generating a summary…".into(),
+    )));
+    Ok(RunClaim(()))
+}
+
+impl Drop for RunClaim {
+    fn drop(&mut self) {
+        let mut run = RUN.lock_recover();
+        if matches!(run.as_ref(), Some((SummaryState::Loading, _))) {
+            *run = None;
+        }
+        drop(run);
+        *ACTIVE_RUN.lock_recover() = None;
+    }
+}
+
+/// True while a helper run for meeting `id` is live in this process.
+pub fn run_active_for(id: &str) -> bool {
+    ACTIVE_RUN.lock_recover().as_deref() == Some(id)
 }
 
 pub fn helper_path() -> Result<PathBuf, String> {

@@ -1,0 +1,14 @@
+[
+  {"index": 0, "start_ms": 0, "text": "Okay, let's get started with the weekly planning sync for the bakery inventory app."},
+  {"index": 1, "start_ms": 6200, "text": "Last week we shipped the barcode scanner fix, and crash reports dropped by about half."},
+  {"index": 2, "start_ms": 13800, "text": "The main open question is whether we move the nightly sync to every two hours."},
+  {"index": 3, "start_ms": 20500, "text": "I think two hours is fine as long as the server load stays under the current limit."},
+  {"index": 4, "start_ms": 27100, "text": "We agreed to keep the old export format until the end of the quarter."},
+  {"index": 5, "start_ms": 33900, "text": "Priya will draft the migration guide for the new export format by Friday."},
+  {"index": 6, "start_ms": 40400, "text": "The pastry team asked for a low stock alert on flour and butter."},
+  {"index": 7, "start_ms": 46800, "text": "Marcus will prototype the low stock alert and share screenshots next week."},
+  {"index": 8, "start_ms": 53300, "text": "Design wants the alert to be a banner, not a popup, so it does not block scanning."},
+  {"index": 9, "start_ms": 59700, "text": "Testing on the older tablets is still slow, roughly ten seconds per sync."},
+  {"index": 10, "start_ms": 66100, "text": "We decided to drop support for the oldest tablet model in the next release."},
+  {"index": 11, "start_ms": 72600, "text": "That's everything for today, thanks everyone, see you next Tuesday."}
+]

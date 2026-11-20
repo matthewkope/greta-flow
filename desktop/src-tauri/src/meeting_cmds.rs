@@ -166,6 +166,7 @@ fn summarize_blocking(app: &AppHandle, id: &str) -> Result<meeting_notes::Meetin
         SummaryState::Loading => return Err("A summary is already being generated.".into()),
         _ => return Err(status.detail),
     }
+    let _claim = summary::claim_run(id)?;
     let (Some(path), Some(model)) = (status.path, status.model) else {
         return Err("No summary model is set up.".into());
     };
@@ -174,14 +175,9 @@ fn summarize_blocking(app: &AppHandle, id: &str) -> Result<meeting_notes::Meetin
     let mut record = store.get(id)?.ok_or("Meeting not found")?;
     record.summary = meeting_notes::SummaryStatus::generating();
     store.save(&record)?;
-    summary::set_run_state(Some((
-        SummaryState::Loading,
-        "Generating a summary…".into(),
-    )));
     let result = summary::summarize(&helper, &path, &record.segments, summary::DEFAULT_TIMEOUT);
     // Re-read so a concurrent rename/delete is respected.
     let Some(mut record) = store.get(id)? else {
-        summary::set_run_state(None);
         return Err("Meeting was deleted while summarizing.".into());
     };
     match result {
@@ -210,7 +206,6 @@ fn summarize_blocking(app: &AppHandle, id: &str) -> Result<meeting_notes::Meetin
                 dropped_ungrounded: dropped_b + dropped_a,
             };
             record.summary = meeting_notes::SummaryStatus::generated(result.clone());
-            summary::set_run_state(None);
             store.save(&record)?;
             Ok(result)
         }

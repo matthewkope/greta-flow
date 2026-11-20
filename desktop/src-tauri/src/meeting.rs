@@ -615,7 +615,13 @@ impl Store {
         if size > MAX_RECORD_BYTES {
             return None;
         }
-        serde_json::from_slice(&std::fs::read(path).ok()?).ok()
+        let mut record: MeetingRecord = serde_json::from_slice(&std::fs::read(path).ok()?).ok()?;
+        if record.summary.status == "generating" && !crate::summary::run_active_for(&record.id) {
+            record.summary = SummaryStatus::failed(
+                "Interrupted: summarizing stopped before it finished. Try again.".into(),
+            );
+        }
+        Some(record)
     }
     pub fn get(&self, id: &str) -> Result<Option<MeetingRecord>, String> {
         let path = self.path(id)?;
@@ -1678,6 +1684,34 @@ mod tests {
         assert_eq!(gap.source, AudioSource::System);
         assert_eq!((gap.start_ms, gap.end_ms), (0, 4000));
         assert!(gap.reason.contains("macOS 14.2"), "{}", gap.reason);
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn summary_claim_is_exclusive_and_interrupted_runs_become_retryable() {
+        let (store, dir) = temp_store();
+        let mut record = build_record(&Meta::new(7000), &Live::default(), 7001, true);
+        record.summary = SummaryStatus::generating();
+        store.save(&record).unwrap();
+
+        let claims: Vec<_> = (0..8)
+            .map(|_| std::thread::spawn(|| crate::summary::claim_run("m7000").ok()))
+            .collect::<Vec<_>>()
+            .into_iter()
+            .map(|h| h.join().unwrap())
+            .collect();
+        assert_eq!(claims.iter().filter(|c| c.is_some()).count(), 1);
+        assert_eq!(
+            store.get("m7000").unwrap().unwrap().summary.status,
+            "generating"
+        );
+
+        drop(claims);
+        let loaded = store.get("m7000").unwrap().unwrap().summary;
+        assert_eq!(loaded.status, "failed");
+        assert!(loaded.reason.starts_with("Interrupted"));
+        let again = crate::summary::claim_run("m7000");
+        assert!(again.is_ok(), "slot is free after every exit");
         let _ = std::fs::remove_dir_all(dir);
     }
 }
