@@ -1,7 +1,8 @@
 //! Notes derived from a meeting transcript without inventing content.
 //!
-//! No local summarization model is approved yet, so `SummaryStatus` reports
-//! that plainly. Action items are *candidates* found by commitment phrases;
+//! Summaries come only from an explicit local model run (`summary.rs`) and
+//! pass `validate_model_grounding`; otherwise `SummaryStatus` says plainly that
+//! none exists. Keyword action items are *candidates* found by commitment phrases;
 //! each quotes one transcript sentence verbatim with its segment timestamp.
 //! `validate_grounding` is the gate any future model output must pass: an
 //! item whose quote is not literally present in its cited segment is dropped.
@@ -23,22 +24,116 @@ pub struct ActionItem {
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SummaryStatus {
-    /// "unavailable" until a local summarizer is approved and installed.
+    /// "unavailable" | "generating" | "generated" | "failed".
     pub status: String,
     pub reason: String,
-    /// How `action_items` were produced.
+    /// How `MeetingRecord::action_items` were produced: always "keyword".
+    /// Model action items live in `summary` and are labelled separately.
     pub action_items_method: String,
+    /// Present only after a successful local model run.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub summary: Option<MeetingSummary>,
 }
 impl SummaryStatus {
     pub fn unavailable() -> Self {
         Self {
             status: "unavailable".into(),
-            reason: "No on-device summary model is installed. The transcript is saved; \
-                     summaries will appear once a local model is approved."
+            reason: "Not summarized. The transcript is saved; a summary can be generated \
+                     on this Mac with a local model from the meeting view."
                 .into(),
             action_items_method: "keyword".into(),
+            summary: None,
         }
     }
+    pub fn generating() -> Self {
+        Self {
+            status: "generating".into(),
+            reason: "Generating a local summary…".into(),
+            ..Self::unavailable()
+        }
+    }
+    pub fn failed(reason: String) -> Self {
+        Self {
+            status: "failed".into(),
+            reason,
+            ..Self::unavailable()
+        }
+    }
+    pub fn generated(summary: MeetingSummary) -> Self {
+        Self {
+            status: "generated".into(),
+            reason: format!(
+                "Local model summary; every item quotes the transcript ({} ungrounded item(s) dropped).",
+                summary.dropped_ungrounded
+            ),
+            action_items_method: "keyword".into(),
+            summary: Some(summary),
+        }
+    }
+}
+
+/// A model-proposed item before grounding checks.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ModelItem {
+    pub text: String,
+    #[serde(default)]
+    pub owner: Option<String>,
+    pub segment_index: usize,
+    pub quote: String,
+}
+
+/// A grounded summary bullet or action item. Bullets never carry an owner.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SummaryItem {
+    pub text: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub owner: Option<String>,
+    pub segment_index: usize,
+    pub start_ms: u64,
+    pub quote: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct MeetingSummary {
+    pub bullets: Vec<SummaryItem>,
+    pub action_items: Vec<SummaryItem>,
+    /// `repo@revision` for the pinned model, otherwise the folder name.
+    pub model: String,
+    pub generated_ms: u64,
+    pub dropped_ungrounded: usize,
+}
+
+/// Grounding gate for model output: keep an item only if its quote is
+/// non-empty and appears verbatim in the text of the cited segment. An owner
+/// survives only if it appears in that quote. Returns kept items and the
+/// number dropped.
+pub fn validate_model_grounding(
+    segments: &[Segment],
+    items: Vec<ModelItem>,
+) -> (Vec<SummaryItem>, usize) {
+    let total = items.len();
+    let kept: Vec<SummaryItem> = items
+        .into_iter()
+        .filter_map(|item| {
+            let segment = segments.get(item.segment_index)?;
+            if item.quote.trim().is_empty() || !segment.text.contains(&item.quote) {
+                return None;
+            }
+            let owner = item
+                .owner
+                .map(|o| o.trim().to_string())
+                .filter(|o| !o.is_empty() && item.quote.contains(o.as_str()));
+            Some(SummaryItem {
+                text: item.text.trim().to_string(),
+                owner,
+                segment_index: item.segment_index,
+                start_ms: segment.start_ms,
+                quote: item.quote,
+            })
+        })
+        .collect();
+    let dropped = total - kept.len();
+    (kept, dropped)
 }
 
 /// Phrases that usually introduce a commitment or request. Matched on word
@@ -151,10 +246,41 @@ pub fn markdown(record: &MeetingRecord) -> String {
         out.push_str("\n> Recording reached the maximum meeting length.\n");
     }
     out.push_str("\n## Summary\n\n");
-    if record.summary.status == "unavailable" {
-        out.push_str(&format!("_{}_\n", record.summary.reason));
+    match &record.summary.summary {
+        Some(summary) if record.summary.status == "generated" => {
+            out.push_str(&format!(
+                "_Model summary ({}), grounded in quoted transcript._\n\n",
+                summary.model
+            ));
+            for b in &summary.bullets {
+                out.push_str(&format!(
+                    "- [{}] {} — \"{}\"\n",
+                    clock(b.start_ms),
+                    b.text,
+                    b.quote
+                ));
+            }
+            if !summary.action_items.is_empty() {
+                out.push_str("\n### Action items (model, grounded)\n\n");
+            }
+            for a in &summary.action_items {
+                let owner = a
+                    .owner
+                    .as_deref()
+                    .map(|o| format!(" ({o})"))
+                    .unwrap_or_default();
+                out.push_str(&format!(
+                    "- [{}] {}{} — \"{}\"\n",
+                    clock(a.start_ms),
+                    a.text,
+                    owner,
+                    a.quote
+                ));
+            }
+        }
+        _ => out.push_str(&format!("_{}_\n", record.summary.reason)),
     }
-    out.push_str("\n## Action item candidates (keyword-detected, not AI)\n\n");
+    out.push_str("\n## Action item candidates (keyword-detected)\n\n");
     if record.action_items.is_empty() {
         out.push_str("_None detected._\n");
     }
@@ -194,6 +320,7 @@ mod tests {
             start_ms,
             end_ms: start_ms + 1000,
             text: text.into(),
+            source: Default::default(),
         }
     }
 
@@ -271,6 +398,7 @@ mod tests {
                 start_ms: 10_000,
                 end_ms: 12_000,
                 reason: "transcription failed".into(),
+                source: Default::default(),
             }],
             source: "microphone".into(),
             tz_offset_min: 0,
@@ -280,11 +408,51 @@ mod tests {
         };
         let md = markdown(&record);
         assert!(md.contains("Duration 01:02:10"));
-        assert!(md.contains("No on-device summary model is installed"));
+        assert!(md.contains("Not summarized."));
         assert!(md.contains("- [00:00:03] I will book the room.\n"));
         let gap = md.find("[00:00:10–00:00:12]").unwrap();
         assert!(md.find("[00:00:03] I will").unwrap() < gap);
         assert!(gap < md.find("[01:02:05] Bye.").unwrap());
         assert_eq!(clock(59_999), "00:00:59");
+    }
+
+    #[test]
+    fn model_grounding_drops_fabricated_and_misattributed_quotes() {
+        let segments = vec![
+            seg(0, "Alice will send the deck by Friday."),
+            seg(4000, "Bob said the budget is fine."),
+        ];
+        let item = |i, quote: &str, owner: Option<&str>| ModelItem {
+            text: "t".into(),
+            owner: owner.map(Into::into),
+            segment_index: i,
+            quote: quote.into(),
+        };
+        let (kept, dropped) = validate_model_grounding(
+            &segments,
+            vec![
+                item(0, "Alice will send the deck", Some("Alice")),
+                item(0, "Carol will write the blog post", Some("Carol")), // fabricated
+                item(1, "Alice will send the deck", None),                // wrong segment
+                item(9, "Alice will send the deck", None),                // no such segment
+                item(1, "the budget is fine", Some("Carol")),             // owner not quoted
+                item(0, "", None),
+                item(0, "alice will send", None), // not verbatim (case)
+            ],
+        );
+        assert_eq!(dropped, 5);
+        assert_eq!(kept.len(), 2);
+        assert_eq!(kept[0].owner.as_deref(), Some("Alice"));
+        assert_eq!(kept[0].start_ms, 0);
+        assert_eq!(kept[1].owner, None);
+        assert_eq!(kept[1].start_ms, 4000);
+    }
+
+    #[test]
+    fn old_summary_records_still_deserialize() {
+        let old = r#"{"status":"unavailable","reason":"x","action_items_method":"keyword"}"#;
+        let s: SummaryStatus = serde_json::from_str(old).unwrap();
+        assert!(s.summary.is_none());
+        assert!(!serde_json::to_string(&s).unwrap().contains("\"summary\""));
     }
 }

@@ -27,3 +27,7 @@ desktop/parakeet/.build/
 desktop/parakeet/.swiftpm/
 desktop/parakeet/staging/
 tools/asr-bench/swift/.build/
+desktop/summarizer/.build/
+desktop/summarizer/.swiftpm/
+desktop/system-audio/.build/
+desktop/system-audio/.swiftpm/

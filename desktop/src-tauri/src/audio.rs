@@ -49,7 +49,23 @@ impl Sink {
         }
     }
 }
-type Started = Sender<Result<u32, String>>;
+const PENDING: u8 = 0;
+const DELIVERED: u8 = 1;
+const CANCELLED: u8 = 2;
+struct Started {
+    reply: Sender<Result<u32, String>>,
+    state: Arc<std::sync::atomic::AtomicU8>,
+}
+fn claim(state: &std::sync::atomic::AtomicU8, from: u8, to: u8) -> bool {
+    state
+        .compare_exchange(
+            from,
+            to,
+            std::sync::atomic::Ordering::SeqCst,
+            std::sync::atomic::Ordering::SeqCst,
+        )
+        .is_ok()
+}
 enum Cmd {
     Start(Option<Sink>, Option<Started>),
     Stop(Sender<Recording>),
@@ -85,7 +101,9 @@ impl Recorder {
                     Cmd::Start(sink, started) => {
                         if stream.is_some() {
                             if let Some(started) = started {
-                                let _ = started.send(Err("microphone is already in use".into()));
+                                let _ = started
+                                    .reply
+                                    .send(Err("microphone is already in use".into()));
                             }
                             continue;
                         }
@@ -103,7 +121,9 @@ impl Recorder {
                             }
                         };
                         if let Some(started) = started {
-                            if started.send(reply).is_err() && stream.take().is_some() {
+                            if claim(&started.state, PENDING, DELIVERED) {
+                                let _ = started.reply.send(reply);
+                            } else if stream.take().is_some() {
                                 log::warn!("microphone opened after the requester gave up");
                                 *buffer.lock_recover() = Capture::default();
                             }
@@ -137,13 +157,27 @@ impl Recorder {
     /// Open the microphone for a meeting and report whether it opened, with
     /// the device sample rate. Captured audio is forwarded to `sink` only.
     pub fn start_meeting(&self, sink: crate::meeting::Input) -> Result<u32, String> {
-        let (started, reply) = mpsc::channel();
+        let (tx, reply) = mpsc::channel();
+        let started = Started {
+            reply: tx,
+            state: Arc::new(std::sync::atomic::AtomicU8::new(PENDING)),
+        };
+        let state = Arc::clone(&started.state);
         self.tx
             .send(Cmd::Start(Some(Sink::Meeting(sink)), Some(started)))
             .map_err(|_| "audio thread unavailable".to_string())?;
-        reply
-            .recv_timeout(self.start_timeout)
-            .map_err(|_| "microphone did not respond".to_string())?
+        match reply.recv_timeout(self.start_timeout) {
+            Ok(result) => result,
+            Err(_) => {
+                if claim(&state, PENDING, CANCELLED) {
+                    Err("microphone did not respond".to_string())
+                } else {
+                    reply
+                        .recv()
+                        .unwrap_or_else(|_| Err("audio thread unavailable".to_string()))
+                }
+            }
+        }
     }
     pub fn stop_async(&self) -> mpsc::Receiver<Recording> {
         let (reply_tx, reply_rx) = mpsc::channel();

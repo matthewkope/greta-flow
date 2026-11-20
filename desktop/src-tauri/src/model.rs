@@ -159,7 +159,7 @@ fn expected_sha256(name: &str) -> Option<&'static str> {
 }
 
 /// Streaming SHA-256 of a file as a lowercase hex string.
-fn file_sha256(path: &std::path::Path) -> Result<String, String> {
+pub(crate) fn file_sha256(path: &std::path::Path) -> Result<String, String> {
     let mut file = fs::File::open(path).map_err(|e| e.to_string())?;
     let mut hasher = Sha256::new();
     let mut buf = [0u8; 64 * 1024];
@@ -173,7 +173,7 @@ fn file_sha256(path: &std::path::Path) -> Result<String, String> {
     Ok(hex_lower(&hasher.finalize()))
 }
 
-fn hex_lower(bytes: &[u8]) -> String {
+pub(crate) fn hex_lower(bytes: &[u8]) -> String {
     use std::fmt::Write;
     let mut s = String::with_capacity(bytes.len() * 2);
     for b in bytes {
@@ -271,7 +271,7 @@ pub fn disk_space(path: &std::path::Path, required_bytes: u64) -> Result<DiskSpa
     })
 }
 
-fn download(
+pub(crate) fn download(
     response: ureq::Response,
     file: &mut fs::File,
     path: &std::path::Path,

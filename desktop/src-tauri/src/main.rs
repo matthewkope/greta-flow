@@ -26,6 +26,8 @@ mod profile;
 mod self_test;
 mod session;
 mod streaming;
+mod summary;
+mod system_audio;
 mod transcribe;
 
 use std::sync::atomic::{AtomicBool, AtomicU64};
@@ -134,7 +136,12 @@ fn main() {
             meeting_cmds::meeting_get,
             meeting_cmds::meeting_delete,
             meeting_cmds::meeting_copy,
-            meeting_cmds::meeting_open_window
+            meeting_cmds::meeting_open_window,
+            meeting_cmds::meeting_summarize,
+            meeting_cmds::summary_status,
+            meeting_cmds::summary_model_set_path,
+            meeting_cmds::summary_model_download,
+            meeting_cmds::summary_model_download_state
         ])
         .manage(AppState {
             recorder: audio::Recorder::spawn(),

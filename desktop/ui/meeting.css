@@ -70,3 +70,13 @@
 .gm .gm-item .gm-sub { display: block; font-size: 16px; color: var(--gm-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gm .gm-badge { font-size: 16px; color: var(--gm-warn); margin-left: 6px; }
 .gm .gm-back { margin-bottom: 8px; }
+.gm .gm-quote { display: block; color: var(--gm-muted); font-style: italic; }
+.gm .gm-input {
+  flex: 1; min-width: 160px; font: inherit; font-size: 14px; padding: 4px 6px;
+  color: var(--gm-fg); background: var(--gm-bg); border: 2px solid #555; border-radius: 4px;
+}
+.gm .gm-sources { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 12px 0 0; }
+.gm .gm-sources .gm-label { margin-right: 4px; }
+.gm .gm-btn.on { background: var(--gm-fg); color: var(--gm-bg); }
+.gm .gm-src { flex: 0 0 auto; min-width: 52px; color: var(--gm-head); opacity: 0.7; }
+.gm .gm-src.system { opacity: 1; }

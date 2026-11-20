@@ -23,23 +23,53 @@
     return node;
   }
 
-  function line(ts, text, gap) {
+  // Source labels say where audio came from, not who spoke.
+  const SOURCE_LABEL = { microphone: "mic", system: "system" };
+
+  function line(ts, text, gap, source) {
     const li = el("li", "gm-line" + (gap ? " gap" : ""));
-    li.append(el("span", "gm-ts", ts), el("span", "gm-text", text));
+    li.append(el("span", "gm-ts", ts));
+    if (source) li.append(el("span", "gm-src " + source, SOURCE_LABEL[source] || source));
+    li.append(el("span", "gm-text", text));
     return li;
   }
 
   // Segments and gaps interleaved by start time.
   function transcript(segments, gaps) {
     const ul = el("ul", "gm-lines");
-    const rows = segments.map((s) => ({ at: s.start_ms, node: line(clock(s.start_ms), s.text) }))
+    const rows = segments.map((s) => ({ at: s.start_ms, node: line(clock(s.start_ms), s.text, false, s.source || "microphone") }))
       .concat((gaps || []).map((g) => ({
         at: g.start_ms,
-        node: line(`${clock(g.start_ms)}–${clock(g.end_ms)}`, `no transcript: ${g.reason}`, true),
+        node: line(`${clock(g.start_ms)}–${clock(g.end_ms)}`, `no transcript: ${g.reason}`, true, g.source || "microphone"),
       })))
       .sort((a, b) => a.at - b.at);
     if (!rows.length) ul.append(el("li", "gm-empty", "Nothing transcribed yet."));
     for (const r of rows) ul.append(r.node);
+    return ul;
+  }
+
+
+  const STATUS_LABEL = {
+    unavailable: "Not summarized",
+    generating: "Generating…",
+    generated: "Model summary",
+    failed: "Summary failed",
+  };
+
+  // One grounded item: timestamp, model text, and the verbatim quote it cites.
+  function groundedLine(item) {
+    const li = el("li", "gm-line");
+    const body = el("span", "gm-text");
+    body.append(el("span", null, item.text + (item.owner ? ` (${item.owner})` : "")));
+    body.append(el("span", "gm-quote", `“${item.quote}”`));
+    li.append(el("span", "gm-ts", clock(item.start_ms)), body);
+    return li;
+  }
+
+  function groundedList(items, empty) {
+    const ul = el("ul", "gm-lines");
+    if (!items.length) ul.append(el("li", "gm-empty", empty));
+    for (const i of items) ul.append(groundedLine(i));
     return ul;
   }
 
@@ -53,6 +83,7 @@
     let view = "live"; // "live" | meeting id
     let busy = false;
     let lastCount = -1;
+    let source = "microphone"; // "microphone" | "system" | "both"
     let timer = null;
 
     async function act(fn) {
@@ -64,6 +95,95 @@
     }
     let flash = null;
 
+    let summarizing = null; // meeting id while a summary runs
+    let downloadPoll = null;
+
+    function pollDownload() {
+      if (downloadPoll) return;
+      downloadPoll = setInterval(async () => {
+        let d = null;
+        try { d = await invoke("summary_model_download_state"); } catch (_) {}
+        if (!d || !d.active) { clearInterval(downloadPoll); downloadPoll = null; }
+        if (view !== "live") render();
+      }, 1000);
+    }
+
+    async function summarySection(id, summary) {
+      const box = el("div", "gm-card");
+      const status = summarizing === id ? "generating" : summary.status;
+      box.append(el("div", "gm-label", STATUS_LABEL[status] || status));
+      box.append(el("div", null, summarizing === id ? "Generating a local summary…" : summary.reason));
+
+      const s = summary.summary;
+      if (status === "generated" && s) {
+        box.append(el("p", "gm-note", `Model summary, grounded in quoted transcript · ${s.model}` +
+          (s.dropped_ungrounded ? ` · ${s.dropped_ungrounded} ungrounded item(s) dropped` : "")));
+        box.append(groundedList(s.bullets, "No grounded points."));
+        box.append(el("div", "gm-label", "Action items (model, grounded)"));
+        box.append(groundedList(s.action_items, "None."));
+      }
+
+      let rt = null;
+      try { rt = await invoke("summary_status"); } catch (e) { box.append(el("p", "gm-error", String(e))); }
+      if (!rt) return box;
+      const actions = el("div", "gm-actions");
+      if (rt.state === "ready" || rt.state === "failed") {
+        const go = el("button", "gm-btn small", status === "generated" ? "summarize again" : "summarize");
+        go.disabled = busy || summarizing !== null;
+        go.onclick = () => {
+          summarizing = id;
+          flash = null;
+          render();
+          invoke("meeting_summarize", { id })
+            .catch((e) => { flash = String(e); })
+            .finally(() => { summarizing = null; render(); });
+        };
+        actions.append(go);
+        if (rt.state === "failed") box.append(el("p", "gm-error", rt.detail));
+        else box.append(el("p", "gm-note", rt.detail));
+      } else if (rt.state === "loading") {
+        box.append(el("p", "gm-note", rt.detail));
+      } else {
+        box.append(el("p", "gm-note warn", rt.detail));
+        const pathRow = el("div", "gm-actions");
+        const input = el("input", "gm-input");
+        input.type = "text";
+        input.placeholder = "/path/to/mlx-model-folder";
+        if (rt.path) input.value = rt.path;
+        const choose = el("button", "gm-btn small", "Choose model folder…");
+        choose.onclick = () => act(async () => {
+          if (!input.value.trim()) throw new Error("Type the model folder path first.");
+          await invoke("summary_model_set_path", { path: input.value });
+          flash = null;
+        });
+        pathRow.append(input, choose);
+        box.append(pathRow);
+
+        let d = null;
+        try { d = await invoke("summary_model_download_state"); } catch (_) {}
+        const dl = el("button", "gm-btn small", "Download (2.26 GB)");
+        if (d && d.active) {
+          const pct = d.total ? Math.floor((d.bytes / d.total) * 100) : 0;
+          dl.textContent = `Downloading… ${pct}%`;
+          dl.disabled = true;
+          pollDownload();
+        } else {
+          dl.onclick = () => {
+            invoke("summary_model_download").catch((e) => { flash = String(e); }).finally(render);
+            setTimeout(pollDownload, 200);
+          };
+        }
+        actions.append(dl);
+        if (d && d.error && !d.active) box.append(el("p", "gm-error", `Download failed: ${d.error}`));
+        box.append(el("p", "gm-note",
+          "Downloads mlx-community/Qwen3-4B-Instruct-2507-4bit (pinned revision, hash-checked) from Hugging Face. Summaries then run entirely on this Mac."));
+      }
+      box.append(actions);
+      box.append(el("p", "gm-note",
+        "Note: this summarizer has not yet been run against the real model on this machine; treat results as unverified."));
+      return box;
+    }
+
     function liveSection(s) {
       const box = el("div");
       const status = el("div", "gm-status" + (s.active && !s.finishing ? " rec" : s.finishing ? " busy" : ""));
@@ -72,7 +192,7 @@
       status.append(el("span", "gm-state",
         s.finishing ? "FINISHING…" : s.active ? "REC" : "READY"));
       if (s.active && !s.finishing) {
-        status.append(el("span", "gm-clock", `${clock(s.audio_ms)} captured · mic`));
+        status.append(el("span", "gm-clock", `${clock(s.audio_ms)} captured · ${s.source === "microphone" ? "mic" : s.source === "both" ? "mic + system" : "system"}`));
       }
       box.append(status);
 
@@ -87,10 +207,24 @@
         });
         actions.append(stop);
       } else {
+        // Toggle buttons rather than a <select>: the panel re-renders every second.
+        const picker = el("div", "gm-sources");
+        picker.setAttribute("role", "radiogroup");
+        picker.setAttribute("aria-label", "Audio source");
+        picker.append(el("span", "gm-label", "SOURCE"));
+        for (const [value, label] of [["microphone", "microphone"], ["system", "system audio"], ["both", "both"]]) {
+          const b = el("button", "gm-btn small" + (source === value ? " on" : ""), label);
+          b.setAttribute("role", "radio");
+          b.setAttribute("aria-checked", String(source === value));
+          b.disabled = busy;
+          b.onclick = () => { source = value; render(); };
+          picker.append(b);
+        }
+        box.append(picker);
         const start = el("button", "gm-btn", "start meeting");
         start.disabled = busy;
         start.onclick = () => act(async () => {
-          await invoke("meeting_start");
+          await invoke("meeting_start", { source });
           flash = null;
           lastCount = -1;
         });
@@ -164,13 +298,10 @@
       if (flash) box.append(el("p", flash.startsWith("Copied") ? "gm-note" : "gm-error", flash));
 
       box.append(el("h2", null, "SUMMARY"));
-      const sum = el("div", "gm-card");
-      sum.append(el("div", "gm-label", r.summary.status === "unavailable" ? "Not available" : r.summary.status));
-      sum.append(el("div", null, r.summary.reason));
-      box.append(sum);
+      box.append(await summarySection(id, r.summary));
 
       box.append(el("h2", null, "ACTION ITEM CANDIDATES"));
-      box.append(el("p", "gm-note", "Keyword-detected sentences quoted from the transcript — not AI. Check before acting."));
+      box.append(el("p", "gm-note", "Keyword-detected sentences quoted from the transcript. Check before acting."));
       const items = el("ul", "gm-lines");
       if (!r.action_items.length) items.append(el("li", "gm-empty", "None detected."));
       for (const a of r.action_items) items.append(line(clock(a.start_ms), a.quote));

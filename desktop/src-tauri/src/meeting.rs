@@ -6,9 +6,10 @@
 //! derived from sample offsets on the 16 kHz timeline, never from wall clocks.
 //! Lost audio is recorded as an explicit gap; the timeline stays aligned.
 //!
-//! Only the default microphone is captured. Remote Zoom/Teams participants are
-//! heard only if their audio reaches that microphone; system-audio capture
-//! needs a separately approved helper and permission.
+//! A meeting captures the default microphone, system audio (through the
+//! `greta-system-audio` helper, see `system_audio.rs`), or both. Each source
+//! runs its own pipeline and sample timeline; segments carry a source label
+//! (not a speaker identity) and are merged by start time when saved.
 use crate::locks::MutexExt;
 use crate::meeting_notes::{self, ActionItem, SummaryStatus};
 use crate::streaming::{prepare, Resampler};
@@ -37,9 +38,47 @@ const CHECKPOINT: Duration = Duration::from_secs(60);
 /// Segments returned to a polling UI; the full list is in the saved record.
 const LIVE_VIEW_SEGMENTS: usize = 300;
 pub const SOURCE_MICROPHONE: &str = "microphone";
+pub const SOURCE_SYSTEM: &str = "system";
+pub const SOURCE_BOTH: &str = "both";
 
 fn ms(samples_16k: u64) -> u64 {
     samples_16k * 1000 / RATE
+}
+
+/// Where a segment's audio came from. A source label only: it says nothing
+/// about who spoke. Records saved before system audio default to microphone.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum AudioSource {
+    #[default]
+    Microphone,
+    System,
+}
+
+/// Which sources a meeting captures.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum SourceMode {
+    #[default]
+    Microphone,
+    System,
+    Both,
+}
+impl SourceMode {
+    pub fn parse(value: Option<&str>) -> Result<Self, String> {
+        match value.unwrap_or(SOURCE_MICROPHONE) {
+            SOURCE_MICROPHONE => Ok(Self::Microphone),
+            SOURCE_SYSTEM => Ok(Self::System),
+            SOURCE_BOTH => Ok(Self::Both),
+            other => Err(format!("unknown meeting source: {other}")),
+        }
+    }
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Microphone => SOURCE_MICROPHONE,
+            Self::System => SOURCE_SYSTEM,
+            Self::Both => SOURCE_BOTH,
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -47,6 +86,8 @@ pub struct Segment {
     pub start_ms: u64,
     pub end_ms: u64,
     pub text: String,
+    #[serde(default)]
+    pub source: AudioSource,
 }
 
 /// A span of the meeting timeline with no transcript, and why.
@@ -55,6 +96,8 @@ pub struct Gap {
     pub start_ms: u64,
     pub end_ms: u64,
     pub reason: String,
+    #[serde(default)]
+    pub source: AudioSource,
 }
 
 // ---------------------------------------------------------------------------
@@ -180,6 +223,7 @@ impl Chunker {
 
 #[derive(Default)]
 struct Live {
+    source: AudioSource,
     segments: Vec<Segment>,
     gaps: Vec<Gap>,
     /// Processed 16 kHz timeline length.
@@ -194,9 +238,35 @@ impl Live {
                 start_ms: ms(start),
                 end_ms: ms(end),
                 reason: reason.into(),
+                source: self.source,
             });
         }
     }
+    fn for_source(source: AudioSource) -> Self {
+        Self {
+            source,
+            ..Self::default()
+        }
+    }
+}
+
+/// One view over several sources: segments and gaps ordered by start time
+/// (stable, so microphone precedes system on ties), timeline = longest source.
+fn merge(lives: &[Arc<Mutex<Live>>]) -> Live {
+    let mut out = Live::default();
+    for live in lives {
+        let live = live.lock_recover();
+        out.segments.extend(live.segments.iter().cloned());
+        out.gaps.extend(live.gaps.iter().cloned());
+        out.timeline = out.timeline.max(live.timeline);
+        out.limit_reached |= live.limit_reached;
+        if out.error.is_none() {
+            out.error = live.error.clone();
+        }
+    }
+    out.segments.sort_by_key(|s| s.start_ms);
+    out.gaps.sort_by_key(|g| (g.start_ms, g.end_ms));
+    out
 }
 
 struct Pending {
@@ -317,11 +387,16 @@ fn run_decoder(
         }
         match transcribe(&prepared) {
             Ok(text) if text.trim().is_empty() => {}
-            Ok(text) => live.lock_recover().segments.push(Segment {
-                start_ms: ms(pending.start),
-                end_ms: ms(end),
-                text: text.trim().to_string(),
-            }),
+            Ok(text) => {
+                let mut live = live.lock_recover();
+                let source = live.source;
+                live.segments.push(Segment {
+                    start_ms: ms(pending.start),
+                    end_ms: ms(end),
+                    text: text.trim().to_string(),
+                    source,
+                })
+            }
             Err(e) => {
                 log::warn!("meeting segment recognition failed: {e}");
                 live.lock_recover()
@@ -420,6 +495,12 @@ pub(crate) struct Meta {
     source: &'static str,
 }
 impl Meta {
+    fn with_source(started_ms: u64, mode: SourceMode) -> Self {
+        Self {
+            source: mode.label(),
+            ..Self::new(started_ms)
+        }
+    }
     pub(crate) fn new(started_ms: u64) -> Self {
         Self {
             id: format!("m{started_ms}"),
@@ -501,6 +582,9 @@ impl Store {
     }
     pub fn save(&self, record: &MeetingRecord) -> Result<(), String> {
         use std::io::Write;
+        // Two source pipelines may checkpoint at once; the temp name is per process.
+        static SAVING: Mutex<()> = Mutex::new(());
+        let _saving = SAVING.lock_recover();
         use std::os::unix::fs::{DirBuilderExt, OpenOptionsExt};
         let path = self.path(&record.id)?;
         std::fs::DirBuilder::new()
@@ -583,12 +667,34 @@ impl Store {
 // Controller
 // ---------------------------------------------------------------------------
 
+/// One source's pipeline: prep and decoder threads over one `Live`.
 struct Running {
+    #[allow(dead_code)]
     meta: Arc<Meta>,
+    #[allow(dead_code)]
     started: Instant,
+    #[allow(dead_code)]
     live: Arc<Mutex<Live>>,
     prep: std::thread::JoinHandle<()>,
     decoder: std::thread::JoinHandle<()>,
+}
+
+struct SystemRun {
+    pipeline: Running,
+    capture: crate::system_audio::Capture,
+}
+
+/// A recording meeting: one pipeline per captured source.
+struct Session {
+    meta: Arc<Meta>,
+    started: Instant,
+    /// Microphone first, then system; the merge order for ties.
+    lives: Vec<Arc<Mutex<Live>>>,
+    mic: Option<Running>,
+    system: Option<SystemRun>,
+    system_live: Option<Arc<Mutex<Live>>>,
+    /// System audio failed to start in Both mode; the meeting is mic-only.
+    system_notice: Option<String>,
 }
 
 #[derive(Default)]
@@ -596,7 +702,7 @@ enum Phase {
     #[default]
     Idle,
     Reserved,
-    Recording(Box<Running>),
+    Recording(Box<Session>),
     Finishing,
 }
 
@@ -628,9 +734,18 @@ pub struct StateView {
     pub error: Option<String>,
     pub disclosure: &'static str,
 }
-pub const DISCLOSURE: &str = "Microphone only. Remote Zoom, Teams or Meet participants are \
-captured only if their voices reach your microphone (speakers, not headphones). Direct \
-app/system audio capture is not available yet.";
+pub const DISCLOSURE: &str = "Source labels (mic / system) say where audio came from, not who \
+spoke; there is no speaker identification. Microphone captures whatever reaches your mic. System \
+audio captures what your Mac plays (for example remote Zoom, Teams or Meet participants) and needs \
+macOS 14.2 or later plus the System Audio Recording permission. In Both mode, remote audio played \
+on speakers also reaches the microphone, so the same words can appear twice; use headphones to \
+avoid this. System-audio capture has not yet been tested on real Zoom or Teams calls.";
+
+/// Opens the microphone with the given sink; returns the device rate.
+pub(crate) type MicOpen<'a> = Box<dyn FnOnce(Input) -> Result<u32, String> + 'a>;
+/// Starts system-audio capture feeding the given sink; returns the helper.
+pub(crate) type SystemOpen<'a> =
+    Box<dyn FnOnce(Input) -> Result<(crate::system_audio::Capture, u32), String> + 'a>;
 
 impl Controller {
     pub fn is_active(&self) -> bool {
@@ -651,45 +766,125 @@ impl Controller {
         *self.last_error.lock_recover() = error;
         self.active.store(false, Ordering::SeqCst);
     }
-    /// Start the pipeline after `reserve`. `open` starts capture with the
-    /// given sink and returns the device rate.
+    /// Start a microphone-only meeting after `reserve`. `open` starts capture
+    /// with the given sink and returns the device rate.
+    #[allow(dead_code)]
     pub(crate) fn begin(
         &self,
         open: impl FnOnce(Input) -> Result<u32, String>,
         transcribe: Transcriber,
         store: Arc<Store>,
     ) -> Result<(), String> {
+        let mut transcribe = Some(transcribe);
+        self.begin_sources(
+            SourceMode::Microphone,
+            Box::new(open),
+            Box::new(|_| Err("system audio was not requested".into())),
+            move || {
+                transcribe
+                    .take()
+                    .unwrap_or_else(|| Box::new(|_| Err("no transcriber".into())))
+            },
+            store,
+        )
+    }
+    /// Start the pipelines for `mode` after `reserve`. A failed microphone
+    /// fails the start; failed system audio fails a System-only start and
+    /// leaves a Both meeting recording the microphone with a recorded notice.
+    pub(crate) fn begin_sources(
+        &self,
+        mode: SourceMode,
+        open_mic: MicOpen<'_>,
+        open_system: SystemOpen<'_>,
+        mut transcriber: impl FnMut() -> Transcriber,
+        store: Arc<Store>,
+    ) -> Result<(), String> {
         if !matches!(*self.phase.lock_recover(), Phase::Reserved) {
             return Err("meeting slot was not reserved".into());
         }
-        let meta = Arc::new(Meta::new(now_ms()));
-        let live = Arc::new(Mutex::new(Live::default()));
-        let (running, input) = spawn_pipeline(meta, live, transcribe, store, MAX_MEETING_MS);
-        let rate = open(input);
-        match rate {
-            Ok(rate) => {
-                log::info!("meeting capture started rate={rate}");
-                *self.phase.lock_recover() = Phase::Recording(Box::new(running));
-                Ok(())
-            }
-            Err(e) => {
-                drop(running);
-                self.release(Some(e.clone()));
-                Err(e)
+        let meta = Arc::new(Meta::with_source(now_ms(), mode));
+        let new_live = |source| Arc::new(Mutex::new(Live::for_source(source)));
+        let mic_live = (mode != SourceMode::System).then(|| new_live(AudioSource::Microphone));
+        let system_live = (mode != SourceMode::Microphone).then(|| new_live(AudioSource::System));
+        let lives: Vec<_> = mic_live.iter().chain(system_live.iter()).cloned().collect();
+        let mut mic = None;
+        if let Some(live) = &mic_live {
+            let (running, input) = spawn_pipeline_in(
+                Arc::clone(&meta),
+                Arc::clone(live),
+                lives.clone(),
+                transcriber(),
+                Arc::clone(&store),
+                MAX_MEETING_MS,
+            );
+            match open_mic(input) {
+                Ok(rate) => {
+                    log::info!("meeting capture started source=microphone rate={rate}");
+                    mic = Some(running);
+                }
+                Err(e) => {
+                    drop(running);
+                    self.release(Some(e.clone()));
+                    return Err(e);
+                }
             }
         }
+        let mut system = None;
+        let mut system_notice = None;
+        if let Some(live) = &system_live {
+            let (running, input) = spawn_pipeline_in(
+                Arc::clone(&meta),
+                Arc::clone(live),
+                lives.clone(),
+                transcriber(),
+                Arc::clone(&store),
+                MAX_MEETING_MS,
+            );
+            match open_system(input) {
+                Ok((capture, rate)) => {
+                    log::info!("meeting capture started source=system rate={rate}");
+                    system = Some(SystemRun {
+                        pipeline: running,
+                        capture,
+                    });
+                }
+                Err(e) if mode == SourceMode::System => {
+                    drop(running);
+                    self.release(Some(e.clone()));
+                    return Err(e);
+                }
+                Err(e) => {
+                    log::warn!("system audio unavailable; recording microphone only: {e}");
+                    drop(running);
+                    live.lock_recover().error = Some(format!(
+                        "System audio unavailable; recording microphone only: {e}"
+                    ));
+                    system_notice = Some(e);
+                }
+            }
+        }
+        *self.phase.lock_recover() = Phase::Recording(Box::new(Session {
+            meta,
+            started: Instant::now(),
+            lives,
+            mic,
+            system,
+            system_live,
+            system_notice,
+        }));
+        Ok(())
     }
-    /// Stop capture (via `stop`, which must drop the capture sink), recognize
-    /// the queued tail, and save the finished record.
+    /// Stop capture (via `stop`, which must drop the microphone sink; system
+    /// audio is stopped here), recognize the queued tail, and save the record.
     pub(crate) fn finish(
         &self,
         stop: impl FnOnce(),
         store: &Store,
     ) -> Result<MeetingRecord, String> {
-        let running = {
+        let mut session = {
             let mut phase = self.phase.lock_recover();
             match std::mem::replace(&mut *phase, Phase::Finishing) {
-                Phase::Recording(running) => running,
+                Phase::Recording(session) => session,
                 other => {
                     *phase = other;
                     return Err("No meeting is recording".into());
@@ -697,16 +892,46 @@ impl Controller {
             }
         };
         stop();
-        let prep = running.prep.join();
-        let decoder = running.decoder.join();
-        let live = running.live.lock_recover();
-        let mut record = build_record(&running.meta, &live, now_ms(), true);
-        drop(live);
-        if prep.is_err() || decoder.is_err() {
+        let mut system_ended = None;
+        let mut pipelines = vec![];
+        if let Some(mut run) = session.system.take() {
+            system_ended = run.capture.ended();
+            run.capture.stop();
+            pipelines.push(run.pipeline);
+        }
+        pipelines.extend(session.mic.take());
+        let mut panicked = false;
+        for running in pipelines {
+            panicked |= running.prep.join().is_err();
+            panicked |= running.decoder.join().is_err();
+        }
+        let merged = merge(&session.lives);
+        let mut record = build_record(&session.meta, &merged, now_ms(), true);
+        let system_end = session
+            .system_live
+            .as_ref()
+            .map(|live| ms(live.lock_recover().timeline))
+            .unwrap_or(0);
+        let notice = session
+            .system_notice
+            .as_ref()
+            .map(|e| (0, format!("system audio unavailable: {e}")))
+            .or_else(|| system_ended.map(|e| (system_end, format!("system audio stopped: {e}"))));
+        if let Some((start_ms, reason)) = notice {
+            record.gaps.push(Gap {
+                start_ms,
+                end_ms: record.audio_ms.max(start_ms),
+                reason,
+                source: AudioSource::System,
+            });
+            record.gaps.sort_by_key(|g| (g.start_ms, g.end_ms));
+        }
+        if panicked {
             record.gaps.push(Gap {
                 start_ms: 0,
                 end_ms: record.audio_ms,
                 reason: "meeting worker stopped unexpectedly; transcript may be incomplete".into(),
+                source: AudioSource::Microphone,
             });
         }
         let saved = store.save(&record);
@@ -732,28 +957,49 @@ impl Controller {
             error,
             disclosure: DISCLOSURE,
         };
-        if let Phase::Recording(running) = &*phase {
-            let live = running.live.lock_recover();
-            view.id = Some(running.meta.id.clone());
-            view.started_ms = Some(running.meta.started_ms);
-            view.elapsed_ms = running.started.elapsed().as_millis() as u64;
+        if let Phase::Recording(session) = &*phase {
+            let live = merge(&session.lives);
+            view.id = Some(session.meta.id.clone());
+            view.started_ms = Some(session.meta.started_ms);
+            view.source = session.meta.source;
+            view.elapsed_ms = session.started.elapsed().as_millis() as u64;
             view.audio_ms = ms(live.timeline);
             view.segment_count = live.segments.len();
             let skip = live.segments.len().saturating_sub(LIVE_VIEW_SEGMENTS);
             view.segments = live.segments[skip..].to_vec();
-            view.gaps = live.gaps.clone();
+            view.gaps = live.gaps;
             view.limit_reached = live.limit_reached;
             if view.error.is_none() {
-                view.error = live.error.clone();
+                view.error = session
+                    .system
+                    .as_ref()
+                    .and_then(|run| run.capture.ended())
+                    .map(|e| format!("System audio stopped: {e}"))
+                    .or(live.error);
             }
         }
         view
     }
 }
 
+#[allow(dead_code)]
 fn spawn_pipeline(
     meta: Arc<Meta>,
     live: Arc<Mutex<Live>>,
+    transcribe: Transcriber,
+    store: Arc<Store>,
+    limit_ms: u64,
+) -> (Running, Input) {
+    let lives = vec![Arc::clone(&live)];
+    spawn_pipeline_in(meta, live, lives, transcribe, store, limit_ms)
+}
+
+/// Spawn one source's pipeline. Checkpoints save the merge of all `lives`
+/// so a two-source meeting's checkpoint holds both transcripts.
+fn spawn_pipeline_in(
+    meta: Arc<Meta>,
+    live: Arc<Mutex<Live>>,
+    lives: Vec<Arc<Mutex<Live>>>,
     transcribe: Transcriber,
     store: Arc<Store>,
     limit_ms: u64,
@@ -767,10 +1013,9 @@ fn spawn_pipeline(
     };
     let decoder = {
         let (live, meta) = (Arc::clone(&live), Arc::clone(&meta));
-        let checkpoint_live = Arc::clone(&live);
         std::thread::spawn(move || {
             run_decoder(decode_rx, transcribe, live, || {
-                let record = build_record(&meta, &checkpoint_live.lock_recover(), now_ms(), false);
+                let record = build_record(&meta, &merge(&lives), now_ms(), false);
                 if let Err(e) = store.save(&record) {
                     log::warn!("meeting checkpoint failed: {e}");
                 }
@@ -926,7 +1171,8 @@ mod tests {
             vec![Gap {
                 start_ms: 1000,
                 end_ms: 3000,
-                reason: "audio dropped (capture queue full)".into()
+                reason: "audio dropped (capture queue full)".into(),
+                source: AudioSource::Microphone,
             }]
         );
         assert_eq!(live.segments.len(), 1);
@@ -1207,5 +1453,231 @@ mod tests {
             dropped.load(Ordering::SeqCst),
             "stop after a late open closes the stream"
         );
+    }
+
+    fn tagged(record: &MeetingRecord) -> Vec<(AudioSource, u64, u64)> {
+        record
+            .segments
+            .iter()
+            .map(|s| (s.source, s.start_ms, s.end_ms))
+            .collect()
+    }
+
+    #[test]
+    fn meeting_two_sources_merge_by_start_with_per_source_gaps() {
+        let (store, dir) = temp_store();
+        let meta = Arc::new(Meta::with_source(1, SourceMode::Both));
+        let mic_live = Arc::new(Mutex::new(Live::for_source(AudioSource::Microphone)));
+        let sys_live = Arc::new(Mutex::new(Live::for_source(AudioSource::System)));
+        let lives = vec![Arc::clone(&mic_live), Arc::clone(&sys_live)];
+        let spawn = |live: &Arc<Mutex<Live>>| {
+            spawn_pipeline_in(
+                Arc::clone(&meta),
+                Arc::clone(live),
+                lives.clone(),
+                echo_len(),
+                Arc::clone(&store),
+                MAX_MEETING_MS,
+            )
+        };
+        let (mic, mic_in) = spawn(&mic_live);
+        let (sys, sys_in) = spawn(&sys_live);
+        for chunk in fixture(48_000, 8.0, &[(1.0, 1.0), (5.0, 1.0)]).chunks(4800) {
+            feed(&mic_in, chunk, 48_000);
+        }
+        let sys_audio = fixture(16_000, 8.0, &[(1.0, 1.0), (3.0, 1.0)]);
+        for chunk in sys_audio[..96_000].chunks(1600) {
+            feed(&sys_in, chunk, 16_000);
+        }
+        // System loses 1 s at t=6 s; the gap is tagged with its source.
+        sys_in.captured.fetch_add(16_000, Ordering::SeqCst);
+        feed(&sys_in, &sys_audio[112_000..], 16_000);
+        drop((mic_in, sys_in));
+        for running in [mic, sys] {
+            running.prep.join().unwrap();
+            running.decoder.join().unwrap();
+        }
+        let record = build_record(&meta, &merge(&lives), 2, true);
+        use AudioSource::{Microphone as M, System as S};
+        assert_eq!(
+            tagged(&record),
+            vec![
+                (M, 800, 2200),
+                (S, 800, 2200),
+                (S, 2800, 4200),
+                (M, 4800, 6200)
+            ],
+            "ordered by start, microphone first on ties"
+        );
+        assert_eq!(record.source, "both");
+        assert_eq!(record.audio_ms, 8000);
+        assert_eq!(
+            record.gaps,
+            vec![Gap {
+                start_ms: 6000,
+                end_ms: 7000,
+                reason: "audio dropped (capture queue full)".into(),
+                source: S,
+            }]
+        );
+        let json = serde_json::to_value(&record.segments[1]).unwrap();
+        assert_eq!(json["source"], "system");
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn meeting_old_records_default_to_microphone_source() {
+        let seg: Segment =
+            serde_json::from_str(r#"{"start_ms":1,"end_ms":2,"text":"hi"}"#).unwrap();
+        assert_eq!(seg.source, AudioSource::Microphone);
+        let gap: Gap = serde_json::from_str(r#"{"start_ms":1,"end_ms":2,"reason":"x"}"#).unwrap();
+        assert_eq!(gap.source, AudioSource::Microphone);
+        assert_eq!(SourceMode::parse(None), Ok(SourceMode::Microphone));
+        assert_eq!(SourceMode::parse(Some("both")), Ok(SourceMode::Both));
+        assert!(SourceMode::parse(Some("speaker")).is_err());
+    }
+
+    /// Writes a python3 helper that speaks the `greta-system-audio` protocol.
+    /// Returns None when python3 is unavailable.
+    fn fake_helper(dir: &Path, body: &str) -> Option<std::process::Command> {
+        let ok = std::process::Command::new("python3")
+            .arg("-c")
+            .arg("pass")
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .status()
+            .map(|s| s.success())
+            .unwrap_or(false);
+        if !ok {
+            eprintln!("python3 unavailable; skipping helper process test");
+            return None;
+        }
+        std::fs::create_dir_all(dir).unwrap();
+        let script = dir.join("helper.py");
+        let prelude = "import sys, json, math, struct\n\
+            out = sys.stdout.buffer\n\
+            def frame(b):\n    out.write(struct.pack('<I', len(b)) + b); out.flush()\n";
+        std::fs::write(&script, format!("{prelude}{body}")).unwrap();
+        let mut command = std::process::Command::new("python3");
+        command.arg("-I").arg(script);
+        Some(command)
+    }
+
+    const TONE_HELPER: &str = "rate = 16000\n\
+        frame(json.dumps({'sample_rate': rate}).encode())\n\
+        def voiced(t):\n    return 1.0 <= t < 2.0 or 4.0 <= t < 4.5\n\
+        samples = [0.2 * math.sin(i * 440 * 2 * math.pi / rate) if voiced(i / rate) else 0.0\n\
+                   for i in range(6 * rate)]\n\
+        for i in range(0, len(samples), 1600):\n\
+        \x20   chunk = samples[i:i + 1600]\n\
+        \x20   frame(struct.pack('<%df' % len(chunk), *chunk))\n\
+        sys.stdin.read()\n";
+
+    fn open_helper(command: std::process::Command) -> SystemOpen<'static> {
+        Box::new(move |input| {
+            crate::system_audio::Capture::spawn(command, input, Duration::from_secs(10))
+        })
+    }
+
+    #[test]
+    fn meeting_system_audio_from_real_helper_process_is_tagged_system() {
+        let (store, dir) = temp_store();
+        let Some(helper) = fake_helper(&dir.join("helper"), TONE_HELPER) else {
+            return;
+        };
+        let c = Controller::default();
+        c.reserve().unwrap();
+        c.begin_sources(
+            SourceMode::System,
+            Box::new(|_| panic!("microphone must not open for system-only")),
+            open_helper(helper),
+            echo_len,
+            Arc::clone(&store),
+        )
+        .unwrap();
+        assert_eq!(c.view().source, "system");
+        assert!(
+            wait_until(|| c.view().segment_count >= 2),
+            "helper frames processed"
+        );
+        let record = c.finish(|| {}, &store).unwrap();
+        use AudioSource::System as S;
+        assert_eq!(tagged(&record), vec![(S, 800, 2200), (S, 3800, 4700)]);
+        assert_eq!(record.source, "system");
+        assert_eq!(record.audio_ms, 6000);
+        assert!(record.gaps.is_empty(), "{:?}", record.gaps);
+        assert!(!c.is_active());
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    const ERROR_HELPER: &str =
+        "frame(json.dumps({'error': 'System audio capture requires macOS 14.2 or later'}).encode())\n";
+
+    #[test]
+    fn meeting_system_only_start_fails_with_the_helper_reason() {
+        let (store, dir) = temp_store();
+        let Some(helper) = fake_helper(&dir.join("helper"), ERROR_HELPER) else {
+            return;
+        };
+        let c = Controller::default();
+        c.reserve().unwrap();
+        let err = c
+            .begin_sources(
+                SourceMode::System,
+                Box::new(|_| panic!("microphone must not open")),
+                open_helper(helper),
+                echo_len,
+                Arc::clone(&store),
+            )
+            .unwrap_err();
+        assert_eq!(err, "System audio capture requires macOS 14.2 or later");
+        assert!(!c.is_active());
+        c.reserve().unwrap();
+        let err = c
+            .begin_sources(
+                SourceMode::System,
+                Box::new(|_| unreachable!()),
+                open_helper(std::process::Command::new(dir.join("missing-helper"))),
+                echo_len,
+                store,
+            )
+            .unwrap_err();
+        assert!(err.contains("couldn't start system audio helper"), "{err}");
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn meeting_both_mode_continues_with_microphone_when_system_fails() {
+        let (store, dir) = temp_store();
+        let Some(helper) = fake_helper(&dir.join("helper"), ERROR_HELPER) else {
+            return;
+        };
+        let c = Controller::default();
+        c.reserve().unwrap();
+        let mut sink = None;
+        c.begin_sources(
+            SourceMode::Both,
+            Box::new(|input| {
+                sink = Some(input);
+                Ok(16_000)
+            }),
+            open_helper(helper),
+            echo_len,
+            Arc::clone(&store),
+        )
+        .unwrap();
+        let input = sink.take().unwrap();
+        assert!(c.view().error.unwrap().contains("macOS 14.2"));
+        for chunk in fixture(16_000, 4.0, &[(1.0, 1.0)]).chunks(1600) {
+            feed(&input, chunk, 16_000);
+        }
+        let record = c.finish(|| drop(input), &store).unwrap();
+        assert_eq!(tagged(&record), vec![(AudioSource::Microphone, 800, 2200)]);
+        assert_eq!(record.gaps.len(), 1);
+        let gap = &record.gaps[0];
+        assert_eq!(gap.source, AudioSource::System);
+        assert_eq!((gap.start_ms, gap.end_ms), (0, 4000));
+        assert!(gap.reason.contains("macOS 14.2"), "{}", gap.reason);
+        let _ = std::fs::remove_dir_all(dir);
     }
 }

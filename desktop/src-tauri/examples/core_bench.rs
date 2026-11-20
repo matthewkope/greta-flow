@@ -31,6 +31,9 @@ mod profile;
 mod session;
 #[path = "../src/streaming.rs"]
 mod streaming;
+#[path = "../src/system_audio.rs"]
+#[allow(dead_code)]
+mod system_audio;
 #[path = "../src/transcribe.rs"]
 mod transcribe;
 

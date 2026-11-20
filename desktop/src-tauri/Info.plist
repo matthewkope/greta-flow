@@ -3,6 +3,8 @@
 <plist version="1.0">
 <dict>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Greta Flow listens to your microphone only while you hold the dictation hotkey or run the setup mic check. Speech is transcribed on-device.</string>
+    <string>Greta Flow uses your microphone for dictation while you hold the hotkey, for meetings between Start and Stop, and for the setup mic check. Speech is transcribed on this Mac.</string>
+    <key>NSAudioCaptureUsageDescription</key>
+    <string>Greta Flow captures system audio only between Start and Stop of a meeting you begin, to transcribe remote participants locally.</string>
 </dict>
 </plist>
