@@ -101,6 +101,18 @@ pub struct MeetingSummary {
     pub model: String,
     pub generated_ms: u64,
     pub dropped_ungrounded: usize,
+    /// Transcript sections sent to the model; 0 in records saved before this was tracked.
+    #[serde(default)]
+    pub sections: usize,
+    /// Sections the model failed on; their content is not summarized.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub failed_chunks: Vec<FailedChunk>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct FailedChunk {
+    pub index: usize,
+    pub reason: String,
 }
 
 /// Grounding gate for model output: keep an item only if its quote is
@@ -249,12 +261,23 @@ pub fn markdown(record: &MeetingRecord) -> String {
     match &record.summary.summary {
         Some(summary) if record.summary.status == "generated" => {
             out.push_str(&format!(
-                "_Model summary ({}), grounded in quoted transcript._\n\n",
+                "_Model summary ({}). Each line is the model's wording followed by the verbatim transcript quote it cites._\n\n",
                 summary.model
             ));
+            if !summary.failed_chunks.is_empty() {
+                out.push_str(&format!(
+                    "> Partial summary — {} of {} sections failed:\n",
+                    summary.failed_chunks.len(),
+                    summary.sections
+                ));
+                for f in &summary.failed_chunks {
+                    out.push_str(&format!("> - section {}: {}\n", f.index + 1, f.reason));
+                }
+                out.push('\n');
+            }
             for b in &summary.bullets {
                 out.push_str(&format!(
-                    "- [{}] {} — \"{}\"\n",
+                    "- [{}] Model wording: {} — Transcript: \"{}\"\n",
                     clock(b.start_ms),
                     b.text,
                     b.quote
@@ -270,7 +293,7 @@ pub fn markdown(record: &MeetingRecord) -> String {
                     .map(|o| format!(" ({o})"))
                     .unwrap_or_default();
                 out.push_str(&format!(
-                    "- [{}] {}{} — \"{}\"\n",
+                    "- [{}] Model wording: {}{} — Transcript: \"{}\"\n",
                     clock(a.start_ms),
                     a.text,
                     owner,

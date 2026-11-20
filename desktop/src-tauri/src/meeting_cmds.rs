@@ -204,6 +204,8 @@ fn summarize_blocking(app: &AppHandle, id: &str) -> Result<meeting_notes::Meetin
                 model: model_label,
                 generated_ms: crate::meeting::now_ms(),
                 dropped_ungrounded: dropped_b + dropped_a,
+                sections: raw.chunks,
+                failed_chunks: raw.failed_chunks,
             };
             record.summary = meeting_notes::SummaryStatus::generated(result.clone());
             store.save(&record)?;

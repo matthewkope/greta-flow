@@ -60,8 +60,8 @@
   function groundedLine(item) {
     const li = el("li", "gm-line");
     const body = el("span", "gm-text");
-    body.append(el("span", null, item.text + (item.owner ? ` (${item.owner})` : "")));
-    body.append(el("span", "gm-quote", `“${item.quote}”`));
+    body.append(el("span", null, "Model wording: " + item.text + (item.owner ? ` (${item.owner})` : "")));
+    body.append(el("span", "gm-quote", `Transcript: “${item.quote}”`));
     li.append(el("span", "gm-ts", clock(item.start_ms)), body);
     return li;
   }
@@ -118,6 +118,11 @@
       if (status === "generated" && s) {
         box.append(el("p", "gm-note", `Model summary, grounded in quoted transcript · ${s.model}` +
           (s.dropped_ungrounded ? ` · ${s.dropped_ungrounded} ungrounded item(s) dropped` : "")));
+        const failed = s.failed_chunks || [];
+        if (failed.length) {
+          box.append(el("p", "gm-note", `Partial summary — ${failed.length} of ${s.sections} sections failed: ` +
+            failed.map((f) => `section ${f.index + 1}: ${f.reason}`).join("; ")));
+        }
         box.append(groundedList(s.bullets, "No grounded points."));
         box.append(el("div", "gm-label", "Action items (model, grounded)"));
         box.append(groundedList(s.action_items, "None."));

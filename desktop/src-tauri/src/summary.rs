@@ -8,19 +8,20 @@
 //! through `meeting_notes::validate_model_grounding` before showing it.
 use crate::locks::MutexExt;
 use crate::meeting::Segment;
-use crate::meeting_notes::ModelItem;
+use crate::meeting_notes::{FailedChunk, ModelItem};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Child, Command, Stdio};
 use std::sync::{mpsc, Mutex};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 pub const HELPER_NAME: &str = "greta-summarizer";
 pub const MODEL_DIR_NAME: &str = "qwen3-4b-instruct-2507-4bit-mlx";
 pub const MAX_RESPONSE_BYTES: u32 = 1024 * 1024;
 pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(600);
+const MAX_RUN_TIME: Duration = Duration::from_secs(45 * 60);
 pub const MAX_TOKENS: u32 = 1024;
 /// Transcript characters per map step; keeps prompts well inside the context.
 const CHUNK_CHARS: usize = 12_000;
@@ -570,6 +571,10 @@ pub struct RawOutput {
     pub bullets: Vec<ModelItem>,
     #[serde(default)]
     pub action_items: Vec<ModelItem>,
+    #[serde(skip)]
+    pub chunks: usize,
+    #[serde(skip)]
+    pub failed_chunks: Vec<FailedChunk>,
 }
 
 #[derive(Deserialize)]
@@ -599,13 +604,7 @@ fn read_frame(reader: &mut impl Read) -> Result<Vec<u8>, String> {
     Ok(body)
 }
 
-/// One helper run for one chunk of (global index, segment) pairs.
-fn run_once(
-    helper: &Path,
-    model_dir: &str,
-    chunk: &[(usize, &Segment)],
-    timeout: Duration,
-) -> Result<RawOutput, String> {
+fn request_body(model_dir: &str, chunk: &[(usize, &Segment)]) -> Result<Vec<u8>, String> {
     let request = Request {
         model_dir,
         segments: chunk
@@ -618,7 +617,58 @@ fn run_once(
             .collect(),
         max_tokens: MAX_TOKENS,
     };
-    let body = serde_json::to_vec(&request).map_err(|e| e.to_string())?;
+    serde_json::to_vec(&request).map_err(|e| e.to_string())
+}
+
+fn parse_reply(frame: &[u8]) -> Result<RawOutput, String> {
+    let reply: Reply =
+        serde_json::from_slice(frame).map_err(|e| format!("malformed summarizer reply: {e}"))?;
+    if !reply.ok {
+        return Err(reply
+            .error
+            .unwrap_or_else(|| "summarizer failed without a reason".into()));
+    }
+    reply
+        .output
+        .ok_or_else(|| "summarizer reply has no output".into())
+}
+
+fn exit_reason(child: &mut Child, err_rx: &mpsc::Receiver<String>, e: String) -> String {
+    let status = match child.wait() {
+        Ok(status) => status.to_string(),
+        Err(e) => e.to_string(),
+    };
+    let stderr = err_rx
+        .recv_timeout(Duration::from_secs(2))
+        .unwrap_or_default();
+    let tail: String = stderr
+        .trim()
+        .chars()
+        .rev()
+        .take(400)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect();
+    if tail.is_empty() {
+        format!("{e} ({status})")
+    } else {
+        format!("{e} ({status}): {tail}")
+    }
+}
+
+/// Run every chunk through one helper process (the model loads once). Each
+/// chunk's reply is independent; `per_chunk` scales one overall deadline.
+fn run_chunks(
+    helper: &Path,
+    model_dir: &str,
+    chunks: &[Vec<(usize, &Segment)>],
+    per_chunk: Duration,
+) -> Result<Vec<Result<RawOutput, String>>, String> {
+    let bodies = chunks
+        .iter()
+        .map(|c| request_body(model_dir, c))
+        .collect::<Result<Vec<_>, _>>()?;
     let mut child = Command::new(helper)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -630,9 +680,16 @@ fn run_once(
     let stderr = child.stderr.take().ok_or("missing summarizer stderr")?;
     // Writes may block if the helper stops reading; never block the caller.
     std::thread::spawn(move || {
-        let _ = stdin.write_all(&(body.len() as u32).to_le_bytes());
-        let _ = stdin.write_all(&body);
-        let _ = stdin.flush();
+        for body in bodies {
+            if stdin
+                .write_all(&(body.len() as u32).to_le_bytes())
+                .and_then(|()| stdin.write_all(&body))
+                .and_then(|()| stdin.flush())
+                .is_err()
+            {
+                break;
+            }
+        }
     });
     let (err_tx, err_rx) = mpsc::channel();
     std::thread::spawn(move || {
@@ -641,58 +698,48 @@ fn run_once(
         let _ = err_tx.send(text);
     });
     let (tx, rx) = mpsc::channel();
-    std::thread::spawn(move || {
-        let _ = tx.send(read_frame(&mut stdout));
+    std::thread::spawn(move || loop {
+        let frame = read_frame(&mut stdout);
+        let done = frame.is_err();
+        if tx.send(frame).is_err() || done {
+            break;
+        }
     });
-    let frame = match rx.recv_timeout(timeout) {
-        Ok(frame) => frame,
-        Err(_) => {
-            let _ = child.kill();
-            let _ = child.wait();
-            return Err(format!(
-                "summarizer timed out after {}s and was stopped",
-                timeout.as_secs()
-            ));
+    let budget = per_chunk
+        .saturating_mul(chunks.len() as u32)
+        .min(MAX_RUN_TIME);
+    let deadline = Instant::now() + budget;
+    let mut results = Vec::with_capacity(chunks.len());
+    let mut fatal: Option<String> = None;
+    for _ in chunks {
+        if let Some(reason) = &fatal {
+            results.push(Err(reason.clone()));
+            continue;
         }
-    };
-    let frame = match frame {
-        Ok(frame) => {
-            // Reply received; don't let a lingering helper hold resources.
-            let _ = child.kill();
-            let _ = child.wait();
-            frame
+        let remaining = deadline.saturating_duration_since(Instant::now());
+        match rx.recv_timeout(remaining) {
+            Ok(Ok(frame)) => results.push(parse_reply(&frame)),
+            Ok(Err(e)) => {
+                let _ = child.kill();
+                let reason = exit_reason(&mut child, &err_rx, e);
+                results.push(Err(reason.clone()));
+                fatal = Some(reason);
+            }
+            Err(_) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                let reason = format!(
+                    "summarizer timed out after {}s and was stopped",
+                    budget.as_secs()
+                );
+                results.push(Err(reason.clone()));
+                fatal = Some(reason);
+            }
         }
-        Err(e) => {
-            let status = child.wait().map_err(|e| e.to_string())?;
-            let stderr = err_rx
-                .recv_timeout(Duration::from_secs(2))
-                .unwrap_or_default();
-            let tail: String = stderr
-                .trim()
-                .chars()
-                .rev()
-                .take(400)
-                .collect::<Vec<_>>()
-                .into_iter()
-                .rev()
-                .collect();
-            return Err(if tail.is_empty() {
-                format!("{e} ({status})")
-            } else {
-                format!("{e} ({status}): {tail}")
-            });
-        }
-    };
-    let reply: Reply =
-        serde_json::from_slice(&frame).map_err(|e| format!("malformed summarizer reply: {e}"))?;
-    if !reply.ok {
-        return Err(reply
-            .error
-            .unwrap_or_else(|| "summarizer failed without a reason".into()));
     }
-    reply
-        .output
-        .ok_or_else(|| "summarizer reply has no output".into())
+    let _ = child.kill();
+    let _ = child.wait();
+    Ok(results)
 }
 
 /// Split segments into chunks by character budget, keeping global indices.
@@ -715,7 +762,8 @@ fn chunks(segments: &[Segment]) -> Vec<Vec<(usize, &Segment)>> {
     out
 }
 
-/// Map step per chunk; results are merged by concatenation.
+/// Map step per chunk; successful chunks are merged by concatenation and
+/// failed chunks are recorded. Fails only when every chunk fails.
 pub fn summarize(
     helper: &Path,
     model_dir: &str,
@@ -726,11 +774,31 @@ pub fn summarize(
     if chunks.is_empty() {
         return Err("This meeting has no transcript to summarize.".into());
     }
-    let mut merged = RawOutput::default();
-    for chunk in &chunks {
-        let out = run_once(helper, model_dir, chunk, timeout)?;
-        merged.bullets.extend(out.bullets);
-        merged.action_items.extend(out.action_items);
+    let results = run_chunks(helper, model_dir, &chunks, timeout)?;
+    let mut merged = RawOutput {
+        chunks: results.len(),
+        ..RawOutput::default()
+    };
+    for (index, result) in results.into_iter().enumerate() {
+        match result {
+            Ok(out) => {
+                merged.bullets.extend(out.bullets);
+                merged.action_items.extend(out.action_items);
+            }
+            Err(reason) => merged.failed_chunks.push(FailedChunk { index, reason }),
+        }
+    }
+    if merged.failed_chunks.len() == merged.chunks {
+        return Err(if merged.chunks == 1 {
+            merged.failed_chunks.remove(0).reason
+        } else {
+            merged
+                .failed_chunks
+                .iter()
+                .map(|f| format!("section {}: {}", f.index + 1, f.reason))
+                .collect::<Vec<_>>()
+                .join("; ")
+        });
     }
     Ok(merged)
 }
@@ -993,6 +1061,79 @@ mod tests {
         )
         .unwrap_err();
         assert!(err.contains("couldn't start summarizer"), "{err}");
+    }
+
+    /// Python fixture that serves every framed request in one process,
+    /// logging each spawn, and fails requests whose first index is in `fail`.
+    fn looping_helper(tag: &str, fail: &[usize]) -> (PathBuf, PathBuf) {
+        let dir = temp_dir(tag);
+        let spawns = dir.join("spawns");
+        let fail: Vec<String> = fail.iter().map(|i| i.to_string()).collect();
+        let body = format!(
+            r#"exec python3 -c '
+import sys, json, struct
+open("{spawns}", "a").write("x\n")
+fail = {{{fail}}}
+while True:
+    head = sys.stdin.buffer.read(4)
+    if len(head) < 4:
+        break
+    req = json.loads(sys.stdin.buffer.read(struct.unpack("<I", head)[0]))
+    seg = req["segments"][0]
+    if seg["index"] in fail:
+        rep = {{"ok": False, "error": "no JSON in section %d" % seg["index"]}}
+    else:
+        rep = {{"ok": True, "output": {{"bullets": [{{"text": "t", "segment_index": seg["index"], "quote": seg["text"][:20]}}], "action_items": []}}}}
+    out = json.dumps(rep).encode()
+    sys.stdout.buffer.write(struct.pack("<I", len(out)) + out)
+    sys.stdout.buffer.flush()
+'"#,
+            spawns = spawns.display(),
+            fail = if fail.is_empty() {
+                "-1".into()
+            } else {
+                fail.join(",")
+            },
+        );
+        (helper(tag, &body), spawns)
+    }
+
+    fn three_sections() -> Vec<Segment> {
+        (0..3)
+            .map(|i| Segment {
+                start_ms: i * 60_000,
+                end_ms: i * 60_000 + 1,
+                text: format!("Section {i} says ").repeat(CHUNK_CHARS / 10),
+                source: Default::default(),
+            })
+            .collect()
+    }
+
+    #[test]
+    fn one_helper_serves_all_sections_and_keeps_partial_results() {
+        let segs = three_sections();
+        assert_eq!(chunks(&segs).len(), 3);
+        let (h, spawns) = looping_helper("partial", &[1]);
+        let out = summarize(&h, "/m", &segs, SECS).unwrap();
+        assert_eq!(std::fs::read_to_string(&spawns).unwrap().lines().count(), 1);
+        assert_eq!(out.chunks, 3);
+        assert_eq!(out.failed_chunks.len(), 1);
+        assert_eq!(out.failed_chunks[0].index, 1);
+        assert!(out.failed_chunks[0].reason.contains("section 1"));
+        let (kept, dropped) = validate_model_grounding(&segs, out.bullets);
+        assert_eq!(dropped, 0);
+        let cited: Vec<usize> = kept.iter().map(|b| b.segment_index).collect();
+        assert_eq!(cited, vec![0, 2]);
+    }
+
+    #[test]
+    fn every_section_failing_fails_with_each_reason() {
+        let segs = three_sections();
+        let (h, _) = looping_helper("allfail", &[0, 1, 2]);
+        let err = summarize(&h, "/m", &segs, SECS).unwrap_err();
+        for i in 0..3 {
+            assert!(err.contains(&format!("no JSON in section {i}")), "{err}");
+        }
     }
 
     #[test]
